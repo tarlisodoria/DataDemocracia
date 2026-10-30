@@ -1,0 +1,25 @@
+{
+  "routes": [
+    { "path": "/", "title": "DataDemocracia — Explorar" },
+    { "path": "/buscar", "title": "DataDemocracia — Buscar" },
+    { "path": "/politico/:id", "title": "DataDemocracia — Perfil do político" },
+    {
+      "path": "/politico/:id/promessas",
+      "title": "DataDemocracia — Promessas"
+    },
+    { "path": "/politico/:id/atuacao", "title": "DataDemocracia — Atuação" },
+    {
+      "path": "/politico/:id/integridade",
+      "title": "DataDemocracia — Integridade"
+    },
+    { "path": "/promessas", "title": "DataDemocracia — Promessas" },
+    {
+      "path": "/promessa/:id",
+      "title": "DataDemocracia — Detalhe da promessa"
+    },
+    { "path": "/comparar", "title": "DataDemocracia — Comparar" },
+    { "path": "/monitoramento", "title": "DataDemocracia — Meu monitoramento" },
+    { "path": "/metodologia", "title": "DataDemocracia — Metodologia" },
+    { "path": "/404", "title": "DataDemocracia — Não encontrado" }
+  ]
+}
