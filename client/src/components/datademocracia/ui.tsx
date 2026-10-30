@@ -1,10 +1,13 @@
 import { Link, useLocation } from "wouter";
 import {
   ArrowUpRight,
+  BadgeCheck,
   Bell,
   BookOpen,
   Check,
   ChevronRight,
+  CircleCheck,
+  CircleDotDashed,
   CircleAlert,
   Clock3,
   FileCheck2,
@@ -12,6 +15,7 @@ import {
   Flag,
   GitCompareArrows,
   Landmark,
+  LockKeyhole,
   Menu,
   Search,
   ShieldCheck,
@@ -24,7 +28,11 @@ import { useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import type { PromiseStatus, TimelineEvent } from "@/data/demo";
+import type {
+  EvidenceStrength,
+  PromiseStatus,
+  TimelineEvent,
+} from "@/data/demo";
 
 export const navItems = [
   { label: "Explorar", href: "/", icon: Search },
@@ -216,6 +224,157 @@ export function SourcePill({
       <FileCheck2 size={13} /> {source}
       {date ? ` · ${date}` : ""}
     </span>
+  );
+}
+
+export function AuditStamp({
+  protocol,
+  version,
+  reviewedAt,
+}: {
+  protocol: string;
+  version: string;
+  reviewedAt: string;
+}) {
+  return (
+    <span className="audit-stamp" title={`Registro ${protocol}`}>
+      <BadgeCheck size={13} />
+      <span>{protocol}</span>
+      <i />
+      <span>{version}</span>
+      <i />
+      <span>revisado {reviewedAt}</span>
+    </span>
+  );
+}
+
+export function EvidenceStrengthBadge({
+  strength,
+}: {
+  strength: EvidenceStrength;
+}) {
+  const tone =
+    strength === "Forte"
+      ? "strong"
+      : strength === "Parcial"
+        ? "partial"
+        : "insufficient";
+  return (
+    <span className={cn("evidence-strength", tone)}>
+      <span className="strength-dot" /> Força da evidência:{" "}
+      <strong>{strength}</strong>
+    </span>
+  );
+}
+
+export function ProvenancePanel({
+  source,
+  sourceDetail,
+  extractedAt,
+  reviewedAt,
+  protocol,
+  license,
+}: {
+  source: string;
+  sourceDetail: string;
+  extractedAt: string;
+  reviewedAt: string;
+  protocol: string;
+  license: string;
+}) {
+  return (
+    <div className="provenance-panel">
+      <div className="provenance-head">
+        <div>
+          <span className="eyebrow">
+            <LockKeyhole size={13} /> Proveniência
+          </span>
+          <h3>De onde este registro veio</h3>
+        </div>
+        <BadgeCheck size={19} />
+      </div>
+      <div className="provenance-source">
+        <span className="provenance-source-mark">
+          <FileCheck2 size={16} />
+        </span>
+        <div>
+          <strong>{source}</strong>
+          <small>{sourceDetail}</small>
+        </div>
+      </div>
+      <dl className="provenance-meta">
+        <div>
+          <dt>Extração</dt>
+          <dd>{extractedAt}</dd>
+        </div>
+        <div>
+          <dt>Revisão</dt>
+          <dd>{reviewedAt}</dd>
+        </div>
+        <div>
+          <dt>Protocolo</dt>
+          <dd>{protocol}</dd>
+        </div>
+        <div>
+          <dt>Licença</dt>
+          <dd>{license}</dd>
+        </div>
+      </dl>
+      <p className="provenance-note">
+        O protocolo identifica esta versão demonstrativa. A integração real
+        preservará o link e o documento original.
+      </p>
+    </div>
+  );
+}
+
+export type EvidenceChainItem = {
+  label: string;
+  date: string;
+  source: string;
+  description: string;
+  state: "confirmed" | "partial" | "pending" | "absent";
+};
+
+export function EvidenceChain({ items }: { items: EvidenceChainItem[] }) {
+  return (
+    <section className="evidence-chain-card">
+      <div className="evidence-chain-heading">
+        <div>
+          <span className="eyebrow">
+            <CircleDotDashed size={14} /> Cadeia de evidências
+          </span>
+          <h2>Do texto original ao que foi encontrado</h2>
+        </div>
+        <span>4 marcos de auditoria</span>
+      </div>
+      <div className="evidence-chain-track">
+        {items.map((item, index) => (
+          <div
+            className={cn("evidence-chain-item", item.state)}
+            key={item.label}
+          >
+            <div className="chain-node">
+              {item.state === "confirmed" ? (
+                <CircleCheck size={14} />
+              ) : item.state === "absent" ? (
+                <CircleAlert size={14} />
+              ) : (
+                <span>{index + 1}</span>
+              )}
+            </div>
+            <div className="chain-item-body">
+              <div className="chain-item-meta">
+                <span>{item.date}</span>
+                <span>{item.source}</span>
+              </div>
+              <h3>{item.label}</h3>
+              <p>{item.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 

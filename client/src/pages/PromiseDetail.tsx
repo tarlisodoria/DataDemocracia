@@ -15,12 +15,16 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Link, useParams } from "wouter";
-import { allPromises } from "@/data/demo";
+import { allPromises, getPromiseAuditMeta } from "@/data/demo";
 import {
+  AuditStamp,
   Breadcrumbs,
   EvidenceNote,
+  EvidenceChain,
+  EvidenceStrengthBadge,
   PageShell,
   ProgressBar,
+  ProvenancePanel,
   SourcePill,
   StatusBadge,
 } from "@/components/datademocracia/ui";
@@ -28,6 +32,7 @@ import {
 export default function PromiseDetail() {
   const { id } = useParams<{ id: string }>();
   const promise = allPromises.find(item => item.id === id) ?? allPromises[0];
+  const audit = getPromiseAuditMeta(promise);
   return (
     <PageShell>
       <Breadcrumbs
@@ -53,6 +58,12 @@ export default function PromiseDetail() {
         </div>
         <div className="promise-detail-status">
           <StatusBadge status={promise.status} />
+          <EvidenceStrengthBadge strength={audit.strength} />
+          <AuditStamp
+            protocol={audit.protocol}
+            version={audit.version}
+            reviewedAt={audit.reviewedAt}
+          />
           <span>Atualizado em {promise.updated}</span>
         </div>
       </section>
@@ -106,6 +117,49 @@ export default function PromiseDetail() {
                 </div>
               </div>
             </section>
+          </div>
+          <EvidenceChain
+            items={[
+              {
+                label: "Compromisso registrado",
+                date: "2022",
+                source: "TSE",
+                description:
+                  "Trecho localizado na proposta de governo demonstrativa.",
+                state: "confirmed",
+              },
+              {
+                label: "Ação ou proposição relacionada",
+                date: "12 abr. 2026",
+                source: "Órgão público",
+                description:
+                  "Registro de ação localizado; relação com a meta ainda é parcial.",
+                state: "partial",
+              },
+              {
+                label: "Execução orçamentária identificada",
+                date: "Em revisão",
+                source: "Portal público",
+                description:
+                  "O vínculo entre dotação e a meta ainda precisa de confirmação documental.",
+                state: "pending",
+              },
+              {
+                label: "Entrega ou resultado final",
+                date: "Não localizado",
+                source: "Busca demonstrativa",
+                description:
+                  "Nenhum documento confirma o alcance total da promessa neste recorte.",
+                state: "absent",
+              },
+            ]}
+          />
+          <div className="evidence-strength-line">
+            <EvidenceStrengthBadge strength={audit.strength} />
+            <span>
+              Força não é qualidade do resultado: indica apenas a solidez da
+              documentação encontrada.
+            </span>
           </div>
           <section className="promise-classification">
             <div className="classification-head">
@@ -215,6 +269,14 @@ export default function PromiseDetail() {
             públicas. Dados ausentes não significam que a promessa não foi
             realizada.
           </EvidenceNote>
+          <ProvenancePanel
+            source={audit.source}
+            sourceDetail={audit.sourceDetail}
+            extractedAt={audit.extractedAt}
+            reviewedAt={audit.reviewedAt}
+            protocol={audit.protocol}
+            license={audit.license}
+          />
           <div className="side-card">
             <div className="side-card-head">
               <div>
