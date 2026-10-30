@@ -94,6 +94,9 @@ export default function PoliticianProfile() {
           <Link href="/comparar" className="button button-secondary">
             <GitCompareArrows size={16} /> Comparar
           </Link>
+          <Link href={`/politico/${politician.id}/dossie`} className="button button-secondary">
+            Dossiê factual
+          </Link>
           <button className="icon-action" aria-label="Compartilhar perfil">
             <Link2 size={18} />
           </button>

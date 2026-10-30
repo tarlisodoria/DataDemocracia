@@ -5,6 +5,7 @@ import {
   CheckCircle2,
   ChevronDown,
   CircleAlert,
+  Download,
   FileCheck2,
   FileText,
   Info,
@@ -33,6 +34,41 @@ export default function PromiseDetail() {
   const { id } = useParams<{ id: string }>();
   const promise = allPromises.find(item => item.id === id) ?? allPromises[0];
   const audit = getPromiseAuditMeta(promise);
+  const exportEvidence = () => {
+    const payload = {
+      produto: "DataDemocracia",
+      tipo: "Ficha de evidências demonstrativa",
+      protocolo: audit.protocol,
+      versao: audit.version,
+      promessa: promise.title,
+      politico: promise.politician,
+      status: promise.status,
+      forcaDaEvidencia: audit.strength,
+      prazo: promise.deadline,
+      competencia: promise.competence,
+      fontes: [
+        audit.source,
+        "Ministério demonstrativo",
+        "Revisão DataDemocracia",
+      ],
+      extraidoEm: audit.extractedAt,
+      revisadoEm: audit.reviewedAt,
+      limitacoes: [
+        "Dados demonstrativos",
+        "Não substitui o documento original",
+        "Ausência de evidência não significa ausência do fato",
+      ],
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `datademocracia-ficha-${promise.id}.json`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  };
   return (
     <PageShell>
       <Breadcrumbs
@@ -200,9 +236,17 @@ export default function PromiseDetail() {
                 <div className="eyebrow">Linha de evidências</div>
                 <h2>O que mudou ao longo do tempo</h2>
               </div>
-              <button className="sort-button">
-                Mais recente <ChevronDown size={15} />
-              </button>
+              <div className="history-actions">
+                <button className="sort-button">
+                  Mais recente <ChevronDown size={15} />
+                </button>
+                <button
+                  className="button button-secondary export-button"
+                  onClick={exportEvidence}
+                >
+                  <Download size={14} /> Exportar ficha
+                </button>
+              </div>
             </div>
             <div className="evidence-history-list">
               <div className="history-item">

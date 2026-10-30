@@ -2,6 +2,10 @@
   "routes": [
     { "path": "/", "title": "DataDemocracia — Explorar" },
     { "path": "/buscar", "title": "DataDemocracia — Buscar" },
+    {
+      "path": "/politico/:id/dossie",
+      "title": "DataDemocracia — Dossiê factual"
+    },
     { "path": "/politico/:id", "title": "DataDemocracia — Perfil do político" },
     {
       "path": "/politico/:id/promessas",

@@ -2385,6 +2385,276 @@ select:focus-visible {
   flex-direction: column;
   gap: 13px;
 }
+.history-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.export-button {
+  font-size: 10px;
+  padding: 8px 10px;
+}
+.dossier-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  padding: 20px 0 28px;
+  border-bottom: 1px solid var(--line);
+}
+.dossier-identity {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.dossier-portrait {
+  width: 94px;
+  height: 112px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--line);
+}
+.dossier-identity h1 {
+  color: var(--brand-dark);
+  font-size: clamp(34px, 5vw, 58px);
+  line-height: 0.95;
+  letter-spacing: -0.08em;
+  margin: 7px 0 9px;
+}
+.dossier-identity p {
+  color: var(--muted-ink);
+  font-size: 12px;
+  margin: 0 0 12px;
+}
+.dossier-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 11px;
+  padding: 23px 0 34px;
+}
+.dossier-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 35px;
+}
+.dossier-main {
+  min-width: 0;
+}
+.dossier-section {
+  padding: 31px 0 37px;
+  border-bottom: 1px solid var(--line);
+}
+.dossier-section:first-child {
+  padding-top: 0;
+}
+.candidacy-table {
+  border-top: 1px solid var(--line);
+}
+.candidacy-table-head,
+.candidacy-row {
+  display: grid;
+  grid-template-columns: 70px 1.1fr 1.4fr 1fr;
+  gap: 14px;
+  align-items: center;
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--line);
+}
+.candidacy-table-head {
+  color: #889697;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 9px;
+}
+.candidacy-row {
+  color: #667677;
+  font-size: 11px;
+}
+.candidacy-row strong {
+  color: var(--brand);
+  font-family: "Courier New", monospace;
+}
+.candidacy-row span:nth-child(2) {
+  color: var(--brand-dark);
+  font-weight: 800;
+}
+.dossier-indicator-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 20px;
+}
+.dossier-indicator {
+  padding: 15px;
+  border: 1px solid var(--line);
+  background: white;
+}
+.dossier-indicator-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+.dossier-indicator-head span,
+.dossier-indicator-head small {
+  display: block;
+}
+.dossier-indicator-head span {
+  color: var(--brand-dark);
+  font-size: 12px;
+  font-weight: 800;
+}
+.dossier-indicator-head small {
+  color: #899697;
+  font-size: 10px;
+  margin-top: 4px;
+}
+.dossier-indicator-head strong {
+  color: var(--brand-dark);
+  font-size: 22px;
+  letter-spacing: -0.05em;
+}
+.dossier-theme-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.dossier-theme-card {
+  position: relative;
+  min-height: 105px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  background: white;
+  overflow: hidden;
+}
+.theme-bar {
+  width: 100%;
+  height: 4px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--brand);
+}
+.theme-bar.teal {
+  background: #5e9d94;
+}
+.theme-bar.blue {
+  background: #5b8dbb;
+}
+.theme-bar.amber {
+  background: #d0994b;
+}
+.theme-bar.coral {
+  background: #c87864;
+}
+.dossier-theme-card span,
+.dossier-theme-card small {
+  display: block;
+}
+.dossier-theme-card span {
+  color: var(--brand-dark);
+  font-size: 11px;
+  font-weight: 800;
+  margin-top: 6px;
+}
+.dossier-theme-card strong {
+  display: block;
+  color: var(--brand-dark);
+  font:
+    25px Georgia,
+    serif;
+  margin-top: 10px;
+}
+.dossier-theme-card small {
+  color: #889596;
+  font-size: 9px;
+  margin-top: 4px;
+}
+.legal-record-list {
+  display: grid;
+  gap: 10px;
+}
+.legal-record {
+  display: flex;
+  gap: 12px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  background: white;
+}
+.legal-record-icon {
+  display: grid;
+  place-items: center;
+  width: 31px;
+  height: 31px;
+  flex: 0 0 auto;
+  color: var(--brand);
+  background: #e2efec;
+}
+.legal-record-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.legal-record-top strong {
+  color: var(--brand-dark);
+  font-size: 12px;
+}
+.legal-record p {
+  color: #768586;
+  font-size: 11px;
+  line-height: 1.45;
+  margin: 6px 0 10px;
+}
+.asset-list {
+  margin-top: 14px;
+}
+.asset-row {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 2px 10px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+}
+.asset-row span {
+  color: #879394;
+  font:
+    10px "Courier New",
+    monospace;
+  grid-row: span 2;
+}
+.asset-row strong {
+  color: var(--brand-dark);
+  font-size: 15px;
+}
+.asset-row small {
+  color: #829091;
+  font-size: 9px;
+}
+.dossier-footnote {
+  color: #7b8a8b;
+  font-size: 10px;
+  line-height: 1.45;
+  margin: 13px 0 0;
+}
+.dossier-side-link {
+  width: 100%;
+  justify-content: center;
+}
+.dossier-footer-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 22px 0 0;
+  color: #7d8b8c;
+  font-size: 10px;
+}
+.dossier-footer-note svg {
+  color: var(--brand);
+}
+.dossier-footer-note a {
+  color: var(--brand);
+  font-weight: 800;
+}
 .metadata-list {
   margin: 16px 0 0;
 }
@@ -3443,14 +3713,20 @@ select:focus-visible {
   }
   .profile-grid,
   .promise-detail-grid,
-  .monitoring-grid {
+  .monitoring-grid,
+  .dossier-layout {
     grid-template-columns: 1fr;
   }
   .profile-side-column,
-  .promise-detail-side {
+  .promise-detail-side,
+  .dossier-side {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     align-items: start;
+  }
+  .dossier-side > .evidence-note,
+  .dossier-side > .dossier-side-link {
+    grid-column: 1 / -1;
   }
   .method-layers {
     margin-left: -28px;
@@ -3669,6 +3945,30 @@ select:focus-visible {
   .audit-stamp {
     white-space: normal;
     flex-wrap: wrap;
+  }
+  .dossier-hero {
+    display: block;
+  }
+  .dossier-hero > .button {
+    margin-top: 18px;
+  }
+  .dossier-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .candidacy-table {
+    overflow-x: auto;
+  }
+  .candidacy-table-head,
+  .candidacy-row {
+    min-width: 690px;
+  }
+  .dossier-theme-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .legal-record-top {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
   }
   .evidence-split {
     grid-template-columns: 1fr;
