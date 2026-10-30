@@ -47,6 +47,34 @@ export type PromiseAuditMeta = {
   strength: EvidenceStrength;
 };
 
+export type DossierData = {
+  candidacies: {
+    year: string;
+    office: string;
+    result: string;
+    source: string;
+  }[];
+  assets: { year: string; value: string; status: string }[];
+  indicators: {
+    label: string;
+    value: string;
+    detail: string;
+    progress: number;
+  }[];
+  themes: {
+    label: string;
+    value: string;
+    tone: "teal" | "blue" | "amber" | "coral";
+  }[];
+  legalRecords: {
+    type: string;
+    status: string;
+    detail: string;
+    source: string;
+  }[];
+  limitations: string[];
+};
+
 export type Politician = {
   id: string;
   name: string;
@@ -441,5 +469,103 @@ export function getPromiseAuditMeta(promise: PromiseItem): PromiseAuditMeta {
     sourceDetail: "Documento eleitoral e registros públicos demonstrativos",
     license: "LAI · dados públicos",
     strength,
+  };
+}
+
+export function getDossierData(politician: Politician): DossierData {
+  const isSenator = politician.role === "Senadora";
+  return {
+    candidacies: [
+      {
+        year: politician.period.slice(0, 4),
+        office: politician.role,
+        result: "Eleito(a) · mandato em exercício",
+        source: "TSE · registro demonstrativo",
+      },
+      {
+        year: isSenator ? "2018" : "2020",
+        office: isSenator ? "Deputada Federal" : "Deputada Federal",
+        result: "Não eleita · candidatura demonstrativa",
+        source: "TSE · resultado demonstrativo",
+      },
+      {
+        year: "2016",
+        office: "Vereadora",
+        result: "Eleita · mandato concluído",
+        source: "TSE · histórico demonstrativo",
+      },
+    ],
+    assets: [
+      {
+        year: "2026",
+        value: isSenator ? "R$ 1,28 mi" : "R$ 842 mil",
+        status: "Declaração demonstrativa",
+      },
+      {
+        year: "2022",
+        value: isSenator ? "R$ 980 mil" : "R$ 615 mil",
+        status: "Declaração demonstrativa",
+      },
+    ],
+    indicators: [
+      {
+        label: "Presença em sessões",
+        value: politician.stats[0]?.value ?? "—",
+        detail: "Legislatura atual",
+        progress: isSenator ? 96 : 92,
+      },
+      {
+        label: "Produção registrada",
+        value: politician.stats[1]?.value ?? "—",
+        detail: "Proposições e votações",
+        progress: isSenator ? 76 : 68,
+      },
+      {
+        label: "Relatorias / comissões",
+        value: politician.stats[2]?.value ?? "—",
+        detail: "Com registro público",
+        progress: isSenator ? 71 : 54,
+      },
+      {
+        label: "Despesas no recorte",
+        value: politician.stats[3]?.value ?? "—",
+        detail: "Cota / exercício 2026",
+        progress: isSenator ? 43 : 61,
+      },
+    ],
+    themes: [
+      { label: "Saúde pública", value: "34%", tone: "teal" },
+      { label: "Educação", value: "26%", tone: "blue" },
+      { label: "Transparência", value: "21%", tone: "amber" },
+      { label: "Orçamento", value: "19%", tone: "coral" },
+    ],
+    legalRecords: [
+      {
+        type: "Consulta processual",
+        status: "Sem decisão condenatória no recorte",
+        detail:
+          "Nenhum registro demonstrativo com decisão condenatória definitiva foi associado.",
+        source: "CNJ · consulta demonstrativa",
+      },
+      {
+        type: "Certidão eleitoral",
+        status: "Registro demonstrativo disponível",
+        detail:
+          "A certidão precisa ser atualizada antes de qualquer uso público real.",
+        source: "TSE · certidão demonstrativa",
+      },
+      {
+        type: "Processos ativos",
+        status: "1 registro em acompanhamento",
+        detail: "A existência de processo não equivale a culpa ou condenação.",
+        source: "Tribunal demonstrativo",
+      },
+    ],
+    limitations: [
+      "Não mede qualidade ética, intenção ou articulação de bastidores.",
+      "Não transforma processo, investigação ou denúncia em condenação.",
+      "Dados ausentes não significam resultado zero.",
+      "Métricas variam conforme o cargo, período, órgão e disponibilidade documental.",
+    ],
   };
 }
