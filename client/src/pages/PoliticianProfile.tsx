@@ -23,6 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import { getPolitician } from "@/data/demo";
 import {
   Breadcrumbs,
+  AuditStamp,
   EvidenceNote,
   MetricTile,
   PageShell,
@@ -106,6 +107,11 @@ export default function PoliticianProfile() {
         <span>
           <CalendarDays size={15} /> Atualizado em 28 out. 2026
         </span>
+        <AuditStamp
+          protocol="DD-PERFIL-MA-2026"
+          version="v0.4 demonstrativo"
+          reviewedAt="28 out. 2026"
+        />
         <Link href="/metodologia">
           Como ler este perfil <ArrowRight size={14} />
         </Link>

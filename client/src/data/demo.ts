@@ -5,6 +5,8 @@ export type PromiseStatus =
   | "Sem evidência suficiente"
   | "Fora da competência direta";
 
+export type EvidenceStrength = "Forte" | "Parcial" | "Insuficiente";
+
 export type TimelineKind =
   | "eleição"
   | "mandato"
@@ -32,6 +34,17 @@ export type PromiseItem = {
   evidence: string;
   updated: string;
   trajectory: "favorável" | "incerta" | "atrasada" | "sem base suficiente";
+};
+
+export type PromiseAuditMeta = {
+  protocol: string;
+  version: string;
+  extractedAt: string;
+  reviewedAt: string;
+  source: string;
+  sourceDetail: string;
+  license: string;
+  strength: EvidenceStrength;
 };
 
 export type Politician = {
@@ -408,4 +421,25 @@ export const allPromises = politicians.flatMap(politician =>
 
 export function getPolitician(id: string | undefined) {
   return politicians.find(politician => politician.id === id) ?? politicians[0];
+}
+
+export function getPromiseAuditMeta(promise: PromiseItem): PromiseAuditMeta {
+  const strength: EvidenceStrength =
+    promise.status === "Cumprida"
+      ? "Forte"
+      : promise.status === "Sem evidência suficiente" ||
+          promise.status === "Fora da competência direta"
+        ? "Insuficiente"
+        : "Parcial";
+
+  return {
+    protocol: `DD-${promise.id.toUpperCase()}-2026`,
+    version: "v0.4 demonstrativo",
+    extractedAt: promise.updated,
+    reviewedAt: "28 out. 2026",
+    source: "TSE · proposta de governo",
+    sourceDetail: "Documento eleitoral e registros públicos demonstrativos",
+    license: "LAI · dados públicos",
+    strength,
+  };
 }
