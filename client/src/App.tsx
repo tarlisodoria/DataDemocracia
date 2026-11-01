@@ -13,6 +13,7 @@ import Compare from "./pages/Compare";
 import Monitoring from "./pages/Monitoring";
 import Methodology from "./pages/Methodology";
 import Dossier from "./pages/Dossier";
+import Radar from "./pages/Radar";
 
 function Router() {
   return (
@@ -20,6 +21,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/buscar" component={SearchPage} />
       <Route path="/politico/:id/dossie" component={Dossier} />
+      <Route path="/politico/:id/radar" component={Radar} />
       <Route path="/politico/:id" component={PoliticianProfile} />
       <Route path="/politico/:id/promessas" component={Promises} />
       <Route path="/politico/:id/atuacao" component={PoliticianProfile} />

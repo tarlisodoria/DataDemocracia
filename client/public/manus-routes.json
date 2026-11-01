@@ -6,6 +6,10 @@
       "path": "/politico/:id/dossie",
       "title": "DataDemocracia — Dossiê factual"
     },
+    {
+      "path": "/politico/:id/radar",
+      "title": "DataDemocracia — Radar analítico"
+    },
     { "path": "/politico/:id", "title": "DataDemocracia — Perfil do político" },
     {
       "path": "/politico/:id/promessas",

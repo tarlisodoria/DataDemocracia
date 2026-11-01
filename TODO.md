@@ -50,6 +50,7 @@
 - [ ] Criar comparação factual entre dois ou mais perfis comparáveis.
 - [ ] Mostrar período, escopo, fonte, denominador e explicação de cada métrica.
 - [ ] Não criar ranking geral de melhor político nem placar esportivo.
+- [x] Entregar Radar Analítico demonstrativo com seis dimensões independentes, filtro de período, fontes, interpretação metodológica, alternativa textual e aviso explícito de que não existe nota geral.
 
 ## Resultado 8 — Monitoramento
 
