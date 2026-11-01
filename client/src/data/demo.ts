@@ -75,6 +75,24 @@ export type DossierData = {
   limitations: string[];
 };
 
+export type RadarDimension = {
+  key: string;
+  label: string;
+  value: number;
+  unit: string;
+  detail: string;
+  source: string;
+  period: string;
+  direction: "higher" | "lower";
+};
+
+export type RadarData = {
+  period: string;
+  dimensions: RadarDimension[];
+  methodology: string[];
+  sources: string[];
+};
+
 export type Politician = {
   id: string;
   name: string;
@@ -566,6 +584,95 @@ export function getDossierData(politician: Politician): DossierData {
       "Não transforma processo, investigação ou denúncia em condenação.",
       "Dados ausentes não significam resultado zero.",
       "Métricas variam conforme o cargo, período, órgão e disponibilidade documental.",
+    ],
+  };
+}
+
+export function getRadarData(
+  politician: Politician,
+  period = "2023–2026"
+): RadarData {
+  const isSenator = politician.role === "Senadora";
+  const officeOffset = isSenator ? 3 : 0;
+  const periodOffset =
+    period === "2025–2026" ? 4 : period === "Mandato atual" ? 2 : 0;
+  const offset = officeOffset + periodOffset;
+  return {
+    period,
+    dimensions: [
+      {
+        key: "presenca",
+        label: "Presença",
+        value: 92 + offset,
+        unit: "%",
+        detail: "Sessões registradas",
+        source: isSenator ? "Senado Federal" : "Câmara dos Deputados",
+        period,
+        direction: "higher",
+      },
+      {
+        key: "producao",
+        label: "Produção",
+        value: 74 + offset,
+        unit: "índice",
+        detail: "Proposições e relatorias",
+        source: isSenator ? "Senado Federal" : "Câmara dos Deputados",
+        period,
+        direction: "higher",
+      },
+      {
+        key: "votacoes",
+        label: "Votações",
+        value: 81 + Math.round(periodOffset / 2),
+        unit: "índice",
+        detail: "Votos nominais localizados",
+        source: isSenator ? "Senado Federal" : "Câmara dos Deputados",
+        period,
+        direction: "higher",
+      },
+      {
+        key: "transparencia",
+        label: "Transparência",
+        value: 68 + offset,
+        unit: "índice",
+        detail: "Dados e registros publicados",
+        source: "Portais públicos",
+        period,
+        direction: "higher",
+      },
+      {
+        key: "promessas",
+        label: "Promessas",
+        value: 62 + periodOffset,
+        unit: "%",
+        detail: "Trajetória documentada",
+        source: "TSE + DataDemocracia",
+        period,
+        direction: "higher",
+      },
+      {
+        key: "despesas",
+        label: "Despesas",
+        value: 57 + Math.round(periodOffset / 2),
+        unit: "índice",
+        detail: "Leitura relativa ao recorte",
+        source: isSenator ? "Senado Federal" : "Câmara dos Deputados",
+        period,
+        direction: "lower",
+      },
+    ],
+    methodology: [
+      "Cada dimensão permanece separada; o sistema não calcula uma nota geral.",
+      "Valores de presença e produção usam denominadores do cargo e do período consultado.",
+      "Despesas são exibidas como dimensão própria e não significam irregularidade.",
+      "Dados ausentes, mudanças de cargo e períodos incompletos reduzem a comparabilidade.",
+    ],
+    sources: [
+      isSenator
+        ? "Senado Federal · atividade parlamentar"
+        : "Câmara dos Deputados · atividade parlamentar",
+      "TSE · candidaturas e propostas",
+      "Portais públicos · registros demonstrativos",
     ],
   };
 }

@@ -2655,6 +2655,242 @@ select:focus-visible {
   color: var(--brand);
   font-weight: 800;
 }
+.radar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 30px;
+  padding: 20px 0 28px;
+  border-bottom: 1px solid var(--line);
+}
+.radar-header h1 {
+  color: var(--brand-dark);
+  font-size: clamp(38px, 5.2vw, 64px);
+  line-height: 0.92;
+  letter-spacing: -0.08em;
+  margin: 7px 0 12px;
+  max-width: 720px;
+}
+.radar-header p {
+  color: var(--muted-ink);
+  font-size: 13px;
+  line-height: 1.45;
+  max-width: 620px;
+  margin: 0 0 13px;
+}
+.radar-controls {
+  display: grid;
+  gap: 8px;
+  min-width: 190px;
+}
+.radar-controls label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #7d8d8e;
+  font-size: 10px;
+  font-weight: 800;
+}
+.radar-controls select {
+  min-height: 35px;
+  border: 1px solid var(--line);
+  background: white;
+  color: var(--brand-dark);
+  padding: 0 9px;
+  font-size: 11px;
+}
+.radar-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 35px;
+  padding-top: 31px;
+}
+.radar-chart-card {
+  border: 1px solid var(--line);
+  background: #f8faf9;
+  padding: 20px;
+}
+.radar-card-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 15px;
+}
+.radar-card-heading h2 {
+  color: var(--brand-dark);
+  font-size: 22px;
+  margin: 5px 0 0;
+}
+.radar-period-badge {
+  color: var(--brand);
+  background: #e0efeb;
+  padding: 5px 8px;
+  font:
+    10px "Courier New",
+    monospace;
+  white-space: nowrap;
+}
+.radar-chart-wrap {
+  display: grid;
+  place-items: center;
+  min-height: 460px;
+  padding: 14px 0 0;
+}
+.radar-chart-wrap svg {
+  width: min(100%, 420px);
+  overflow: visible;
+}
+.radar-grid {
+  fill: none;
+  stroke: #d6e3e0;
+  stroke-width: 1;
+}
+.radar-axis {
+  stroke: #dce8e5;
+  stroke-width: 1;
+}
+.radar-value-area {
+  fill: #6aada333;
+  stroke: #448e85;
+  stroke-width: 2;
+}
+.radar-value-dot {
+  fill: #fff;
+  stroke: #287b72;
+  stroke-width: 2;
+}
+.radar-label {
+  fill: #557070;
+  font-size: 11px;
+  font-weight: 800;
+}
+.radar-center-label {
+  fill: var(--brand-dark);
+  font-size: 12px;
+  font-weight: 800;
+}
+.radar-center-note {
+  fill: #819091;
+  font-size: 9px;
+}
+.radar-legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 17px;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+  color: #7b8b8c;
+  font-size: 10px;
+}
+.radar-legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.radar-legend i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+}
+.legend-area {
+  background: #6aada388;
+  border: 1px solid #448e85;
+}
+.legend-ring {
+  border: 1px solid #b7cbc7;
+  border-radius: 50%;
+}
+.radar-section {
+  padding-top: 35px;
+}
+.radar-dimension-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 20px;
+}
+.radar-dimension {
+  padding: 15px;
+  border: 1px solid var(--line);
+  background: white;
+}
+.radar-dimension-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.radar-dimension-head strong,
+.radar-dimension-head small {
+  display: block;
+}
+.radar-dimension-head strong {
+  color: var(--brand-dark);
+  font-size: 12px;
+}
+.radar-dimension-head small {
+  color: #859495;
+  font-size: 10px;
+  margin-top: 4px;
+}
+.radar-dimension-head b {
+  color: var(--brand-dark);
+  font-size: 24px;
+  letter-spacing: -0.05em;
+}
+.radar-dimension-head em {
+  color: #839091;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 400;
+  margin-left: 3px;
+}
+.radar-dimension-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+.radar-dimension-foot > span {
+  color: #8a9899;
+  font-size: 9px;
+  text-align: right;
+}
+.radar-side {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+.radar-sources {
+  display: grid;
+  gap: 11px;
+  margin-top: 15px;
+}
+.radar-method-link {
+  display: block;
+  color: var(--brand);
+  font-size: 10px;
+  font-weight: 800;
+  margin-top: 18px;
+}
+.radar-footer-note {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #7e8d8e;
+  font-size: 10px;
+  padding: 24px 0 0;
+}
+.radar-footer-note svg {
+  color: var(--brand);
+}
+.radar-footer-note a {
+  color: var(--brand);
+  font-weight: 800;
+}
 .metadata-list {
   margin: 16px 0 0;
 }
@@ -3714,7 +3950,8 @@ select:focus-visible {
   .profile-grid,
   .promise-detail-grid,
   .monitoring-grid,
-  .dossier-layout {
+  .dossier-layout,
+  .radar-layout {
     grid-template-columns: 1fr;
   }
   .profile-side-column,
@@ -3726,6 +3963,15 @@ select:focus-visible {
   }
   .dossier-side > .evidence-note,
   .dossier-side > .dossier-side-link {
+    grid-column: 1 / -1;
+  }
+  .radar-side {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: start;
+  }
+  .radar-side > .evidence-note,
+  .radar-side > .side-card:last-child {
     grid-column: 1 / -1;
   }
   .method-layers {
@@ -3946,11 +4192,16 @@ select:focus-visible {
     white-space: normal;
     flex-wrap: wrap;
   }
-  .dossier-hero {
+  .dossier-hero,
+  .radar-header {
     display: block;
   }
   .dossier-hero > .button {
     margin-top: 18px;
+  }
+  .radar-controls {
+    margin-top: 20px;
+    max-width: 260px;
   }
   .dossier-metrics {
     grid-template-columns: repeat(2, 1fr);
@@ -3964,6 +4215,29 @@ select:focus-visible {
   }
   .dossier-theme-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .radar-dimension-list {
+    grid-template-columns: 1fr;
+  }
+  .radar-side {
+    display: flex;
+  }
+  .radar-chart-wrap {
+    min-height: 340px;
+  }
+  .radar-card-heading {
+    display: block;
+  }
+  .radar-period-badge {
+    display: inline-block;
+    margin-top: 10px;
+  }
+  .radar-dimension-foot {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .radar-dimension-foot > span {
+    text-align: left;
   }
   .legal-record-top {
     align-items: flex-start;
