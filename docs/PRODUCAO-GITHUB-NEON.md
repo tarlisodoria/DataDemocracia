@@ -10,7 +10,7 @@ A Neon Data API está ativa no schema `public` e usa o Better Auth do Neon para 
 
 ## Variáveis públicas do build
 
-Configure no GitHub em **Settings → Secrets and variables → Actions**:
+O workflow já contém os dois endpoints públicos do Neon:
 
 - `VITE_NEON_DATA_API_URL`
 - `VITE_NEON_AUTH_URL`
@@ -22,7 +22,7 @@ VITE_NEON_DATA_API_URL=https://ep-crimson-king-b6e827kq.apirest.c-2.sa-east-1.aw
 VITE_NEON_AUTH_URL=https://ep-crimson-king-b6e827kq.neonauth.c-2.sa-east-1.aws.neon.tech/neondb/auth
 ```
 
-Esses endpoints podem ser usados no navegador. Não coloque no frontend a connection string PostgreSQL nem senha privilegiada.
+Esses endpoints podem ser usados no navegador. Não coloque no frontend a connection string PostgreSQL nem senha privilegiada. Se preferir, eles podem ser movidos posteriormente para **Actions Variables**; não são secrets porque não carregam credenciais.
 
 ## Banco e segurança
 
