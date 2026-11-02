@@ -1,5 +1,5 @@
--- DataDemocracia · schema inicial do Supabase
--- Execute no SQL Editor do projeto Supabase depois de revisar os campos demonstrativos.
+-- DataDemocracia · schema inicial do Neon
+-- Aplicado na branch production do projeto datademocracia.
 
 create extension if not exists pgcrypto;
 
@@ -59,7 +59,7 @@ create table if not exists public.promise_evidence (
 
 create table if not exists public.monitoring_items (
   id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references auth.users(id) on delete cascade,
+  user_id text not null default auth.user_id(),
   entity_type text not null check (entity_type in ('politician', 'promise', 'theme', 'city', 'agency')),
   entity_id uuid,
   label text not null,
@@ -77,23 +77,14 @@ alter table public.promises enable row level security;
 alter table public.promise_evidence enable row level security;
 alter table public.monitoring_items enable row level security;
 
-drop policy if exists "public can read politicians" on public.politicians;
-create policy "public can read politicians" on public.politicians for select using (true);
+revoke all on table public.politicians, public.promises, public.promise_evidence, public.monitoring_items from anonymous, authenticated;
+grant select on table public.politicians, public.promises, public.promise_evidence to anonymous, authenticated;
+grant select, insert, update, delete on table public.monitoring_items to authenticated;
 
-drop policy if exists "public can read promises" on public.promises;
-create policy "public can read promises" on public.promises for select using (true);
-
-drop policy if exists "public can read evidence" on public.promise_evidence;
-create policy "public can read evidence" on public.promise_evidence for select using (true);
-
-drop policy if exists "users can read own monitoring" on public.monitoring_items;
-create policy "users can read own monitoring" on public.monitoring_items for select using (auth.uid() = user_id);
-
-drop policy if exists "users can insert own monitoring" on public.monitoring_items;
-create policy "users can insert own monitoring" on public.monitoring_items for insert with check (auth.uid() = user_id);
-
-drop policy if exists "users can update own monitoring" on public.monitoring_items;
-create policy "users can update own monitoring" on public.monitoring_items for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
-
-drop policy if exists "users can delete own monitoring" on public.monitoring_items;
-create policy "users can delete own monitoring" on public.monitoring_items for delete using (auth.uid() = user_id);
+create policy "public read politicians" on public.politicians for select to anonymous, authenticated using (true);
+create policy "public read promises" on public.promises for select to anonymous, authenticated using (true);
+create policy "public read evidence" on public.promise_evidence for select to anonymous, authenticated using (true);
+create policy "users read own monitoring" on public.monitoring_items for select to authenticated using (auth.user_id() = user_id);
+create policy "users insert own monitoring" on public.monitoring_items for insert to authenticated with check (auth.user_id() = user_id);
+create policy "users update own monitoring" on public.monitoring_items for update to authenticated using (auth.user_id() = user_id) with check (auth.user_id() = user_id);
+create policy "users delete own monitoring" on public.monitoring_items for delete to authenticated using (auth.user_id() = user_id);
