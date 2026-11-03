@@ -35,9 +35,19 @@ A branch `production` contém:
 
 Políticos, promessas e evidências têm leitura pública. Itens de monitoramento exigem autenticação e usam RLS para permitir acesso apenas ao próprio usuário. A Data API não deve receber tabelas novas sem grants mínimos e políticas RLS revisadas.
 
-## GitHub Pages
+## Cloudflare Workers Static Assets
 
-O workflow `.github/workflows/deploy-pages.yml` instala dependências, injeta as variáveis Neon, executa `pnpm build:static`, cria `404.html` e publica `dist/public` usando GitHub Actions. No repositório, configure **Settings → Pages → Source: GitHub Actions**.
+O repositório agora contém `wrangler.jsonc`, que declara `dist/public` como diretório de assets estáticos e usa fallback SPA para as rotas do React. No formulário **Workers & Pages → Create application → Connect to GitHub**, use:
+
+```text
+Build command: pnpm build:static
+Deploy command: npx wrangler deploy
+Production branch: main
+```
+
+Em **Configurações avançadas**, defina `VITE_BASE_PATH=/` e os dois endpoints públicos do Neon. Não use `pnpm run build`, pois esse comando também compila o servidor Express do starter; para este deploy, o produto é o frontend estático em `dist/public`.
+
+O antigo workflow `.github/workflows/deploy-pages.yml` pode permanecer no repositório, mas não é necessário para o deploy Cloudflare.
 
 A URL esperada é:
 
