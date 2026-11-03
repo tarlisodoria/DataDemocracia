@@ -177,9 +177,9 @@ export function SiteFooter() {
         <div className="footer-links">
           <Link href="/metodologia">Metodologia</Link>
           <Link href="/metodologia#fontes">Fontes</Link>
-          <Link href="/monitoramento">Apoie o projeto</Link>
+          <Link href="/metodologia">Apoie e conheça o projeto</Link>
           <span className="footer-credit">
-            Projeto criado por [Nome do criador]
+            Projeto criado por Tarliso Doria
           </span>
         </div>
       </div>

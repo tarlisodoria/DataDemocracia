@@ -10,7 +10,7 @@ O Stitch oferece quatro contribuições especialmente fortes: uma identidade vis
 
 O MVP já possui home editorial, busca, perfil, promessas, detalhe de evidência, comparação factual, monitoramento, metodologia, trajetória e integridade. Ele também já adota vários princípios do Stitch: fonte e data, ausência de ranking geral, separação entre processo e condenação, visual sem cores partidárias, cartões documentais, baixa dependência de sombras e linguagem não eleitoral.
 
-Por isso, não vale substituir o MVP pelo HTML exportado do Stitch. O código do Stitch é prototípico, usa layout e componentes próprios, repete estruturas em várias telas e não está conectado às rotas, tipos, estado e serviços do projeto WebDev. O valor está nas ideias, no desenho e nos padrões de interface, não em copiar os arquivos HTML literalmente.
+Por isso, não vale substituir o MVP pelo HTML exportado do Stitch. O código do Stitch é prototípico, usa layout e componentes próprios, repete estruturas em várias telas e não está conectado às rotas, tipos, estado e serviços da aplicação atual. O valor está nas ideias, no desenho e nos padrões de interface, não em copiar os arquivos HTML literalmente.
 
 ## Melhorias visuais aproveitáveis imediatamente
 

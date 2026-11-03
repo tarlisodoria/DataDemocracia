@@ -1,75 +1,72 @@
-# Plano de implementação — DataDemocracia MVP
+# Plano mestre — DataDemocracia
 
-## Escopo desta entrega
+## Posicionamento
 
-Construir um protótipo web navegável e visualmente consistente do DataDemocracia, usando dados demonstrativos seguros. A entrega terá home, busca/exploração, perfil de político, trajetória, promessas, atuação, integridade, comparação, monitoramento e metodologia. A integração com fontes oficiais e persistência de dados reais ficam preparadas como próxima etapa, mas não serão simuladas com afirmações reais nesta primeira versão.
+O DataDemocracia é um arquivo cívico editorial: uma plataforma independente criada por **Tarliso Doria** para organizar dados públicos, documentos oficiais e evidências sobre a política brasileira. Seu compromisso é mostrar o que pode ser verificado, não recomendar voto.
 
-## Abordagem de implementação
+## Estado atual
 
-- React + TypeScript + Wouter para rotas navegáveis.
-- Dados demonstrativos locais em módulos TypeScript, com IDs estáveis e campos que refletem o modelo futuro.
-- Componentes reutilizáveis para cabeçalho, perfil, evidência, status, linha do tempo, gráficos e tabelas.
-- Recharts para visualizações simples e explicáveis.
-- Lucide para ícones lineares e consistentes.
-- Banco e servidor permanecem habilitados no projeto para a próxima etapa, mas o MVP visual não depende de chamadas externas.
-- `public/manus-routes.json` com todas as rotas de página.
-- Linguagem em português brasileiro e design responsivo.
+O MVP navegável está publicado como frontend estático. Home e Explorar consultam o catálogo público no Neon e mantêm fallback demonstrativo. O schema PostgreSQL já possui políticos, promessas, evidências e monitoramento com RLS. As demais telas ainda usam o modelo tipado em `client/src/data/demo.ts` e serão migradas gradualmente.
 
-## Direção de design
+## Arquitetura aprovada
 
-### Alternativas consideradas
+- React + TypeScript + Vite no frontend;
+- Wouter para rotas;
+- Tailwind CSS e CSS editorial próprio;
+- Neon Data API para leitura pública;
+- Neon Auth para o futuro fluxo de conta e monitoramento;
+- PostgreSQL com RLS;
+- Cloudflare Workers Static Assets para publicação;
+- `pnpm build:static` como build público;
+- `client/public/manus-routes.json` como manifesto das páginas.
 
-1. **Arquivo Cívico Editorial — 0,06:** linha do tempo, divisórias, documentos, evidências e tipografia editorial para transformar dados em contexto.
-2. **Painel Institucional Modular — 0,05:** navegação de dados, indicadores e tabelas com foco operacional.
-3. **Mapa de Evidências — 0,04:** relações visuais entre pessoa, cargo, promessa, documento e status.
+## Direção visual
 
 ### Escolha: Arquivo Cívico Editorial
 
-**Design Movement:** editorial information design aplicado a civic tech, com sobriedade institucional e ritmo de arquivo documental.
-
 **Princípios:** clareza antes de densidade; evidência antes de julgamento; contexto persistente; leitura progressiva.
 
-**Filosofia de cor:** azul profundo para confiança e estabilidade, papel claro para leitura, grafite para precisão, azul-petróleo para ações e âmbar para atenção. Vermelho não será usado como julgamento moral.
+**Cores:** azul-petróleo profundo `#0F4C5C` para identidade e ação; azul profundo para estabilidade; papel claro para leitura; grafite para precisão; âmbar para atenção. Evitar cores partidárias e usar vermelho apenas quando houver significado factual indispensável.
 
-**Paradigma de layout:** composição editorial assimétrica controlada, com coluna principal de conteúdo e trilho lateral de metadados/evidências em desktop; no mobile, o trilho vira blocos empilhados.
+**Layout:** composição editorial assimétrica controlada, com conteúdo principal e trilho lateral de fonte, período, escopo e limitações em telas amplas; no mobile, blocos empilhados.
 
-**Elementos assinatura:** linha vertical de trajetória com marcadores categorizados; etiquetas de fonte/data embutidas em cada bloco; barra de contexto “o que significa / o que não significa”.
+**Elementos de assinatura:** linha vertical de trajetória; etiquetas documentais de fonte e data; bloco “o que significa / o que não significa”; ficha de evidências com marcos.
 
-**Interação:** filtros e tabs alteram o recorte sem perder o contexto do político; detalhes aparecem progressivamente; cada número abre sua explicação e fonte.
+**Tipografia:** títulos com personalidade editorial e interface sans-serif de alta legibilidade; identificadores e referências podem usar estilo monoespacial com parcimônia.
 
-**Animação:** transições curtas e discretas entre seções, skeletons no carregamento e confirmação sutil ao acompanhar. Sem confetes, pódios ou gamificação.
+**Voz:** direta, explicativa, serena e não partidária. Exemplos: “Veja o que está documentado.” e “Fonte, data e contexto em cada informação.”
 
-**Tipografia:** sans-serif legível para interface e números; títulos com peso forte e escala editorial. Evitar estética futurista ou condensada.
+**Marca:** wordmark DataDemocracia com símbolo de camadas conectadas representando fonte, contexto e evidência. Evitar urna, bandeira, estrela ou qualquer símbolo partidário como elemento central.
 
-**Essência da marca:** histórico verificável do político brasileiro para cidadãos que querem entender antes de julgar. Personalidade: serena, rigorosa, acessível.
+## Fluxo de produto
 
-**Voz:** direta, explicativa e não partidária. Exemplos: “Veja o que está documentado.” / “Sem achismo: fonte, data e contexto em cada informação.”
+1. A pessoa busca um político, tema, cidade ou promessa.
+2. A plataforma apresenta a identidade e o recorte temporal.
+3. O perfil mostra trajetória, compromissos, atuação e integridade com limites.
+4. Cada status abre sua fonte, regra e evidência.
+5. A pessoa pode comparar fatos ou acompanhar atualizações.
+6. Correções preservam o histórico e não alteram automaticamente o publicado.
 
-**Marca:** wordmark “DataDemocracia” com destaque tipográfico em “Data” e um pequeno símbolo de três camadas/fichas conectadas representando fonte, contexto e evidência; não usar urna, bandeira ou estrela partidária como ícone principal.
+## Ordem de implementação
 
-**Cor proprietária:** azul-petróleo profundo `#0F4C5C`, usado em ações principais e detalhes de identidade.
+1. Consultas tipadas para catálogo, promessas e evidências.
+2. Integração TSE para candidaturas e propostas de governo.
+3. Histórico de revisão, correções e exportação.
+4. Neon Auth e monitoramento persistente.
+5. Câmara e Senado para recorte parlamentar pequeno.
+6. Radar analítico com métricas oficiais e tabelas acessíveis.
+7. Exploração opcional de convergência em pautas, sem recomendação de voto.
+
+## Regras de produto
+
+- Nenhuma nota geral de “melhor político”.
+- Nenhuma acusação sem estado jurídico, fonte e contexto.
+- Nenhuma inferência a partir de ausência de registro.
+- Nenhum hash, protocolo ou estado “em tempo real” fictício.
+- Nenhuma métrica sem período, denominador e explicação.
+- Nenhum dado real apresentado como demonstrativo ou o contrário.
+- O acesso público à leitura não depende de login ou doação.
 
 ## Estrutura de projeto
 
-- `client/src/App.tsx`: rotas e composição global.
-- `client/src/pages/`: Home, Search, PoliticianProfile, Promises, PromiseDetail, Compare, Monitoring, Methodology.
-- `client/src/components/datademocracia/`: componentes de marca e dados.
-- `client/src/data/`: fixtures demonstrativas e tipos futuros.
-- `client/src/index.css`: tokens, tipografia, responsividade e componentes visuais.
-- `public/manus-routes.json`: manifesto de rotas.
-- `server/` e `drizzle/`: infraestrutura preparada para a fase de dados reais; não ampliar nesta entrega salvo necessidade.
-
-## Critérios de aceitação da implementação
-
-- A home explica a proposta e permite iniciar busca.
-- A busca apresenta resultados demonstrativos por categoria e filtros.
-- O perfil possui overview, cards, trajetória, promessas, atuação e integridade.
-- A promessa possui detalhe com fonte, status, competência e evidências.
-- A comparação não usa ranking geral nem cores partidárias.
-- O monitoramento possui ações reais no protótipo e feedback visual.
-- Metodologia exibe fonte, data, cadeia de evidência e limitações.
-- Todas as rotas funcionam com navegação interna.
-- Desktop e mobile possuem layouts utilizáveis.
-- Status são comunicados por texto e não apenas por cor.
-- Não há nomes reais associados a acusações ou processos no conteúdo demonstrativo.
-- TypeScript e build passam sem erros.
+Consulte `docs/ARQUITETURA.md` para o mapa técnico, `docs/MODELO-DE-DADOS.md` para a proveniência e `docs/OPERACAO.md` para execução e publicação. O backlog executável está em `TODO.md`; o roadmap completo está em `docs/ROADMAP.md`.

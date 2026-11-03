@@ -33,8 +33,8 @@ const questions = [
     a: "Significa que a informação não foi localizada ou não está disponível naquele recorte. Ausência de registro não é resultado zero e não prova que algo não aconteceu.",
   },
   {
-    q: "Como a IA participa do DataDemocracia?",
-    a: "A IA ajuda a extrair, classificar e explicar documentos. Ela não decide sozinha se uma promessa foi cumprida, se alguém cometeu um crime ou quem é o melhor político.",
+    q: "Como os registros são revisados?",
+    a: "Cada registro passa por conferência de fonte, escopo, data e contexto. Classificações sensíveis devem preservar a evidência original, registrar limitações e permitir correção pública.",
   },
   {
     q: "Como contestar uma informação?",
