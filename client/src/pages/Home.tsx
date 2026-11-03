@@ -8,8 +8,15 @@ import {
   UsersRound,
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { politicians, sources, themes, updates } from "@/data/demo";
+import {
+  dataSourceLabel,
+  fetchPublicPoliticians,
+  isNeonConfigured,
+  mergePublicPoliticians,
+} from "@/lib/neon";
 import {
   PageShell,
   SearchBox,
@@ -19,6 +26,28 @@ import {
 
 export default function Home() {
   const [, navigate] = useLocation();
+  const [directory, setDirectory] = useState(politicians);
+  const [usingLiveDirectory, setUsingLiveDirectory] = useState(false);
+
+  useEffect(() => {
+    if (!isNeonConfigured) return;
+
+    let active = true;
+    fetchPublicPoliticians()
+      .then(records => {
+        if (!active || records.length === 0) return;
+        setDirectory(mergePublicPoliticians(records));
+        setUsingLiveDirectory(true);
+      })
+      .catch(() => {
+        // Keep the demonstrative catalog available during a temporary API failure.
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <PageShell>
       <section className="hero-section">
@@ -51,7 +80,10 @@ export default function Home() {
           <div className="hero-aside-top">
             <span>Em foco agora</span>
             <span className="live-indicator">
-              <i /> dados demonstrativos
+              <i />{" "}
+              {usingLiveDirectory
+                ? "catálogo conectado"
+                : "dados demonstrativos"}
             </span>
           </div>
           <div className="document-stack">
@@ -161,7 +193,7 @@ export default function Home() {
           }
         />
         <div className="politician-grid">
-          {politicians.map(politician => (
+          {directory.map(politician => (
             <Link
               href={`/politico/${politician.id}`}
               className="politician-card"
@@ -185,7 +217,13 @@ export default function Home() {
                 <h3>{politician.shortName}</h3>
                 <p>{politician.summary}</p>
                 <div className="politician-card-foot">
-                  <SourcePill source="TSE · demonstrativo" />
+                  <SourcePill
+                    source={
+                      usingLiveDirectory
+                        ? dataSourceLabel
+                        : "TSE · demonstrativo"
+                    }
+                  />
                   <ArrowRight size={16} />
                 </div>
               </div>

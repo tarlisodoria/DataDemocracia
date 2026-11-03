@@ -1,4 +1,5 @@
 import { createClient } from "@neondatabase/neon-js";
+import { politicians as demoPoliticians, type Politician } from "@/data/demo";
 
 const dataApiUrl = import.meta.env.VITE_NEON_DATA_API_URL?.trim();
 const authUrl = import.meta.env.VITE_NEON_AUTH_URL?.trim();
@@ -46,4 +47,56 @@ export async function fetchPublicPoliticians(): Promise<PoliticianRecord[]> {
 
   if (error) throw error;
   return (data ?? []) as PoliticianRecord[];
+}
+
+/**
+ * Keeps the editorial fields used by the MVP while allowing the public
+ * identity fields to come from Neon. New records remain intentionally modest
+ * until their dossier, promises and evidence have been reviewed.
+ */
+export function mergePublicPoliticians(
+  records: PoliticianRecord[]
+): Politician[] {
+  if (records.length === 0) return demoPoliticians;
+
+  return records.map(record => {
+    const fallback = demoPoliticians.find(item => item.id === record.slug);
+    if (fallback) {
+      return {
+        ...fallback,
+        name: record.name,
+        shortName: record.name,
+        role: record.role,
+        party: record.party ?? fallback.party,
+        state: record.state ?? fallback.state,
+        city: record.city ?? fallback.city,
+        period: record.period ?? fallback.period,
+        portrait: record.portrait_url ?? fallback.portrait,
+      };
+    }
+
+    const isCandidacy = record.role.toLowerCase().includes("candidat");
+    return {
+      id: record.slug,
+      name: record.name,
+      shortName: record.name,
+      role: record.role,
+      party: record.party ?? "Partido não informado",
+      state: record.state ?? "UF não informada",
+      city: record.city ?? "Município não informado",
+      period: record.period ?? "Período não informado",
+      portrait: record.portrait_url ?? "",
+      type: isCandidacy ? "candidatura" : "mandato",
+      summary:
+        "Perfil público em fase de catalogação. Consulte as fontes e o histórico de revisão antes de tirar conclusões.",
+      elections: 0,
+      wins: 0,
+      mandates: 0,
+      promises: 0,
+      tracked: false,
+      timeline: [],
+      promisesList: [],
+      stats: [],
+    };
+  });
 }
