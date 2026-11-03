@@ -8,10 +8,16 @@ import {
   UsersRound,
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { politicians } from "@/data/demo";
+import {
+  dataSourceLabel,
+  fetchPublicPoliticians,
+  isNeonConfigured,
+  mergePublicPoliticians,
+} from "@/lib/neon";
 import {
   Breadcrumbs,
   PageShell,
@@ -28,9 +34,31 @@ export default function SearchPage() {
   const [role, setRole] = useState("Todos os cargos");
   const [stateFilter, setStateFilter] = useState("Todos os estados");
   const [situation, setSituation] = useState("Todas as situações");
+  const [directory, setDirectory] = useState(politicians);
+  const [usingLiveDirectory, setUsingLiveDirectory] = useState(false);
+
+  useEffect(() => {
+    if (!isNeonConfigured) return;
+
+    let active = true;
+    fetchPublicPoliticians()
+      .then(records => {
+        if (!active || records.length === 0) return;
+        setDirectory(mergePublicPoliticians(records));
+        setUsingLiveDirectory(true);
+      })
+      .catch(() => {
+        // Keep search usable with the local catalog during a temporary API failure.
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const results = useMemo(
     () =>
-      politicians.filter(
+      directory.filter(
         p =>
           (!query ||
             `${p.name} ${p.role} ${p.party} ${p.city} ${p.state}`
@@ -45,7 +73,7 @@ export default function SearchPage() {
             (situation === "Em exercício" && p.type === "mandato") ||
             (situation === "Candidato não eleito" && p.type === "candidatura"))
       ),
-    [query, role, stateFilter, situation]
+    [directory, query, role, stateFilter, situation]
   );
   return (
     <PageShell
@@ -159,8 +187,9 @@ export default function SearchPage() {
           <div className="filter-tip">
             <ShieldIcon />
             <p>
-              Dados demonstrativos para validação do protótipo. As fontes reais
-              entram na próxima etapa.
+              {usingLiveDirectory
+                ? `Catálogo público conectado ao Neon. ${dataSourceLabel}.`
+                : "Dados demonstrativos para validação do protótipo. As fontes reais entram na próxima etapa."}
             </p>
           </div>
         </aside>
@@ -214,7 +243,13 @@ export default function SearchPage() {
                       {politician.role} · {politician.party} ·{" "}
                       {politician.period}
                     </p>
-                    <SourcePill source="TSE · registro demonstrativo" />
+                    <SourcePill
+                      source={
+                        usingLiveDirectory
+                          ? dataSourceLabel
+                          : "TSE · registro demonstrativo"
+                      }
+                    />
                   </div>
                   <div className="result-side">
                     <span>
