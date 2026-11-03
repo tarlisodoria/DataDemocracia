@@ -118,3 +118,7 @@ docs/
 ## Créditos
 
 Projeto independente criado por **Tarliso Doria**. O DataDemocracia é desenvolvido como uma vitrine de engenharia cívica, design editorial de informação e transparência pública.
+
+## Licença
+
+O código deste repositório é distribuído sob a [MIT License](LICENSE). Dados, documentos, marcas e conteúdos de fontes públicas de terceiros continuam sujeitos às respectivas condições de uso, autoria e licença.
