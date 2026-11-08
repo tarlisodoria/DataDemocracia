@@ -1,5 +1,7 @@
 # DataDemocracia
 
+[![CI](https://github.com/tarlisodoria/DataDemocracia/actions/workflows/ci.yml/badge.svg)](https://github.com/tarlisodoria/DataDemocracia/actions/workflows/ci.yml)
+
 > **Não diga ao cidadão em quem votar. Mostre o que pode ser verificado.**
 
 O DataDemocracia é uma plataforma cívica independente criada por **Tarliso Doria** para organizar dados públicos, documentos oficiais e evidências sobre candidatos, representantes e instituições políticas brasileiras.

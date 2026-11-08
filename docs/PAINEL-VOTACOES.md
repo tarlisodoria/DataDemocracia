@@ -7,6 +7,7 @@ Página própria em `client/explorar/votacoes-2025.html`, publicada em `/explora
 - Fonte: [API Dados Abertos da Câmara](https://dadosabertos.camara.leg.br/swagger/api.html) v2.
 - Escopo: votações do Plenário (`idOrgao=180`) de 01/01 a 31/12/2025.
 - Script: `pnpm dados:votacoes 2025` (`scripts/coletar-votacoes-camara.mjs`).
+- Agendamento: o workflow `dados-votacoes.yml` roda a coleta no dia 1 de cada mês (ou manualmente, escolhendo o ano) e faz commit se o arquivo mudar.
 
 O script lista as votações por trimestre (limite de intervalo da API), busca os votos de cada uma, o detalhe da votação e os temas da proposição principal. São cerca de 2 mil chamadas, com 6 requisições simultâneas e nova tentativa em erro 429/5xx.
 
@@ -47,7 +48,7 @@ Toda seleção vira filtro global: estado, região, cor da legenda, parte de bar
 
 ## Próximos passos
 
-- Rodar a coleta em agendamento e guardar o arquivo original de cada resposta (camada bronze).
+- Guardar o arquivo original de cada resposta da API (camada bronze).
 - Calcular "sem registro" com base nos mandatos em exercício em cada data.
 - Incluir a orientação de bancada para mostrar aderência à orientação do partido.
 - Repetir o painel para o Senado.

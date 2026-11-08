@@ -133,7 +133,7 @@ Cada item deve sair do backlog apenas quando houver código, fonte ou política 
 - [ ] Medir performance de carregamento, tamanho do bundle e tempo de primeira renderização.
 - [ ] Criar monitoramento de disponibilidade da API pública e do endpoint de publicação.
 - [ ] Criar política de logs sem dados pessoais desnecessários.
-- [ ] Adicionar CI com `pnpm check`, `pnpm test` e `pnpm build` a cada push.
+- [x] CI com `pnpm check`, `pnpm test` e `pnpm build` a cada push (`.github/workflows/ci.yml`).
 - [ ] Manter dependências atualizadas e revisar permissões do banco em cada migração.
 
 ## Direção de arquitetura
