@@ -180,6 +180,7 @@ select:focus-visible {
   gap: 7px;
   padding: 8px 10px;
   color: #687678;
+  white-space: nowrap;
   font-size: 13px;
   border-bottom: 2px solid transparent;
   transition: 0.2s ease;

@@ -1,0 +1,2250 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Votações da Câmara 2025</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Painel de exploração com filtro cruzado: toda seleção (mapa, legenda, barra, célula, linha) vira filtro global e recalcula todos os visuais. */
+      :root {
+        --bg: #f3f5f6;
+        --surface: #ffffff;
+        --ink: #13232b;
+        --muted: #5b6b73;
+        --line: #dce3e6;
+        --accent: #0f4c5c;
+        --accent-soft: #e2eef0;
+        --sel: #e0a526;
+        --sim: #0f4c5c;
+        --nao: #b83280;
+        --abst: #a3adb5;
+        --obst: #4b5563;
+        --ghost: #e3e8eb;
+        --r-n: #2e8b57;
+        --r-ne: #d99a1e;
+        --r-co: #b8642a;
+        --r-se: #2f6db5;
+        --r-s: #7e57c2;
+        --display: "Newsreader", Georgia, "Times New Roman", serif;
+        --body: "IBM Plex Sans", "Segoe UI", Roboto, sans-serif;
+        --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #0d1518;
+          --surface: #142026;
+          --ink: #e4ecef;
+          --muted: #93a4ab;
+          --line: #26373e;
+          --accent: #5fb3c4;
+          --accent-soft: #1b3a42;
+          --sel: #f2c14e;
+          --sim: #5fb3c4;
+          --nao: #e77ab8;
+          --abst: #7d8c93;
+          --obst: #b7c1c8;
+          --ghost: #1e2d33;
+          --r-n: #4fb27a;
+          --r-ne: #e9b44a;
+          --r-co: #d98552;
+          --r-se: #5b93d6;
+          --r-s: #a486db;
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #0d1518;
+        --surface: #142026;
+        --ink: #e4ecef;
+        --muted: #93a4ab;
+        --line: #26373e;
+        --accent: #5fb3c4;
+        --accent-soft: #1b3a42;
+        --sel: #f2c14e;
+        --sim: #5fb3c4;
+        --nao: #e77ab8;
+        --abst: #7d8c93;
+        --obst: #b7c1c8;
+        --ghost: #1e2d33;
+        --r-n: #4fb27a;
+        --r-ne: #e9b44a;
+        --r-co: #d98552;
+        --r-se: #5b93d6;
+        --r-s: #a486db;
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font: 15px/1.5 var(--body);
+      }
+      a {
+        color: var(--accent);
+      }
+      .wrap {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 20px 20px 48px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      header.top {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 24px;
+        align-items: end;
+        justify-content: space-between;
+      }
+      .brand {
+        font: 600 13px/1 var(--body);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      h1 {
+        font: 600 clamp(26px, 3.2vw, 38px) / 1.1 var(--display);
+        margin: 6px 0 4px;
+        text-wrap: balance;
+      }
+      .lede {
+        color: var(--muted);
+        max-width: 76ch;
+        margin: 0;
+      }
+      .prov {
+        font: 12px/1.45 var(--mono);
+        color: var(--muted);
+        border: 1px solid var(--line);
+        background: var(--surface);
+        padding: 8px 10px;
+        border-radius: 6px;
+      }
+      .prov b {
+        color: var(--ink);
+        font-weight: 500;
+      }
+      .tag {
+        display: inline-block;
+        font: 600 11px/1 var(--body);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--sel);
+        border: 1px solid currentColor;
+        border-radius: 4px;
+        padding: 4px 6px;
+        margin-bottom: 6px;
+      }
+
+      .filterbar {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: var(--bg);
+        padding: 10px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        border-bottom: 1px solid var(--line);
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+      .lbl {
+        font-size: 13px;
+        color: var(--muted);
+        margin-right: 2px;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        background: var(--accent-soft);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 3px 5px 3px 10px;
+      }
+      .chip button {
+        all: unset;
+        cursor: pointer;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        color: var(--muted);
+      }
+      .chip button:hover,
+      .chip button:focus-visible {
+        background: var(--surface);
+        color: var(--ink);
+        outline: 2px solid var(--accent);
+      }
+      .none {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .btn {
+        font: 500 13px/1 var(--body);
+        background: var(--surface);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 8px 12px;
+        cursor: pointer;
+      }
+      .btn:hover {
+        border-color: var(--accent);
+      }
+      .btn:focus-visible,
+      input:focus-visible,
+      .lg:focus-visible,
+      .st:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .btn[aria-pressed="true"] {
+        background: var(--accent);
+        color: var(--surface);
+        border-color: var(--accent);
+      }
+      .spacer {
+        flex: 1;
+      }
+      input[type="search"] {
+        font: 14px var(--body);
+        background: var(--surface);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 7px 10px;
+        min-width: 230px;
+      }
+      .lg {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font: 500 13px/1 var(--body);
+        color: var(--ink);
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 6px 10px;
+        cursor: pointer;
+      }
+      .lg i {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        display: inline-block;
+      }
+      .lg.off {
+        opacity: 0.38;
+      }
+      .lg.on {
+        border-color: var(--ink);
+        box-shadow: inset 0 -3px 0 var(--sel);
+      }
+      .hint {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        gap: 12px;
+      }
+      .kpi {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px 16px;
+      }
+      .kpi .k {
+        font-size: 12px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .kpi .v {
+        font: 600 28px/1.15 var(--body);
+        font-variant-numeric: tabular-nums;
+        margin: 4px 0 2px;
+      }
+      .kpi .d {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 12px;
+        grid-auto-flow: row dense;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 14px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
+      }
+      .card h2 {
+        font: 600 16px/1.25 var(--body);
+        margin: 0;
+      }
+      .card .q {
+        font-size: 12.5px;
+        color: var(--muted);
+        margin: 0;
+      }
+      .card .src {
+        font: 11px/1.35 var(--mono);
+        color: var(--muted);
+        margin-top: auto;
+        padding-top: 6px;
+        border-top: 1px dashed var(--line);
+      }
+      .c12 {
+        grid-column: span 12;
+      }
+      .c7 {
+        grid-column: span 7;
+      }
+      .c5 {
+        grid-column: span 5;
+      }
+      .c4 {
+        grid-column: span 4;
+      }
+      .c3 {
+        grid-column: span 3;
+      }
+      .rs2 {
+        grid-row: span 2;
+      }
+      .chart {
+        width: 100%;
+        height: 270px;
+      }
+      .chart.sm {
+        height: 220px;
+      }
+      .chart.tall {
+        height: 440px;
+      }
+      @media (max-width: 1100px) {
+        .c7,
+        .c5,
+        .c4,
+        .c3 {
+          grid-column: span 12;
+        }
+        .rs2 {
+          grid-row: auto;
+        }
+      }
+
+      /* Mapa */
+      .mapbox {
+        position: relative;
+        width: 100%;
+        max-width: 560px;
+        margin: 0 auto;
+      }
+      .mapbox svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .st {
+        cursor: pointer;
+        stroke: var(--surface);
+        stroke-width: 1;
+        transition: opacity 0.15s;
+      }
+      .st:hover {
+        stroke: var(--ink);
+        stroke-width: 1.6;
+      }
+      .st.dim {
+        opacity: 0.28;
+      }
+      .st:focus {
+        outline: none;
+      }
+      .st:focus-visible {
+        stroke: var(--accent);
+        stroke-width: 2.5;
+      }
+      .st.sel {
+        stroke: var(--sel);
+        stroke-width: 3;
+      }
+      .mlabel {
+        font: 600 10px var(--body);
+        pointer-events: none;
+        text-anchor: middle;
+        paint-order: stroke;
+        stroke-width: 3px;
+        stroke-linejoin: round;
+      }
+      .mlabel tspan.p {
+        font-weight: 500;
+        font-size: 9px;
+      }
+      .regs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: center;
+      }
+      .shade {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11.5px;
+        color: var(--muted);
+        justify-content: center;
+      }
+      .shade .bar {
+        width: 120px;
+        height: 8px;
+        border-radius: 4px;
+        background: linear-gradient(90deg, #eef1f3, #7d8a91, #222c31);
+      }
+      .tip {
+        position: fixed;
+        z-index: 20;
+        pointer-events: none;
+        background: var(--surface);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 8px 10px;
+        font-size: 12px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+        max-width: 260px;
+        display: none;
+      }
+
+      .tablewrap {
+        overflow: auto;
+        max-height: 420px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 13px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 7px 10px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+      }
+      th {
+        position: sticky;
+        top: 0;
+        background: var(--surface);
+        font-weight: 600;
+        font-size: 12px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        z-index: 1;
+      }
+      td.n,
+      th.n {
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+        white-space: nowrap;
+      }
+      .mono {
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+      tbody tr {
+        cursor: pointer;
+      }
+      tbody tr:hover {
+        background: var(--accent-soft);
+      }
+      tbody tr.sel {
+        background: var(--accent-soft);
+        box-shadow: inset 3px 0 0 var(--sel);
+      }
+      .placar {
+        display: flex;
+        height: 8px;
+        width: 110px;
+        border-radius: 4px;
+        overflow: hidden;
+        background: var(--ghost);
+      }
+      .placar span {
+        display: block;
+        height: 100%;
+      }
+      .vb {
+        display: inline-block;
+        min-width: 24px;
+        text-align: center;
+        font: 600 11px/1 var(--body);
+        padding: 3px 5px;
+        border-radius: 4px;
+        color: #fff;
+      }
+
+      .notes {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 12px;
+      }
+      .notes ul {
+        margin: 0;
+        padding-left: 18px;
+        color: var(--muted);
+        font-size: 13.5px;
+      }
+      .notes li {
+        margin: 3px 0;
+      }
+      .eyebrow {
+        font: 600 11px/1 var(--body);
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .card h2 {
+        text-wrap: balance;
+      }
+      .foot {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        font: 11px/1.3 var(--mono);
+        color: var(--muted);
+        padding-top: 6px;
+      }
+      .foot b {
+        font: 600 11px var(--body);
+        color: var(--accent);
+        letter-spacing: 0.02em;
+      }
+      .story {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 18px 22px;
+        display: grid;
+        gap: 10px;
+      }
+      .story p {
+        margin: 0;
+        max-width: 74ch;
+        font-size: 16.5px;
+        line-height: 1.6;
+      }
+      .story strong {
+        color: var(--accent);
+        font-variant-numeric: tabular-nums;
+      }
+      .story sup a {
+        font: 600 11px var(--mono);
+        text-decoration: none;
+        margin-left: 1px;
+      }
+      .refs {
+        margin: 0;
+        padding-left: 20px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .refs li {
+        margin: 3px 0;
+      }
+      .audit-only {
+        display: none;
+      }
+      body.audit .audit-only {
+        display: table-cell;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .st {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <div>
+          <div class="brand">DataDemocracia · Exploração</div>
+          <h1>Votações nominais do Plenário da Câmara em 2025</h1>
+          <p class="lede">
+            Clique em qualquer elemento: estado, região, cor da legenda, barra,
+            fatia, célula ou linha. Todos os visuais passam a mostrar só aquele
+            recorte. Segure Ctrl (ou Shift) para somar seleções.
+          </p>
+        </div>
+        <div class="prov">
+          <span class="tag">Protótipo</span><br />
+          <a href="/">← DataDemocracia</a><br />
+          Fonte: <b>API Dados Abertos da Câmara (v2)</b><br />
+          Órgão: Plenário · 01/01–31/12/2025<br />
+          Coleta: <b id="coleta"></b>
+        </div>
+      </header>
+
+      <section class="story" id="story" aria-label="Resumo do ano"></section>
+
+      <div class="filterbar">
+        <div class="row" role="group" aria-label="Tipo de voto">
+          <span class="lbl">Tipo de voto:</span>
+          <span id="legend" class="row"></span>
+          <span class="spacer"></span>
+          <label class="lbl" for="dep">Deputado(a)</label>
+          <input
+            id="dep"
+            type="search"
+            list="deplist"
+            placeholder="Digite um nome"
+          />
+          <datalist id="deplist"></datalist>
+          <button class="btn" id="clear" type="button">Limpar filtros</button>
+          <button class="btn" id="audit" type="button" aria-pressed="false">
+            Modo auditoria
+          </button>
+        </div>
+        <div class="row" role="region" aria-label="Filtros ativos">
+          <span class="lbl">Recorte:</span><span id="chips" class="row"></span>
+        </div>
+      </div>
+
+      <section class="kpis" aria-label="Resumo do recorte">
+        <div class="kpi">
+          <div class="k">Votações nominais</div>
+          <div class="v" id="k1"></div>
+          <div class="d" id="k1d"></div>
+        </div>
+        <div class="kpi">
+          <div class="k">Votos no recorte</div>
+          <div class="v" id="k2"></div>
+          <div class="d" id="k2d"></div>
+        </div>
+        <div class="kpi">
+          <div class="k">Votos "Sim"</div>
+          <div class="v" id="k3"></div>
+          <div class="d" id="k3d"></div>
+        </div>
+        <div class="kpi">
+          <div class="k">Sem registro de voto</div>
+          <div class="v" id="k4"></div>
+          <div class="d" id="k4d"></div>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="card c5 rs2">
+          <div class="eyebrow" id="e_mapTitle">Mapa por estado</div>
+          <h2 id="mapTitle"></h2>
+          <p class="q">
+            Cor da região do país; tom mais escuro quando o estado fica acima da
+            média do recorte, mais claro quando fica abaixo. Clique num estado
+            ou numa região.
+          </p>
+          <div class="regs" id="regs" role="group" aria-label="Regiões"></div>
+          <div class="mapbox" id="mapbox"></div>
+          <div class="shade">
+            <span>abaixo da média</span><span class="bar"></span
+            ><span>acima da média</span>
+          </div>
+          <div class="shade" id="mapmedia"></div>
+          <div class="src">
+            Denominador: votos registrados dos deputados de cada UF no recorte.
+            Mapa: @svg-maps/brazil (Victor Cazanave, CC BY 4.0).
+          </div>
+        </div>
+        <div class="card c7">
+          <div class="eyebrow" id="e_hMes">Votos por mês</div>
+          <h2 id="hMes"></h2>
+          <p class="q">
+            Barra cinza: total do ano. Barra colorida: o recorte atual, por tipo
+            de voto. Clique numa cor de um mês para filtrar mês e tipo.
+          </p>
+          <div class="chart" id="chMes"></div>
+        </div>
+        <div class="card c3">
+          <div class="eyebrow" id="e_hTipo">Tipo de voto</div>
+          <h2 id="hTipo"></h2>
+          <p class="q">Clique numa fatia.</p>
+          <div class="chart sm" id="chTipo"></div>
+        </div>
+        <div class="card c4">
+          <div class="eyebrow" id="e_hReg">Por região</div>
+          <h2 id="hReg"></h2>
+          <p class="q">Distribuição dos votos por região. Clique numa cor.</p>
+          <div class="chart sm" id="chReg"></div>
+        </div>
+
+        <div class="card c7">
+          <div class="eyebrow" id="e_hPart">Como cada partido votou</div>
+          <h2 id="hPart"></h2>
+          <p class="q">
+            Ordenado pelo número de deputados, não pelo resultado. Clique numa
+            cor para filtrar partido e tipo; clique no nome para filtrar só o
+            partido.
+          </p>
+          <div class="chart tall" id="chPart"></div>
+          <div class="src">
+            Partido: sigla registrada no último voto do deputado em 2025.
+          </div>
+        </div>
+        <div class="card c5">
+          <div class="eyebrow" id="e_hTema">Temas das proposições</div>
+          <h2 id="hTema"></h2>
+          <p class="q">
+            Votos por tema (classificação da Câmara). Barra cinza: total do ano.
+            Uma votação pode ter mais de um tema.
+          </p>
+          <div class="chart tall" id="chTema"></div>
+          <div class="src">
+            Fonte: /proposicoes/{id}/temas da proposição principal de cada
+            votação.
+          </div>
+        </div>
+
+        <div class="card c12">
+          <div class="eyebrow" id="e_heatTitle">Partido × tema</div>
+          <h2 id="heatTitle"></h2>
+          <p class="q">
+            Cor relativa à média do recorte (±20 pontos). Células vazias têm
+            menos de 30 votos. Clique numa célula para filtrar partido e tema.
+          </p>
+          <div class="chart tall" id="chHeat"></div>
+          <div class="src">
+            Limitação: "Sim" pode significar apoiar ou rejeitar algo, conforme o
+            objeto votado (requerimento, emenda, destaque).
+          </div>
+        </div>
+
+        <div class="card c7">
+          <h2>Votações no recorte</h2>
+          <p class="q">Clique numa linha para isolar a votação.</p>
+          <div class="tablewrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Proposição</th>
+                  <th>O que foi votado</th>
+                  <th>Placar</th>
+                  <th class="n">Sim</th>
+                  <th class="n">Não</th>
+                  <th class="n">Outros</th>
+                  <th class="audit-only">Fonte</th>
+                </tr>
+              </thead>
+              <tbody id="tbVot"></tbody>
+            </table>
+          </div>
+          <div class="src" id="nVot"></div>
+        </div>
+        <div class="card c5">
+          <h2>Deputados no recorte</h2>
+          <p class="q">
+            Em ordem alfabética. Com uma votação isolada, mostra o voto de cada
+            um. Clique para filtrar.
+          </p>
+          <div class="tablewrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Deputado(a)</th>
+                  <th>Partido-UF</th>
+                  <th class="n">Sim</th>
+                  <th class="n">Não</th>
+                  <th class="n">Outros</th>
+                  <th class="n">Sem reg.</th>
+                </tr>
+              </thead>
+              <tbody id="tbDep"></tbody>
+            </table>
+          </div>
+          <div class="src" id="nDep"></div>
+        </div>
+      </section>
+
+      <section class="notes">
+        <div class="card">
+          <h2>O que este painel mostra</h2>
+          <ul>
+            <li>
+              Votos nominais do Plenário da Câmara em 2025, como registrados na
+              API oficial.
+            </li>
+            <li>
+              Distribuição por mês, estado, região, partido e tema, recalculada
+              para cada seleção.
+            </li>
+            <li>Link de cada votação na fonte, no modo auditoria.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h2>O que não mostra</h2>
+          <ul>
+            <li>Votações simbólicas, das comissões ou do Senado.</li>
+            <li>
+              "Sem registro" não é ausência: pode ser falta, licença, missão
+              oficial, presidência da sessão ou suplente fora de exercício.
+            </li>
+            <li>Nenhuma nota, ranking ou avaliação de quem votou "certo".</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h2>Como foi calculado</h2>
+          <ul>
+            <li>
+              "Sem registro" = deputados que votaram em alguma votação de 2025 e
+              não aparecem na lista desta votação.
+            </li>
+            <li>
+              % de um tipo = votos daquele tipo ÷ votos registrados no recorte.
+            </li>
+            <li>
+              Obstrução inclui os registros "Artigo 17" (presidente da sessão).
+            </li>
+          </ul>
+        </div>
+        <div class="card">
+          <h2>Fontes</h2>
+          <ol class="refs">
+            <li id="ref1">
+              Câmara dos Deputados. API Dados Abertos v2,
+              <a
+                href="https://dadosabertos.camara.leg.br/swagger/api.html"
+                target="_blank"
+                rel="noopener"
+                >/votacoes</a
+              >
+              e <span class="mono">/votacoes/{id}/votos</span>, Plenário, 2025.
+            </li>
+            <li id="ref2">
+              Cálculo DataDemocracia: votos "Sim" ÷ votos registrados, por
+              partido, com partidos de 10 ou mais deputados.
+            </li>
+            <li id="ref3">
+              "Sem registro": deputado que votou em ao menos uma votação de 2025
+              e não consta na lista de votos da votação.
+            </li>
+          </ol>
+        </div>
+      </section>
+    </div>
+    <div class="tip" id="tip" role="tooltip"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.1/echarts.min.js"></script>
+    <script>
+      function start(D, BR) {
+        const MESES = [
+          "jan",
+          "fev",
+          "mar",
+          "abr",
+          "mai",
+          "jun",
+          "jul",
+          "ago",
+          "set",
+          "out",
+          "nov",
+          "dez",
+        ];
+        const TIPOS = [
+          { k: "Sim", c: "--sim" },
+          { k: "Não", c: "--nao" },
+          { k: "Abstenção", c: "--abst" },
+          { k: "Obstrução", c: "--obst" },
+        ];
+        const REGS = [
+          {
+            k: "Norte",
+            c: "--r-n",
+            u: ["AC", "AM", "AP", "PA", "RO", "RR", "TO"],
+          },
+          {
+            k: "Nordeste",
+            c: "--r-ne",
+            u: ["AL", "BA", "CE", "MA", "PB", "PE", "PI", "RN", "SE"],
+          },
+          { k: "Centro-Oeste", c: "--r-co", u: ["DF", "GO", "MS", "MT"] },
+          { k: "Sudeste", c: "--r-se", u: ["ES", "MG", "RJ", "SP"] },
+          { k: "Sul", c: "--r-s", u: ["PR", "RS", "SC"] },
+        ];
+        const UFS = REGS.flatMap(r => r.u).sort();
+        const ufReg = {};
+        REGS.forEach((r, ri) => r.u.forEach(u => (ufReg[u] = ri)));
+
+        const deps = D.deps,
+          vot = D.vot,
+          temas = D.temas;
+        const nd = deps.length,
+          nv = vot.length;
+        document.getElementById("coleta").textContent = D.coleta;
+        // votos como bytes: 0 sim 1 nao 2 abst 3 obst 4 sem registro
+        const CODE = { S: 0, N: 1, A: 2, O: 3, R: 3, ".": 4 };
+        const V = D.v.map(s => {
+          const a = new Uint8Array(s.length);
+          for (let j = 0; j < s.length; j++) a[j] = CODE[s[j]];
+          return a;
+        });
+        const parties = [...new Set(deps.map(d => d[2]))];
+        const psize = {};
+        deps.forEach(d => (psize[d[2]] = (psize[d[2]] || 0) + 1));
+        parties.sort((a, b) => psize[b] - psize[a] || a.localeCompare(b));
+        const pIdx = new Map(parties.map((p, i) => [p, i]));
+        const depP = Int16Array.from(deps, d => pIdx.get(d[2])),
+          depU = Int16Array.from(deps, d => UFS.indexOf(d[3])),
+          depR = Int16Array.from(deps, d => ufReg[d[3]]);
+        const votM = Int8Array.from(vot, v => +v[1].slice(5, 7) - 1);
+        const NT = temas.length;
+        const votT = vot.map(v => (v[5].length ? v[5] : [NT]));
+        const temaName = i => (i >= NT ? "Sem tema informado" : temas[i]);
+
+        const F = {
+          mes: new Set(),
+          tema: new Set(),
+          partido: new Set(),
+          uf: new Set(),
+          regiao: new Set(),
+          voto: new Set(),
+          vot: null,
+          dep: null,
+        };
+        const C = {};
+        function readColors() {
+          const cs = getComputedStyle(document.documentElement);
+          [
+            "--ink",
+            "--muted",
+            "--line",
+            "--surface",
+            "--accent",
+            "--accent-soft",
+            "--sel",
+            "--sim",
+            "--nao",
+            "--abst",
+            "--obst",
+            "--ghost",
+            "--r-n",
+            "--r-ne",
+            "--r-co",
+            "--r-se",
+            "--r-s",
+          ].forEach(k => (C[k] = cs.getPropertyValue(k).trim()));
+        }
+        const tc = t => C[TIPOS[t].c],
+          rc = r => C[REGS[r].c];
+
+        function votOk(i, skip) {
+          if (F.vot !== null && !skip.vot && F.vot !== i) return false;
+          if (F.mes.size && !skip.mes && !F.mes.has(votM[i])) return false;
+          if (F.tema.size && !skip.tema && !votT[i].some(t => F.tema.has(t)))
+            return false;
+          return true;
+        }
+        function depOk(j, skip) {
+          if (F.dep !== null && !skip.dep && F.dep !== j) return false;
+          if (F.partido.size && !skip.partido && !F.partido.has(depP[j]))
+            return false;
+          if (F.uf.size && !skip.uf && !F.uf.has(depU[j])) return false;
+          if (F.regiao.size && !skip.regiao && !F.regiao.has(depR[j]))
+            return false;
+          return true;
+        }
+        const S = (...k) => Object.fromEntries(k.map(x => [x, 1]));
+        // agrega votos em (chaveVotação × chaveDeputado × 5 tipos). kv: i-> int | int[]; kd: j-> int
+        function agg(skip, kv, n1, kd, n2) {
+          const out = new Int32Array(n1 * n2 * 5);
+          const vi = [],
+            dj = [];
+          for (let i = 0; i < nv; i++) if (votOk(i, skip)) vi.push(i);
+          for (let j = 0; j < nd; j++) if (depOk(j, skip)) dj.push(j);
+          const tOk = F.voto.size && !skip.voto ? F.voto : null;
+          const kdv = kd ? Int32Array.from(dj, kd) : null;
+          for (const i of vi) {
+            const row = V[i];
+            let ks = kv ? kv(i) : 0;
+            if (!Array.isArray(ks)) ks = [ks];
+            for (const k1 of ks) {
+              const b = k1 * n2;
+              for (let x = 0; x < dj.length; x++) {
+                const c = row[dj[x]];
+                if (tOk && (c === 4 || !tOk.has(c))) continue;
+                out[(b + (kdv ? kdv[x] : 0)) * 5 + c]++;
+              }
+            }
+          }
+          out.nv = vi.length;
+          out.nd = dj.length;
+          return out;
+        }
+        const cell = (a, k, t) => a[k * 5 + t];
+        const regd = (a, k) =>
+          a[k * 5] + a[k * 5 + 1] + a[k * 5 + 2] + a[k * 5 + 3];
+        const fmt = n => n.toLocaleString("pt-BR");
+        const pct = (a, b) =>
+          b
+            ? ((100 * a) / b).toLocaleString("pt-BR", {
+                maximumFractionDigits: 1,
+              }) + "%"
+            : "sem dado";
+        const focusT = () => (F.voto.size === 1 ? [...F.voto][0] : 0);
+        function esc(s) {
+          return String(s).replace(
+            /[&<>"]/g,
+            c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]
+          );
+        }
+
+        const MESF = [
+          "janeiro",
+          "fevereiro",
+          "março",
+          "abril",
+          "maio",
+          "junho",
+          "julho",
+          "agosto",
+          "setembro",
+          "outubro",
+          "novembro",
+          "dezembro",
+        ];
+        const UFN = {
+          AC: "Acre",
+          AL: "Alagoas",
+          AP: "Amapá",
+          AM: "Amazonas",
+          BA: "Bahia",
+          CE: "Ceará",
+          DF: "Distrito Federal",
+          ES: "Espírito Santo",
+          GO: "Goiás",
+          MA: "Maranhão",
+          MT: "Mato Grosso",
+          MS: "Mato Grosso do Sul",
+          MG: "Minas Gerais",
+          PA: "Pará",
+          PB: "Paraíba",
+          PR: "Paraná",
+          PE: "Pernambuco",
+          PI: "Piauí",
+          RJ: "Rio de Janeiro",
+          RN: "Rio Grande do Norte",
+          RS: "Rio Grande do Sul",
+          RO: "Rondônia",
+          RR: "Roraima",
+          SC: "Santa Catarina",
+          SP: "São Paulo",
+          SE: "Sergipe",
+          TO: "Tocantins",
+        };
+        const H = (id, txt) => {
+          document.getElementById(id).textContent = txt;
+        };
+        const q = t => "“" + TIPOS[t].k + "”";
+        // extremos de uma lista [{nome, n, r}] com base mínima; devolve null se não houver dois itens
+        function ext(list, min) {
+          const ok = list
+            .filter(x => x.r >= min)
+            .map(x => ({ ...x, p: x.n / x.r }));
+          if (ok.length < 2) return null;
+          ok.sort((a, b) => a.p - b.p);
+          return { lo: ok[0], hi: ok[ok.length - 1] };
+        }
+        // seleção estilo BI: clique substitui, Ctrl/Shift soma
+        const multi = e => !!(e && (e.ctrlKey || e.metaKey || e.shiftKey));
+        function pick(dim, v, e) {
+          if (!multi(e)) {
+            if (dim === "uf") F.regiao.clear();
+            if (dim === "regiao") F.uf.clear();
+          }
+          const s = F[dim];
+          if (multi(e)) {
+            s.has(v) ? s.delete(v) : s.add(v);
+          } else if (s.size === 1 && s.has(v)) s.clear();
+          else {
+            s.clear();
+            s.add(v);
+          }
+          render();
+        }
+        function pick2(d1, v1, d2, v2, e) {
+          const a = F[d1],
+            b = F[d2];
+          if (multi(e)) {
+            a.add(v1);
+            b.add(v2);
+          } else if (a.size === 1 && a.has(v1) && b.size === 1 && b.has(v2)) {
+            a.clear();
+            b.clear();
+          } else {
+            a.clear();
+            a.add(v1);
+            b.clear();
+            b.add(v2);
+          }
+          render();
+        }
+
+        const charts = {};
+        function mk(id) {
+          const c = echarts.init(document.getElementById(id));
+          charts[id] = c;
+          return c;
+        }
+        const base = () => ({
+          textStyle: {
+            fontFamily: "IBM Plex Sans, Segoe UI, sans-serif",
+            color: C["--ink"],
+          },
+          animationDuration: 250,
+          animationDurationUpdate: 250,
+          tooltip: {
+            backgroundColor: C["--surface"],
+            borderColor: C["--line"],
+            textStyle: { color: C["--ink"], fontSize: 12 },
+            confine: true,
+          },
+        });
+        const ax = () => ({
+          axisLine: { lineStyle: { color: C["--line"] } },
+          axisTick: { show: false },
+          axisLabel: { color: C["--muted"], fontSize: 11 },
+          splitLine: { lineStyle: { color: C["--line"], type: "dashed" } },
+        });
+        const dimT = t => F.voto.size && !F.voto.has(t);
+
+        // legenda global
+        const lgBox = document.getElementById("legend");
+        TIPOS.forEach((t, ti) => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "lg";
+          b.dataset.t = ti;
+          b.innerHTML = `<i></i>${t.k}`;
+          b.onclick = e => pick("voto", ti, e);
+          lgBox.appendChild(b);
+        });
+        const rgBox = document.getElementById("regs");
+        REGS.forEach((r, ri) => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "lg";
+          b.dataset.r = ri;
+          b.innerHTML = `<i></i>${r.k}`;
+          b.onclick = e => pick("regiao", ri, e);
+          rgBox.appendChild(b);
+        });
+
+        // mapa SVG
+        const NS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(NS, "svg");
+        svg.setAttribute("viewBox", BR.viewBox);
+        svg.setAttribute("role", "group");
+        svg.setAttribute("aria-label", "Mapa do Brasil por estado");
+        const gS = document.createElementNS(NS, "g"),
+          gL = document.createElementNS(NS, "g");
+        svg.append(gS, gL);
+        document.getElementById("mapbox").appendChild(svg);
+        const tip = document.getElementById("tip");
+        const stEl = {},
+          lbEl = {};
+        UFS.forEach((u, ui) => {
+          const p = document.createElementNS(NS, "path");
+          p.setAttribute("d", BR.paths[u]);
+          p.setAttribute("class", "st");
+          p.setAttribute("tabindex", "0");
+          p.setAttribute("role", "button");
+          p.addEventListener("click", e => pick("uf", ui, e));
+          p.addEventListener("keydown", e => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              pick("uf", ui, e);
+            }
+          });
+          p.addEventListener("mousemove", e => {
+            tip.style.display = "block";
+            tip.innerHTML = p.dataset.tip;
+            const x = Math.min(e.clientX + 14, innerWidth - 270);
+            tip.style.left = x + "px";
+            tip.style.top = e.clientY + 14 + "px";
+          });
+          p.addEventListener("mouseleave", () => (tip.style.display = "none"));
+          gS.appendChild(p);
+          stEl[u] = p;
+        });
+        requestAnimationFrame(() =>
+          UFS.forEach(u => {
+            const b = stEl[u].getBBox();
+            if (b.width * b.height < 900) return;
+            const t = document.createElementNS(NS, "text");
+            t.setAttribute("class", "mlabel");
+            t.setAttribute("x", b.x + b.width / 2);
+            t.setAttribute("y", b.y + b.height / 2);
+            const OFF = {
+              PE: [0, -2],
+              AL: [0, 0],
+              RJ: [4, 4],
+              ES: [3, 0],
+              SC: [2, 0],
+              GO: [2, 6],
+              MS: [0, 4],
+              PA: [0, 8],
+              MG: [0, 4],
+              BA: [-6, 4],
+              PI: [-2, 6],
+              MA: [-6, 4],
+              AM: [0, 6],
+              TO: [2, 6],
+              AP: [0, 6],
+              RR: [0, 4],
+            };
+            const o = OFF[u] || [0, 0];
+            t.setAttribute("transform", `translate(${o[0]},${o[1]})`);
+            const a = document.createElementNS(NS, "tspan");
+            a.textContent = u;
+            const c = document.createElementNS(NS, "tspan");
+            c.setAttribute("class", "p");
+            c.setAttribute("x", b.x + b.width / 2);
+            c.setAttribute("dy", "1.1em");
+            t.append(a, c);
+            gL.appendChild(t);
+            lbEl[u] = { t, c };
+            paintMap();
+          })
+        );
+
+        function mix(a, b, k) {
+          const pa = a.match(/\w\w/g).map(h => parseInt(h, 16)),
+            pb = b.match(/\w\w/g).map(h => parseInt(h, 16));
+          return (
+            "#" +
+            pa
+              .map((x, i) =>
+                Math.round(x + (pb[i] - x) * k)
+                  .toString(16)
+                  .padStart(2, "0")
+              )
+              .join("")
+          );
+        }
+        function lum(h) {
+          const p = h.match(/\w\w/g).map(x => parseInt(x, 16) / 255);
+          return 0.2126 * p[0] + 0.7152 * p[1] + 0.0722 * p[2];
+        }
+        let mapState = null;
+        function paintMap() {
+          if (!mapState) return;
+          const { a, ft, avg } = mapState;
+          UFS.forEach((u, ui) => {
+            const el = stEl[u];
+            const r = regd(a, ui),
+              n = cell(a, ui, ft),
+              p = r ? n / r : null;
+            const ri = ufReg[u];
+            let col = rc(ri);
+            if (p !== null && avg !== null) {
+              const d = Math.max(-1, Math.min(1, (p - avg) / 0.12));
+              col =
+                d >= 0
+                  ? mix(col, "#101820", d * 0.45)
+                  : mix(col, "#ffffff", -d * 0.6);
+            } else col = C["--ghost"];
+            el.setAttribute("fill", col);
+            el.classList.toggle("sel", F.uf.has(ui));
+            el.classList.toggle(
+              "dim",
+              (F.uf.size && !F.uf.has(ui)) ||
+                (F.regiao.size && !F.regiao.has(ri))
+            );
+            el.dataset.tip = `<b>${u}</b> · ${REGS[ri].k}<br>${p === null ? "Sem votos no recorte" : `${pct(n, r)} de "${TIPOS[ft].k}"`}<br><span style="color:${C["--muted"]}">Base: ${fmt(r)} votos registrados</span>`;
+            el.setAttribute(
+              "aria-label",
+              `${u}: ${p === null ? "sem votos" : pct(n, r) + " " + TIPOS[ft].k}`
+            );
+            const L = lbEl[u];
+            if (L) {
+              L.c.textContent = p === null ? "—" : Math.round(p * 100) + "%";
+              const dark = lum(col) < 0.45;
+              L.t.setAttribute("fill", dark ? "#fff" : "#13232B");
+              L.t.setAttribute(
+                "stroke",
+                dark ? "rgba(0,0,0,.35)" : "rgba(255,255,255,.6)"
+              );
+              L.t.style.opacity = el.classList.contains("dim") ? 0.35 : 1;
+            }
+          });
+        }
+
+        function chipsRender() {
+          const P = [];
+          F.voto.forEach(v => P.push(["voto", v, "Voto: " + TIPOS[v].k]));
+          F.mes.forEach(v => P.push(["mes", v, "Mês: " + MESES[v]]));
+          F.regiao.forEach(v => P.push(["regiao", v, "Região: " + REGS[v].k]));
+          F.uf.forEach(v => P.push(["uf", v, "UF: " + UFS[v]]));
+          F.partido.forEach(v =>
+            P.push(["partido", v, "Partido: " + parties[v]])
+          );
+          F.tema.forEach(v => P.push(["tema", v, "Tema: " + temaName(v)]));
+          if (F.vot !== null)
+            P.push([
+              "vot",
+              F.vot,
+              "Votação: " +
+                (vot[F.vot][3] || vot[F.vot][0]) +
+                " · " +
+                vot[F.vot][1].split("-").reverse().join("/"),
+            ]);
+          if (F.dep !== null)
+            P.push(["dep", F.dep, "Deputado(a): " + deps[F.dep][1]]);
+          const box = document.getElementById("chips");
+          box.innerHTML = "";
+          if (!P.length) {
+            box.innerHTML =
+              '<span class="none">Todo o ano de 2025, todos os deputados, todos os tipos de voto</span>';
+            return "todo o ano";
+          }
+          P.forEach(([k, v, l]) => {
+            const c = document.createElement("span");
+            c.className = "chip";
+            c.textContent = l;
+            const b = document.createElement("button");
+            b.type = "button";
+            b.setAttribute("aria-label", "Remover " + l);
+            b.textContent = "×";
+            b.onclick = () => {
+              if (k === "vot") F.vot = null;
+              else if (k === "dep") {
+                F.dep = null;
+                document.getElementById("dep").value = "";
+              } else F[k].delete(v);
+              render();
+            };
+            c.appendChild(b);
+            box.appendChild(c);
+          });
+          return P.map(p => p[2]).join(" · ");
+        }
+
+        function render() {
+          readColors();
+          const rec = chipsRender();
+          document.querySelectorAll("#legend .lg").forEach(b => {
+            const t = +b.dataset.t;
+            b.querySelector("i").style.background = tc(t);
+            b.classList.toggle("on", F.voto.has(t));
+            b.classList.toggle("off", dimT(t));
+            b.setAttribute("aria-pressed", F.voto.has(t));
+          });
+          document.querySelectorAll("#regs .lg").forEach(b => {
+            const r = +b.dataset.r;
+            b.querySelector("i").style.background = rc(r);
+            b.classList.toggle("on", F.regiao.has(r));
+            b.classList.toggle("off", F.regiao.size && !F.regiao.has(r));
+            b.setAttribute("aria-pressed", F.regiao.has(r));
+          });
+          const ft = focusT();
+
+          // KPIs
+          const all = agg({}, null, 1, null, 1),
+            noT = agg(S("voto"), null, 1, null, 1);
+          const tot = all[0] + all[1] + all[2] + all[3],
+            reg = regd(noT, 0),
+            sem = noT[4];
+          document.getElementById("k1").textContent = fmt(all.nv);
+          document.getElementById("k1d").textContent =
+            "de " + fmt(nv) + " votações nominais em 2025";
+          document.getElementById("k2").textContent = fmt(tot);
+          document.getElementById("k2d").textContent = F.voto.size
+            ? "só os tipos selecionados, " + fmt(all.nd) + " deputados"
+            : fmt(all.nd) +
+              " deputados × " +
+              fmt(all.nv) +
+              ' votações, sem os "sem registro"';
+          document.getElementById("k3").textContent = pct(noT[0], reg);
+          document.getElementById("k3d").textContent =
+            fmt(noT[0]) + " de " + fmt(reg) + " votos registrados";
+          document.getElementById("k4").textContent = pct(sem, reg + sem);
+          document.getElementById("k4d").textContent =
+            fmt(sem) + " casos. Não é sinônimo de falta.";
+
+          // Mapa (ignora UF/região/tipo para mostrar todos os estados)
+          {
+            const a = agg(
+              S("uf", "regiao", "voto"),
+              null,
+              1,
+              j => depU[j],
+              UFS.length
+            );
+            const ref = agg(S("voto"), null, 1, null, 1);
+            const rr = regd(ref, 0);
+            const avg = rr ? ref[ft] / rr : null;
+            mapState = { a, ft, avg };
+            paintMap();
+            {
+              const e = ext(
+                UFS.map((u, ui) => ({
+                  k: UFN[u],
+                  n: cell(a, ui, ft),
+                  r: regd(a, ui),
+                })),
+                300
+              );
+              H(
+                "mapTitle",
+                e
+                  ? `${e.hi.k} teve a maior proporção de ${q(ft)} (${pct(e.hi.n, e.hi.r)}); ${e.lo.k}, a menor (${pct(e.lo.n, e.lo.r)})`
+                  : `${pct(ref[ft], rr)} dos votos do recorte foram ${q(ft)}`
+              );
+              H("e_mapTitle", `Mapa · % de ${q(ft)} por estado`);
+            }
+            document.getElementById("mapmedia").textContent =
+              `Média do recorte: ${pct(ref[ft], rr)} de "${TIPOS[ft].k}"`;
+          }
+
+          // Mês
+          {
+            const a = agg(S("mes", "voto"), i => votM[i], 12, null, 1),
+              g = GHOST.mes;
+            {
+              let bm = -1,
+                bv = 0,
+                tt = 0;
+              for (let m = 0; m < 12; m++) {
+                const r = regd(a, m);
+                tt += r;
+                if (r > bv) {
+                  bv = r;
+                  bm = m;
+                }
+              }
+              H(
+                "hMes",
+                bm < 0
+                  ? "Nenhum voto no recorte"
+                  : `${MESF[bm][0].toUpperCase() + MESF[bm].slice(1)} concentrou ${pct(bv, tt)} dos votos do recorte (${fmt(bv)})`
+              );
+            }
+            const c = charts.chMes || mk("chMes");
+            const ser = TIPOS.map((t, ti) => ({
+              name: t.k,
+              type: "bar",
+              stack: "r",
+              barWidth: "46%",
+              data: MESES.map((_, m) => ({
+                value: cell(a, m, ti),
+                itemStyle: {
+                  color: tc(ti),
+                  opacity: dimT(ti) || (F.mes.size && !F.mes.has(m)) ? 0.22 : 1,
+                },
+              })),
+              emphasis: { focus: "none" },
+            }));
+            c.setOption(
+              {
+                ...base(),
+                grid: {
+                  left: 8,
+                  right: 12,
+                  top: 14,
+                  bottom: 8,
+                  containLabel: true,
+                },
+                tooltip: {
+                  ...base().tooltip,
+                  trigger: "axis",
+                  axisPointer: { type: "shadow" },
+                  formatter: ps => {
+                    const m = ps[0].dataIndex;
+                    const r = regd(a, m);
+                    return (
+                      `<b>${MESES[m]}/2025</b><br>` +
+                      TIPOS.map(
+                        (t, ti) => `${t.k}: ${fmt(cell(a, m, ti))}`
+                      ).join("<br>") +
+                      `<br><span style="color:${C["--muted"]}">Recorte: ${fmt(r)} · Total do ano: ${fmt(g[m])}</span>`
+                    );
+                  },
+                },
+                xAxis: {
+                  type: "category",
+                  data: MESES,
+                  ...ax(),
+                  splitLine: { show: false },
+                },
+                yAxis: {
+                  type: "value",
+                  ...ax(),
+                  axisLabel: {
+                    color: C["--muted"],
+                    formatter: v => (v >= 1000 ? v / 1000 + " mil" : v),
+                  },
+                },
+                series: [
+                  {
+                    name: "Total do ano",
+                    type: "bar",
+                    barWidth: "46%",
+                    barGap: "-100%",
+                    silent: true,
+                    itemStyle: { color: C["--ghost"] },
+                    data: g,
+                    z: 1,
+                  },
+                  ...ser.map(s => ({ ...s, z: 2 })),
+                ],
+              },
+              true
+            );
+          }
+
+          // Tipo (rosca)
+          {
+            const a = agg(S("voto"), null, 1, null, 1);
+            const c = charts.chTipo || mk("chTipo");
+            const r = regd(a, 0);
+            H(
+              "hTipo",
+              r
+                ? `${pct(a[ft], r)} dos votos foram ${q(ft)}`
+                : "Sem votos no recorte"
+            );
+            c.setOption(
+              {
+                ...base(),
+                tooltip: {
+                  ...base().tooltip,
+                  trigger: "item",
+                  formatter: p =>
+                    `${p.name}<br><b>${fmt(p.value)}</b> votos · ${pct(p.value, r)}`,
+                },
+                series: [
+                  {
+                    type: "pie",
+                    radius: ["52%", "80%"],
+                    center: ["50%", "52%"],
+                    avoidLabelOverlap: true,
+                    label: {
+                      show: true,
+                      formatter: p =>
+                        p.percent >= 4 ? Math.round(p.percent) + "%" : "",
+                      color: C["--ink"],
+                      fontSize: 11,
+                    },
+                    labelLine: { length: 6, length2: 4 },
+                    itemStyle: { borderColor: C["--surface"], borderWidth: 2 },
+                    data: TIPOS.map((t, ti) => ({
+                      name: t.k,
+                      value: a[ti],
+                      itemStyle: {
+                        color: tc(ti),
+                        opacity: dimT(ti) ? 0.25 : 1,
+                      },
+                      labelLine: { show: r > 0 && a[ti] / r >= 0.04 },
+                    })),
+                    emphasis: { scale: true, scaleSize: 4 },
+                  },
+                ],
+                graphic: [
+                  {
+                    type: "text",
+                    left: "center",
+                    top: "45%",
+                    style: {
+                      text: fmt(r),
+                      fill: C["--ink"],
+                      font: "600 14px IBM Plex Sans, sans-serif",
+                      textAlign: "center",
+                    },
+                  },
+                  {
+                    type: "text",
+                    left: "center",
+                    top: "56%",
+                    style: {
+                      text: "registrados",
+                      fill: C["--muted"],
+                      font: "11px IBM Plex Sans, sans-serif",
+                      textAlign: "center",
+                    },
+                  },
+                ],
+              },
+              true
+            );
+          }
+
+          // Região (100% empilhado)
+          {
+            const a = agg(S("regiao", "voto", "uf"), null, 1, j => depR[j], 5);
+            const c = charts.chReg || mk("chReg");
+            {
+              const e = ext(
+                REGS.map((g, ri) => ({
+                  k: g.k,
+                  n: cell(a, ri, ft),
+                  r: regd(a, ri),
+                })),
+                100
+              );
+              H(
+                "hReg",
+                e
+                  ? `${q(ft)} vai de ${pct(e.lo.n, e.lo.r)} no ${e.lo.k} a ${pct(e.hi.n, e.hi.r)} no ${e.hi.k}`
+                  : "Uma região no recorte"
+              );
+            }
+            c.setOption(
+              {
+                ...base(),
+                grid: {
+                  left: 8,
+                  right: 14,
+                  top: 6,
+                  bottom: 6,
+                  containLabel: true,
+                },
+                tooltip: {
+                  ...base().tooltip,
+                  trigger: "axis",
+                  axisPointer: { type: "shadow" },
+                  formatter: ps => {
+                    const r = ps[0].dataIndex;
+                    const rr = regd(a, r);
+                    return (
+                      `<b>${REGS[r].k}</b><br>` +
+                      TIPOS.map(
+                        (t, ti) =>
+                          `${t.k}: ${pct(cell(a, r, ti), rr)} (${fmt(cell(a, r, ti))})`
+                      ).join("<br>")
+                    );
+                  },
+                },
+                xAxis: { type: "value", max: 100, show: false },
+                yAxis: {
+                  type: "category",
+                  inverse: true,
+                  data: REGS.map(r => r.k),
+                  ...ax(),
+                  splitLine: { show: false },
+                  axisLabel: { color: C["--ink"], fontSize: 11 },
+                  triggerEvent: true,
+                },
+                series: TIPOS.map((t, ti) => ({
+                  name: t.k,
+                  type: "bar",
+                  stack: "r",
+                  barWidth: "62%",
+                  data: REGS.map((_, r) => {
+                    const rr = regd(a, r);
+                    return {
+                      value: rr ? +((100 * cell(a, r, ti)) / rr).toFixed(2) : 0,
+                      itemStyle: {
+                        color: tc(ti),
+                        opacity:
+                          dimT(ti) || (F.regiao.size && !F.regiao.has(r))
+                            ? 0.22
+                            : 1,
+                      },
+                    };
+                  }),
+                })),
+              },
+              true
+            );
+          }
+
+          // Partido
+          {
+            const a = agg(
+              S("partido", "voto"),
+              null,
+              1,
+              j => depP[j],
+              parties.length
+            );
+            const nDep = agg(S("partido", "voto"), null, 1, null, 1);
+            const cnt = new Int32Array(parties.length);
+            for (let j = 0; j < nd; j++)
+              if (depOk(j, S("partido"))) cnt[depP[j]]++;
+            const rows = parties
+              .map((p, pi) => ({ p, pi, r: regd(a, pi), n: cnt[pi] }))
+              .filter(x => x.n > 0 && x.r > 0);
+            {
+              const e = ext(
+                rows.map(x => ({ k: x.p, n: cell(a, x.pi, ft), r: x.r })),
+                300
+              );
+              H(
+                "hPart",
+                e
+                  ? `Entre os partidos, ${q(ft)} variou de ${pct(e.lo.n, e.lo.r)} (${e.lo.k}) a ${pct(e.hi.n, e.hi.r)} (${e.hi.k})`
+                  : rows.length
+                    ? `${rows[0].p}: ${pct(cell(a, rows[0].pi, ft), rows[0].r)} de ${q(ft)}`
+                    : "Sem partidos no recorte"
+              );
+            }
+            const c = charts.chPart || mk("chPart");
+            c._rows = rows;
+            c.setOption(
+              {
+                ...base(),
+                grid: {
+                  left: 8,
+                  right: 16,
+                  top: 4,
+                  bottom: 24,
+                  containLabel: true,
+                },
+                tooltip: {
+                  ...base().tooltip,
+                  trigger: "axis",
+                  axisPointer: { type: "shadow" },
+                  formatter: ps => {
+                    const x = rows[ps[0].dataIndex];
+                    return (
+                      `<b>${x.p}</b> · ${x.n} deputados<br>` +
+                      TIPOS.map(
+                        (t, ti) =>
+                          `${t.k}: ${pct(cell(a, x.pi, ti), x.r)} (${fmt(cell(a, x.pi, ti))})`
+                      ).join("<br>") +
+                      `<br><span style="color:${C["--muted"]}">Base: ${fmt(x.r)} votos registrados</span>`
+                    );
+                  },
+                },
+                xAxis: {
+                  type: "value",
+                  max: 100,
+                  ...ax(),
+                  axisLabel: { color: C["--muted"], formatter: "{value}%" },
+                },
+                yAxis: {
+                  type: "category",
+                  inverse: true,
+                  data: rows.map(x => x.p + " (" + x.n + ")"),
+                  ...ax(),
+                  splitLine: { show: false },
+                  axisLabel: { color: C["--ink"], fontSize: 11 },
+                  triggerEvent: true,
+                },
+                series: TIPOS.map((t, ti) => ({
+                  name: t.k,
+                  type: "bar",
+                  stack: "p",
+                  barMaxWidth: 16,
+                  data: rows.map(x => ({
+                    value: +((100 * cell(a, x.pi, ti)) / x.r).toFixed(2),
+                    itemStyle: {
+                      color: tc(ti),
+                      opacity:
+                        dimT(ti) || (F.partido.size && !F.partido.has(x.pi))
+                          ? 0.22
+                          : 1,
+                    },
+                  })),
+                })),
+              },
+              true
+            );
+          }
+
+          // Tema
+          {
+            const a = agg(S("tema", "voto"), i => votT[i], NT + 1, null, 1),
+              g = GHOST.tema;
+            const rows = [];
+            for (let t = 0; t <= NT; t++) {
+              const r = regd(a, t);
+              if (r > 0 || g[t] > 0) rows.push({ t, r });
+            }
+            rows.sort((x, y) => y.r - x.r || g[y.t] - g[x.t]);
+            const top = rows.slice(0, 15);
+            H(
+              "hTema",
+              top.length && top[0].r
+                ? `${temaName(top[0].t)} reuniu mais votos no recorte: ${fmt(top[0].r)}`
+                : "Sem votos no recorte"
+            );
+            const c = charts.chTema || mk("chTema");
+            c._rows = top;
+            c.setOption(
+              {
+                ...base(),
+                grid: {
+                  left: 8,
+                  right: 16,
+                  top: 4,
+                  bottom: 20,
+                  containLabel: true,
+                },
+                tooltip: {
+                  ...base().tooltip,
+                  trigger: "axis",
+                  axisPointer: { type: "shadow" },
+                  formatter: ps => {
+                    const x = top[ps[0].dataIndex];
+                    return (
+                      `<b>${temaName(x.t)}</b><br>` +
+                      TIPOS.map(
+                        (tt, ti) => `${tt.k}: ${fmt(cell(a, x.t, ti))}`
+                      ).join("<br>") +
+                      `<br><span style="color:${C["--muted"]}">Recorte: ${fmt(x.r)} · Total do ano: ${fmt(g[x.t])}</span>`
+                    );
+                  },
+                },
+                xAxis: {
+                  type: "value",
+                  ...ax(),
+                  axisLabel: {
+                    color: C["--muted"],
+                    formatter: v => (v >= 1000 ? v / 1000 + " mil" : v),
+                  },
+                },
+                yAxis: {
+                  type: "category",
+                  inverse: true,
+                  data: top.map(x => temaName(x.t)),
+                  ...ax(),
+                  splitLine: { show: false },
+                  axisLabel: {
+                    color: C["--ink"],
+                    fontSize: 11,
+                    width: 165,
+                    overflow: "truncate",
+                  },
+                  triggerEvent: true,
+                },
+                series: [
+                  {
+                    name: "Total do ano",
+                    type: "bar",
+                    barWidth: "60%",
+                    barGap: "-100%",
+                    silent: true,
+                    itemStyle: { color: C["--ghost"] },
+                    data: top.map(x => g[x.t]),
+                    z: 1,
+                  },
+                  ...TIPOS.map((tt, ti) => ({
+                    name: tt.k,
+                    type: "bar",
+                    stack: "t",
+                    barWidth: "60%",
+                    z: 2,
+                    data: top.map(x => ({
+                      value: cell(a, x.t, ti),
+                      itemStyle: {
+                        color: tc(ti),
+                        opacity:
+                          dimT(ti) || (F.tema.size && !F.tema.has(x.t))
+                            ? 0.22
+                            : 1,
+                      },
+                    })),
+                  })),
+                ],
+              },
+              true
+            );
+          }
+
+          // Heatmap partido × tema (% do tipo em foco)
+          {
+            const a = agg(
+              S("voto"),
+              i => votT[i],
+              NT + 1,
+              j => depP[j],
+              parties.length
+            );
+            const tt = agg(S("voto"), i => votT[i], NT + 1, null, 1);
+            const tl = [];
+            for (let t = 0; t <= NT; t++) tl.push([t, regd(tt, t)]);
+            tl.sort((x, y) => y[1] - x[1]);
+            const topT = tl
+              .filter(x => x[1] > 0)
+              .slice(0, 10)
+              .map(x => x[0]);
+            const pr = agg(S("voto"), null, 1, j => depP[j], parties.length);
+            const ps = parties
+              .map((p, pi) => pi)
+              .filter(pi => regd(pr, pi) > 0)
+              .slice(0, 16);
+            const ref = agg(S("voto"), null, 1, null, 1),
+              rr = regd(ref, 0),
+              avg = rr ? (100 * ref[ft]) / rr : 50;
+            const data = [];
+            ps.forEach((pi, yi) =>
+              topT.forEach((t, xi) => {
+                const k = t * parties.length + pi;
+                const r = regd(a, k);
+                const v =
+                  r >= 30 ? +((100 * cell(a, k, ft)) / r).toFixed(1) : "-";
+                const on =
+                  (!F.partido.size || F.partido.has(pi)) &&
+                  (!F.tema.size || F.tema.has(t));
+                data.push({
+                  value: [xi, yi, v, r],
+                  itemStyle: { opacity: on ? 1 : 0.3 },
+                });
+              })
+            );
+            const c = charts.chHeat || mk("chHeat");
+            c._ps = ps;
+            c._t = topT;
+            {
+              let best = null;
+              topT.forEach((t, xi) => {
+                const vs = data
+                  .filter(d => d.value[0] === xi && d.value[2] !== "-")
+                  .map(d => d.value[2]);
+                if (vs.length < 2) return;
+                const lo = Math.min(...vs),
+                  hi = Math.max(...vs);
+                if (!best || hi - lo > best.d) best = { t, lo, hi, d: hi - lo };
+              });
+              H(
+                "heatTitle",
+                best
+                  ? `A maior divergência entre partidos está em ${temaName(best.t)}: de ${Math.round(best.lo)}% a ${Math.round(best.hi)}% de ${q(ft)}`
+                  : "Poucos votos para comparar partidos neste recorte"
+              );
+              H("e_heatTitle", `Partido × tema · % de ${q(ft)}`);
+            }
+            c.setOption(
+              {
+                ...base(),
+                grid: {
+                  left: 8,
+                  right: 16,
+                  top: 6,
+                  bottom: 8,
+                  containLabel: true,
+                },
+                tooltip: {
+                  ...base().tooltip,
+                  formatter: p => {
+                    const d = p.value;
+                    return `<b>${parties[ps[d[1]]]}</b> · ${temaName(topT[d[0]])}<br>${d[2] === "-" ? "Menos de 30 votos: não calculado" : d[2].toLocaleString("pt-BR") + '% de "' + TIPOS[ft].k + '"'}<br><span style="color:${C["--muted"]}">Base: ${fmt(d[3])} votos registrados</span>`;
+                  },
+                },
+                xAxis: {
+                  type: "category",
+                  data: topT.map(temaName),
+                  position: "top",
+                  ...ax(),
+                  splitLine: { show: false },
+                  axisLabel: {
+                    color: C["--ink"],
+                    fontSize: 11,
+                    width: 118,
+                    overflow: "break",
+                    interval: 0,
+                    lineHeight: 13,
+                  },
+                },
+                yAxis: {
+                  type: "category",
+                  data: ps.map(pi => parties[pi]),
+                  inverse: true,
+                  ...ax(),
+                  splitLine: { show: false },
+                  axisLabel: { color: C["--ink"], fontSize: 11 },
+                },
+                visualMap: {
+                  dimension: 2,
+                  min: Math.max(0, avg - 20),
+                  max: Math.min(100, avg + 20),
+                  show: false,
+                  inRange: { color: [mix(tc(ft), "#ffffff", 0.85), tc(ft)] },
+                },
+                series: [
+                  {
+                    type: "heatmap",
+                    data,
+                    label: {
+                      show: true,
+                      fontSize: 11,
+                      formatter: p =>
+                        p.value[2] === "-" ? "" : Math.round(p.value[2]),
+                      color: C["--ink"],
+                      textBorderColor: C["--surface"],
+                      textBorderWidth: 2,
+                    },
+                    itemStyle: { borderColor: C["--surface"], borderWidth: 2 },
+                    emphasis: {
+                      itemStyle: { borderColor: C["--sel"], borderWidth: 2 },
+                    },
+                  },
+                ],
+              },
+              true
+            );
+          }
+
+          // Tabela de votações
+          {
+            const a = agg(S("vot", "voto"), i => i, nv, null, 1);
+            const rows = [];
+            for (let i = 0; i < nv; i++) if (votOk(i, S("vot"))) rows.push(i);
+            rows.sort((x, y) => vot[y][1].localeCompare(vot[x][1]) || y - x);
+            const show = rows.slice(0, 300);
+            let h = "";
+            for (const i of show) {
+              const v = vot[i],
+                s = cell(a, i, 0),
+                n = cell(a, i, 1),
+                o = cell(a, i, 2) + cell(a, i, 3),
+                r = s + n + o;
+              const w = k => (r ? (100 * k) / r : 0);
+              h += `<tr data-i="${i}" class="${F.vot === i ? "sel" : ""}" tabindex="0"><td class="mono">${v[1].split("-").reverse().join("/")}</td><td>${v[3] ? esc(v[3]) : '<span class="none">—</span>'}</td><td>${esc(v[2])}</td>
+     <td><div class="placar" title="Sim ${s} · Não ${n} · Outros ${o}"><span style="width:${w(s)}%;background:var(--sim)"></span><span style="width:${w(n)}%;background:var(--nao)"></span><span style="width:${w(o)}%;background:var(--abst)"></span></div></td>
+     <td class="n">${fmt(s)}</td><td class="n">${fmt(n)}</td><td class="n">${fmt(o)}</td><td class="audit-only mono"><a href="https://dadosabertos.camara.leg.br/api/v2/votacoes/${v[0]}/votos" target="_blank" rel="noopener">${v[0]}</a></td></tr>`;
+            }
+            const tb = document.getElementById("tbVot");
+            tb.innerHTML = h;
+            document.getElementById("nVot").textContent =
+              `${fmt(rows.length)} votações${rows.length > 300 ? " (mostrando as 300 mais recentes)" : ""}. Placar só com os deputados do recorte.`;
+            tb.querySelectorAll("tr").forEach(tr => {
+              const go = () => {
+                const i = +tr.dataset.i;
+                F.vot = F.vot === i ? null : i;
+                render();
+              };
+              tr.onclick = go;
+              tr.onkeydown = e => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  go();
+                }
+              };
+            });
+          }
+
+          // Tabela de deputados
+          {
+            const a = agg(S("dep", "voto"), null, 1, j => j, nd);
+            const rows = [];
+            for (let j = 0; j < nd; j++)
+              if (depOk(j, S("dep")) && regd(a, j) + cell(a, j, 4) > 0)
+                rows.push(j);
+            const single = F.vot !== null;
+            let h = "";
+            for (const j of rows) {
+              const d = deps[j],
+                s = cell(a, j, 0),
+                n = cell(a, j, 1),
+                o = cell(a, j, 2) + cell(a, j, 3),
+                z = cell(a, j, 4);
+              let cells;
+              if (single) {
+                const code = V[F.vot][j];
+                const lab = code === 4 ? "—" : TIPOS[code].k;
+                const bg = code === 4 ? C["--ghost"] : tc(code);
+                cells = `<td class="n" colspan="4"><span class="vb" style="background:${bg};color:${code === 4 || code === 2 ? C["--ink"] : "#fff"}">${lab}</span></td>`;
+              } else
+                cells = `<td class="n">${fmt(s)}</td><td class="n">${fmt(n)}</td><td class="n">${fmt(o)}</td><td class="n">${fmt(z)}</td>`;
+              h += `<tr data-j="${j}" class="${F.dep === j ? "sel" : ""}" tabindex="0"><td>${esc(d[1])}</td><td class="mono">${esc(d[2])}-${d[3]}</td>${cells}</tr>`;
+            }
+            const tb = document.getElementById("tbDep");
+            tb.innerHTML = h;
+            document.getElementById("nDep").textContent =
+              `${fmt(rows.length)} deputados com votos no recorte.`;
+            tb.querySelectorAll("tr").forEach(tr => {
+              const go = () => {
+                const j = +tr.dataset.j;
+                F.dep = F.dep === j ? null : j;
+                document.getElementById("dep").value =
+                  F.dep === null
+                    ? ""
+                    : `${deps[j][1]} (${deps[j][2]}-${deps[j][3]})`;
+                render();
+              };
+              tr.onclick = go;
+              tr.onkeydown = e => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  go();
+                }
+              };
+            });
+          }
+        }
+
+        // totais fixos (barra cinza)
+        const GHOST = {
+          mes: new Array(12).fill(0),
+          tema: new Array(NT + 1).fill(0),
+        };
+        for (let i = 0; i < nv; i++) {
+          let r = 0;
+          const row = V[i];
+          for (let j = 0; j < nd; j++) if (row[j] < 4) r++;
+          GHOST.mes[votM[i]] += r;
+          votT[i].forEach(t => (GHOST.tema[t] += r));
+        }
+
+        document.querySelectorAll(".grid .card").forEach(c => {
+          const f = document.createElement("div");
+          f.className = "foot";
+          f.innerHTML = `<span>Fonte: <a href="https://dadosabertos.camara.leg.br" target="_blank" rel="noopener">Câmara dos Deputados</a> · coleta ${D.coleta}</span><b>DataDemocracia</b>`;
+          c.appendChild(f);
+        });
+        {
+          const a = agg({}, null, 1, null, 1),
+            r = regd(a, 0),
+            sem = a[4];
+          const pp = agg({}, null, 1, j => depP[j], parties.length);
+          const e = ext(
+            parties.map((p, pi) => ({
+              k: p,
+              n: cell(pp, pi, 0),
+              r: psize[p] >= 10 ? regd(pp, pi) : 0,
+            })),
+            1
+          );
+          const vm = new Array(12).fill(0);
+          votM.forEach(m => vm[m]++);
+          const bm = vm.indexOf(Math.max(...vm));
+          document.getElementById("story").innerHTML =
+            `<p>Em 2025, o Plenário da Câmara fez <strong>${fmt(nv)} votações nominais</strong>, aquelas em que cada deputado registra o próprio voto no painel eletrônico.<sup><a href="#ref1">1</a></sup></p>` +
+            `<p><strong>${pct(a[0], r)}</strong> dos votos registrados foram “Sim”. Entre os partidos com 10 ou mais deputados, essa proporção foi de <strong>${pct(e.lo.n, e.lo.r)}</strong> (${e.lo.k}) a <strong>${pct(e.hi.n, e.hi.r)}</strong> (${e.hi.k}).<sup><a href="#ref2">2</a></sup></p>` +
+            `<p>${MESF[bm][0].toUpperCase() + MESF[bm].slice(1)} foi o mês com mais votações (${vm[bm]}). Em <strong>${pct(sem, r + sem)}</strong> dos casos não há voto registrado, o que inclui faltas, licenças e suplentes fora de exercício.<sup><a href="#ref3">3</a></sup> Use o painel abaixo para investigar qualquer recorte.</p>`;
+        }
+        readColors();
+        render();
+        const ev = p => p && p.event && p.event.event;
+        charts.chMes.on("click", p => {
+          if (p.seriesName === "Total do ano") return;
+          pick2("mes", p.dataIndex, "voto", p.seriesIndex - 1, ev(p));
+        });
+        charts.chTipo.on("click", p => pick("voto", p.dataIndex, ev(p)));
+        charts.chReg.on("click", p => {
+          if (p.componentType === "yAxis") {
+            pick(
+              "regiao",
+              REGS.findIndex(r => r.k === p.value),
+              ev(p)
+            );
+            return;
+          }
+          pick2("regiao", p.dataIndex, "voto", p.seriesIndex, ev(p));
+        });
+        charts.chPart.on("click", p => {
+          const rows = charts.chPart._rows;
+          if (p.componentType === "yAxis") {
+            const x = rows.find(r => p.value.startsWith(r.p + " ("));
+            if (x) pick("partido", x.pi, ev(p));
+            return;
+          }
+          const x = rows[p.dataIndex];
+          if (x) pick2("partido", x.pi, "voto", p.seriesIndex, ev(p));
+        });
+        charts.chTema.on("click", p => {
+          const rows = charts.chTema._rows;
+          if (p.componentType === "yAxis") {
+            const x = rows.find(r => temaName(r.t) === p.value);
+            if (x) pick("tema", x.t, ev(p));
+            return;
+          }
+          if (p.seriesName === "Total do ano") return;
+          const x = rows[p.dataIndex];
+          if (x) pick2("tema", x.t, "voto", p.seriesIndex - 1, ev(p));
+        });
+        charts.chHeat.on("click", p => {
+          const c = charts.chHeat;
+          pick2("partido", c._ps[p.value[1]], "tema", c._t[p.value[0]], ev(p));
+        });
+        document.getElementById("clear").onclick = () => {
+          ["mes", "tema", "partido", "uf", "regiao", "voto"].forEach(k =>
+            F[k].clear()
+          );
+          F.vot = null;
+          F.dep = null;
+          document.getElementById("dep").value = "";
+          render();
+        };
+        const ab = document.getElementById("audit");
+        ab.onclick = () => {
+          const on = document.body.classList.toggle("audit");
+          ab.setAttribute("aria-pressed", on);
+        };
+        document.getElementById("deplist").innerHTML = deps
+          .map(d => `<option value="${esc(d[1])} (${d[2]}-${d[3]})"></option>`)
+          .join("");
+        document.getElementById("dep").addEventListener("change", e => {
+          const v = e.target.value;
+          const j = deps.findIndex(d => `${d[1]} (${d[2]}-${d[3]})` === v);
+          F.dep = j >= 0 ? j : null;
+          render();
+        });
+        addEventListener("resize", () =>
+          Object.values(charts).forEach(c => c.resize())
+        );
+        const mq = matchMedia("(prefers-color-scheme: dark)");
+        mq.addEventListener && mq.addEventListener("change", render);
+        new MutationObserver(render).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme"],
+        });
+      }
+      const carregar = u =>
+        fetch(u).then(r => {
+          if (!r.ok) throw new Error(u + ": HTTP " + r.status);
+          return r.json();
+        });
+      Promise.all([
+        carregar("dados/votacoes-plenario-2025.json"),
+        carregar("dados/brasil-uf.json"),
+      ])
+        .then(([dados, mapa]) => start(dados, mapa))
+        .catch(err => {
+          console.error(err);
+          document.getElementById("story").innerHTML =
+            "<p>Não foi possível carregar os dados do painel. Recarregue a página; se o erro continuar, os arquivos em <code>/explorar/dados/</code> podem estar indisponíveis.</p>";
+        });
+    </script>
+  </body>
+</html>

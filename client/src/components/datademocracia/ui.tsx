@@ -1,6 +1,7 @@
 import { Link, useLocation } from "wouter";
 import {
   ArrowUpRight,
+  BarChart3,
   BadgeCheck,
   Bell,
   BookOpen,
@@ -39,9 +40,12 @@ export const navItems = [
   { label: "Políticos", href: "/buscar", icon: UsersRound },
   { label: "Promessas", href: "/promessas", icon: Flag },
   { label: "Comparar", href: "/comparar", icon: GitCompareArrows },
-  { label: "Meu monitoramento", href: "/monitoramento", icon: Bell },
+  { label: "Votações", href: "/explorar/votacoes-2025.html", icon: BarChart3 },
+  { label: "Monitoramento", href: "/monitoramento", icon: Bell },
   { label: "Metodologia", href: "/metodologia", icon: BookOpen },
 ];
+
+const isStaticPage = (href: string) => href.endsWith(".html");
 
 export function Logo({ compact = false }: { compact?: boolean }) {
   return (
@@ -78,14 +82,16 @@ export function SiteHeader() {
               item.href === "/"
                 ? location === "/"
                 : location.startsWith(item.href);
+            // Painéis em /explorar são páginas estáticas, fora do roteador do app.
+            const NavTag = isStaticPage(item.href) ? "a" : Link;
             return (
-              <Link
+              <NavTag
                 key={item.href}
                 href={item.href}
                 className={cn("nav-link", active && "active")}
               >
                 <Icon size={15} /> {item.label}
-              </Link>
+              </NavTag>
             );
           })}
         </nav>
@@ -113,15 +119,16 @@ export function SiteHeader() {
         <div className="mobile-nav container">
           {navItems.map(item => {
             const Icon = item.icon;
+            const NavTag = isStaticPage(item.href) ? "a" : Link;
             return (
-              <Link
+              <NavTag
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
                 className="mobile-nav-link"
               >
                 <Icon size={17} /> {item.label}
-              </Link>
+              </NavTag>
             );
           })}
         </div>
@@ -177,6 +184,7 @@ export function SiteFooter() {
         <div className="footer-links">
           <Link href="/metodologia">Metodologia</Link>
           <Link href="/metodologia#fontes">Fontes</Link>
+          <a href="/explorar/votacoes-2025.html">Votações da Câmara em 2025</a>
           <Link href="/metodologia">Apoie e conheça o projeto</Link>
           <span className="footer-credit">
             Projeto criado por Tarliso Doria
