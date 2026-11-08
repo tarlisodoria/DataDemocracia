@@ -36,7 +36,7 @@ Navegação por todas as rotas em desktop (1440 px) e celular (390 px), com veri
 
 ### P0 — confiança
 
-- [ ] Remover o contador fixo "2" do sino de monitoramento e o botão "Entrar" que não faz nada, ou marcá-los como "em breve".
+- [x] Remover o contador fixo "2" do sino de monitoramento e desativar "Entrar" até existir login (com aviso ao passar o mouse).
 - [ ] Revisar textos que afirmam funcionalidades inexistentes ("rastreabilidade por registro", "atualizações relevantes").
 - [ ] Mostrar a faixa "dados demonstrativos" de forma consistente no topo de perfis, promessas, dossiê e radar.
 - [ ] Trocar o retrato vazio do radar e da comparação pelo mesmo avatar de iniciais.

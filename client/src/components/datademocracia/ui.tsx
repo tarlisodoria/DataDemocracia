@@ -101,9 +101,15 @@ export function SiteHeader() {
             className="header-monitor"
             aria-label="Meu monitoramento"
           >
-            <Bell size={17} /> <span>2</span>
+            <Bell size={17} />
           </Link>
-          <Button variant="outline" size="sm" className="header-login">
+          <Button
+            variant="outline"
+            size="sm"
+            className="header-login"
+            disabled
+            title="Contas de usuário chegam com o monitoramento persistente"
+          >
             <UserRound size={15} /> Entrar
           </Button>
           <button
