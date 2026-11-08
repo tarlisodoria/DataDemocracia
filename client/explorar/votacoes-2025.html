@@ -640,6 +640,9 @@
           />
           <datalist id="deplist"></datalist>
           <button class="btn" id="clear" type="button">Limpar filtros</button>
+          <button class="btn" id="share" type="button">
+            Copiar link do recorte
+          </button>
           <button class="btn" id="audit" type="button" aria-pressed="false">
             Modo auditoria
           </button>
@@ -969,6 +972,44 @@
           vot: null,
           dep: null,
         };
+
+        // Recorte na URL (?uf=PA&voto=N): o link copiado reabre o mesmo filtro.
+        const LETRAS = ["S", "N", "A", "O"];
+        function lerUrl() {
+          const q = new URLSearchParams(location.search);
+          const lista = k => (q.get(k) || "").split(",").filter(Boolean);
+          const add = (set, i) => i >= 0 && set.add(i);
+          lista("mes").forEach(v => add(F.mes, +v - 1));
+          lista("tema").forEach(v => add(F.tema, temas.indexOf(v)));
+          lista("partido").forEach(v => add(F.partido, parties.indexOf(v)));
+          lista("uf").forEach(v => add(F.uf, UFS.indexOf(v)));
+          lista("regiao").forEach(v =>
+            add(
+              F.regiao,
+              REGS.findIndex(r => r.k === v)
+            )
+          );
+          lista("voto").forEach(v => add(F.voto, LETRAS.indexOf(v)));
+          const vi = vot.findIndex(v => v[0] === q.get("votacao"));
+          if (vi >= 0) F.vot = vi;
+          const dj = deps.findIndex(d => String(d[0]) === q.get("deputado"));
+          if (dj >= 0) F.dep = dj;
+        }
+        function escreverUrl() {
+          const q = new URLSearchParams();
+          const put = (k, set, f) =>
+            set.size && q.set(k, [...set].map(f).join(","));
+          put("mes", F.mes, m => m + 1);
+          put("tema", F.tema, temaName);
+          put("partido", F.partido, i => parties[i]);
+          put("uf", F.uf, i => UFS[i]);
+          put("regiao", F.regiao, i => REGS[i].k);
+          put("voto", F.voto, i => LETRAS[i]);
+          if (F.vot !== null) q.set("votacao", vot[F.vot][0]);
+          if (F.dep !== null) q.set("deputado", deps[F.dep][0]);
+          const s = q.toString();
+          history.replaceState(null, "", s ? "?" + s : location.pathname);
+        }
         const C = {};
         function readColors() {
           const cs = getComputedStyle(document.documentElement);
@@ -1390,6 +1431,7 @@
         function render() {
           readColors();
           const rec = chipsRender();
+          escreverUrl();
           document.querySelectorAll("#legend .lg").forEach(b => {
             const t = +b.dataset.t;
             b.querySelector("i").style.background = tc(t);
@@ -2173,6 +2215,10 @@
             `<p><strong>${pct(a[0], r)}</strong> dos votos registrados foram “Sim”. Entre os partidos com 10 ou mais deputados, essa proporção foi de <strong>${pct(e.lo.n, e.lo.r)}</strong> (${e.lo.k}) a <strong>${pct(e.hi.n, e.hi.r)}</strong> (${e.hi.k}).<sup><a href="#ref2">2</a></sup></p>` +
             `<p>${MESF[bm][0].toUpperCase() + MESF[bm].slice(1)} foi o mês com mais votações (${vm[bm]}). Em <strong>${pct(sem, r + sem)}</strong> dos casos não há voto registrado, o que inclui faltas, licenças e suplentes fora de exercício.<sup><a href="#ref3">3</a></sup> Use o painel abaixo para investigar qualquer recorte.</p>`;
         }
+        lerUrl();
+        if (F.dep !== null)
+          document.getElementById("dep").value =
+            `${deps[F.dep][1]} (${deps[F.dep][2]}-${deps[F.dep][3]})`;
         readColors();
         render();
         const ev = p => p && p.event && p.event.event;
@@ -2217,6 +2263,18 @@
           const c = charts.chHeat;
           pick2("partido", c._ps[p.value[1]], "tema", c._t[p.value[0]], ev(p));
         });
+        const share = document.getElementById("share");
+        share.onclick = () =>
+          navigator.clipboard.writeText(location.href).then(
+            () => {
+              share.textContent = "Link copiado";
+              setTimeout(
+                () => (share.textContent = "Copiar link do recorte"),
+                2000
+              );
+            },
+            () => (share.textContent = "Copie o endereço da barra")
+          );
         document.getElementById("clear").onclick = () => {
           ["mes", "tema", "partido", "uf", "regiao", "voto"].forEach(k =>
             F[k].clear()
