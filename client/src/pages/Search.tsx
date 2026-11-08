@@ -7,11 +7,17 @@ import {
   Sparkles,
   UsersRound,
 } from "lucide-react";
-import { Link, useLocation } from "wouter";
+import { Link, useLocation, useSearch } from "wouter";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { politicians } from "@/data/demo";
+import { initialsAvatar, politicians } from "@/data/demo";
+import {
+  buscarDeputados,
+  carregarDeputados,
+  painelDeputado,
+  type DeputadoResumo,
+} from "@/lib/camara";
 import {
   dataSourceLabel,
   fetchPublicPoliticians,
@@ -26,9 +32,8 @@ import {
 } from "@/components/datademocracia/ui";
 
 export default function SearchPage() {
-  const [location, navigate] = useLocation();
-  const initial =
-    new URLSearchParams(location.split("?")[1] ?? "").get("q") ?? "";
+  const [, navigate] = useLocation();
+  const initial = new URLSearchParams(useSearch()).get("q") ?? "";
   const [query, setQuery] = useState(initial);
   const [activeTab, setActiveTab] = useState("Políticos");
   const [role, setRole] = useState("Todos os cargos");
@@ -36,6 +41,25 @@ export default function SearchPage() {
   const [situation, setSituation] = useState("Todas as situações");
   const [directory, setDirectory] = useState(politicians);
   const [usingLiveDirectory, setUsingLiveDirectory] = useState(false);
+  const [camara, setCamara] = useState<{
+    coleta: string;
+    deputados: DeputadoResumo[];
+  } | null>(null);
+
+  // Os votos reais só são baixados quando há algo digitado.
+  useEffect(() => {
+    if (!query.trim() || camara) return;
+    carregarDeputados()
+      .then(setCamara)
+      .catch(() => {
+        // Sem o arquivo do painel, a busca segue só com o catálogo.
+      });
+  }, [query, camara]);
+
+  const deputados = useMemo(
+    () => (camara ? buscarDeputados(camara.deputados, query) : []),
+    [camara, query]
+  );
 
   useEffect(() => {
     if (!isNeonConfigured) return;
@@ -197,7 +221,7 @@ export default function SearchPage() {
           <div className="results-header">
             <div>
               <span className="results-kicker">{activeTab}</span>
-              <h2>{results.length} resultados encontrados</h2>
+              <h2>{results.length + deputados.length} resultados encontrados</h2>
             </div>
             <button className="sort-button">
               <SlidersHorizontal size={15} /> Mais relevantes
@@ -259,7 +283,61 @@ export default function SearchPage() {
                   </div>
                 </Link>
               ))}
-              {results.length === 0 && (
+              {deputados.length > 0 && camara && (
+                <div className="real-deputies">
+                  <div className="real-deputies-head">
+                    <h3>Deputados federais com votos reais em 2025</h3>
+                    <SourcePill
+                      source={`Câmara dos Deputados · coleta ${camara.coleta}`}
+                    />
+                  </div>
+                  {deputados.slice(0, 20).map(d => (
+                    <a
+                      href={painelDeputado(d.id)}
+                      className="result-row"
+                      key={d.id}
+                    >
+                      <div
+                        className="result-avatar"
+                        style={{
+                          backgroundImage: `url("${initialsAvatar(d.nome)}")`,
+                        }}
+                      />
+                      <div className="result-info">
+                        <div className="result-meta">
+                          <Badge variant="outline">Dados oficiais</Badge>
+                          <span>{d.uf}</span>
+                        </div>
+                        <h3>{d.nome}</h3>
+                        <p>
+                          Deputado(a) federal · {d.partido}-{d.uf} ·{" "}
+                          {d.registrados} votos registrados em{" "}
+                          {d.registrados + d.semRegistro} votações
+                        </p>
+                      </div>
+                      <div className="result-side">
+                        <span>
+                          <strong>
+                            {d.registrados
+                              ? Math.round((100 * d.sim) / d.registrados)
+                              : "—"}
+                            %
+                          </strong>{" "}
+                          de votos Sim
+                        </span>
+                        <ArrowRight size={18} />
+                      </div>
+                    </a>
+                  ))}
+                  {deputados.length > 20 && (
+                    <p className="real-deputies-more">
+                      e mais {deputados.length - 20}. Refine a busca para ver os
+                      demais.
+                    </p>
+                  )}
+                </div>
+              )}
+              {results.length === 0 && deputados.length === 0 && (
                 <div className="empty-search">
                   <SearchIcon size={25} />
                   <h3>Nenhum resultado neste recorte</h3>

@@ -44,7 +44,7 @@ Navegação por todas as rotas em desktop (1440 px) e celular (390 px), com veri
 ### P1 — produto
 
 - [ ] Home: dar ao painel de votações um bloco próprio com o achado principal, no lugar do card estático "O que foi prometido?".
-- [ ] Busca: pesquisar também deputados reais do painel (551) e levar ao painel filtrado.
+- [x] Busca: pesquisar também deputados reais do painel (551) e levar ao painel filtrado.
 - [ ] Perfil: para deputados do painel, mostrar votos reais (participação, distribuição por tipo) com link para o painel.
 - [ ] Páginas de perfil com título e descrição próprios para compartilhamento (Open Graph).
 - [ ] Bundle principal acima de 500 kB: dividir rotas com `import()`.
@@ -53,7 +53,7 @@ Navegação por todas as rotas em desktop (1440 px) e celular (390 px), com veri
 
 - [ ] Alvos de toque menores que 32 px em chips e links de rodapé (média de 10 por página).
 - [ ] Página 404 com busca e links úteis em vez de só voltar ao início.
-- [ ] Painel de votações: botão de compartilhar o recorte atual (filtros na URL).
+- [x] Painel de votações: botão de compartilhar o recorte atual (filtros na URL).
 
 ## Próximo ciclo — dados públicos conectados
 

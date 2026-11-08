@@ -4400,3 +4400,27 @@ select:focus-visible {
     animation-duration: 0.01ms !important;
   }
 }
+
+.real-deputies {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.real-deputies-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.real-deputies-head h3 {
+  margin: 0;
+  font-size: 15px;
+}
+.real-deputies-more {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 13px;
+}
