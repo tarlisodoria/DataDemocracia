@@ -1,4 +1,3 @@
-import { createClient } from "@neondatabase/neon-js";
 import {
   initialsAvatar,
   politicians as demoPoliticians,
@@ -10,17 +9,20 @@ const authUrl = import.meta.env.VITE_NEON_AUTH_URL?.trim();
 
 export const isNeonConfigured = Boolean(dataApiUrl && authUrl);
 
-export const neon = isNeonConfigured
-  ? createClient({
-      auth: {
-        url: authUrl as string,
-        allowAnonymous: true,
-      },
-      dataApi: {
-        url: dataApiUrl as string,
-      },
+// O SDK do Neon é carregado sob demanda para não pesar na primeira página.
+type NeonClient = ReturnType<
+  typeof import("@neondatabase/neon-js").createClient
+>;
+let client: Promise<NeonClient> | null = null;
+function getNeon() {
+  client ??= import("@neondatabase/neon-js").then(({ createClient }) =>
+    createClient({
+      auth: { url: authUrl as string, allowAnonymous: true },
+      dataApi: { url: dataApiUrl as string },
     })
-  : null;
+  );
+  return client;
+}
 
 export const dataSourceLabel = isNeonConfigured
   ? "Neon Data API · dados conectados"
@@ -42,8 +44,9 @@ export type PoliticianRecord = {
 };
 
 export async function fetchPublicPoliticians(): Promise<PoliticianRecord[]> {
-  if (!neon) return [];
+  if (!isNeonConfigured) return [];
 
+  const neon = await getNeon();
   const { data, error } = await neon
     .from("politicians")
     .select()

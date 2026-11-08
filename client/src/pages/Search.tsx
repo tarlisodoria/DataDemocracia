@@ -221,7 +221,9 @@ export default function SearchPage() {
           <div className="results-header">
             <div>
               <span className="results-kicker">{activeTab}</span>
-              <h2>{results.length + deputados.length} resultados encontrados</h2>
+              <h2>
+                {results.length + deputados.length} resultados encontrados
+              </h2>
             </div>
             <button className="sort-button">
               <SlidersHorizontal size={15} /> Mais relevantes
