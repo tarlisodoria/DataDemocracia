@@ -13,7 +13,8 @@ Este arquivo é o recorte operacional do [roadmap completo](docs/ROADMAP.md). It
 - [x] Radar analítico demonstrativo com dimensões independentes, fontes e alternativa textual.
 - [x] Monitoramento demonstrativo com feedback visual.
 - [x] Metodologia com fontes, camadas de leitura, correções e independência.
-- [x] Manifesto de rotas em `client/public/manus-routes.json`.
+- [x] Painel de votações nominais da Câmara em 2025 com filtro cruzado e dados oficiais.
+- [x] Projeto reduzido a frontend estático, sem servidor de aplicação.
 - [x] Schema Neon com RLS para tabelas públicas e itens privados de monitoramento.
 - [x] Home e Explorar conectados ao catálogo público do Neon, com fallback demonstrativo.
 - [x] Build estático, typecheck e publicação em Cloudflare Workers Static Assets.
@@ -68,8 +69,8 @@ Este arquivo é o recorte operacional do [roadmap completo](docs/ROADMAP.md). It
 
 ## Qualidade contínua
 
-- [ ] Manter `pnpm check`, `pnpm test` e `pnpm build:static` aprovados.
+- [ ] Manter `pnpm check`, `pnpm test` e `pnpm build` aprovados.
 - [ ] Testar teclado, foco, contraste e alternativas textuais.
-- [ ] Verificar rotas, fallback SPA e `/manus-routes.json` após mudanças.
+- [ ] Verificar rotas, fallback SPA e páginas de `/explorar` após mudanças.
 - [ ] Monitorar disponibilidade do Neon e do deploy.
 - [ ] Atualizar README, roadmap, modelo de dados e operação a cada mudança estrutural.

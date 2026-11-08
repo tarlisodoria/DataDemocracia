@@ -13,7 +13,7 @@ Preencha apenas valores públicos de frontend no ambiente local. A connection st
 
 1. Leia `README.md`, `docs/ROADMAP.md` e a documentação específica da área.
 2. Verifique `git status` e preserve alterações existentes.
-3. Confirme as rotas em `client/src/App.tsx` e `client/public/manus-routes.json`.
+3. Confirme as rotas em `client/src/App.tsx` e os links para páginas em `client/public/explorar/`.
 4. Entenda se a tela usa Neon, fallback demonstrativo ou ambos.
 5. Faça a alteração no menor conjunto de arquivos possível.
 
@@ -22,10 +22,10 @@ Preencha apenas valores públicos de frontend no ambiente local. A connection st
 ```bash
 pnpm check
 pnpm test
-pnpm build:static
+pnpm build
 ```
 
-`pnpm check` é obrigatório para TypeScript. `pnpm build:static` é a verificação mais próxima da publicação do Cloudflare. Se o bundle mudar de tamanho significativamente, registrar o motivo no changelog do ciclo.
+`pnpm check` é obrigatório para TypeScript. `pnpm build` é a verificação mais próxima da publicação do Cloudflare. Se o bundle mudar de tamanho significativamente, registrar o motivo no changelog do ciclo.
 
 ## Dados do Neon
 
@@ -48,7 +48,7 @@ O banco compartilhado contém desenvolvimento e produção. Nunca usar comandos 
 O build estático usa:
 
 ```bash
-pnpm build:static
+pnpm build
 npx wrangler deploy
 ```
 
@@ -57,7 +57,7 @@ O `wrangler.jsonc` publica `dist/public` com fallback SPA. Depois da publicaçã
 - home em HTTP 200;
 - `/buscar` em HTTP 200;
 - uma rota dinâmica de político;
-- `/manus-routes.json` retornando JSON, não HTML;
+- `/explorar/votacoes-2025.html` carregando os gráficos e os dois arquivos de `/explorar/dados/`;
 - leitura do catálogo público;
 - ausência de placeholder ou conteúdo genérico.
 
@@ -65,7 +65,7 @@ O `wrangler.jsonc` publica `dist/public` com fallback SPA. Depois da publicaçã
 
 Se o build falhar:
 
-1. reproduzir com `pnpm check` e `pnpm build:static`;
+1. reproduzir com `pnpm check` e `pnpm build`;
 2. conferir o arquivo que introduziu a regressão;
 3. verificar variáveis públicas e caminho `dist/public`;
 4. corrigir e repetir as verificações;

@@ -2,7 +2,7 @@
 
 ## Visão geral
 
-O DataDemocracia é uma aplicação React/TypeScript publicada como frontend estático. O catálogo público é lido pela Neon Data API com autenticação anônima para respeitar as políticas de acesso do banco. O servidor Express e os procedimentos tRPC permanecem preparados para recursos que exigem sessão, exportação, tarefas de ingestão e operações administrativas.
+O DataDemocracia é uma aplicação React/TypeScript publicada como frontend estático. O catálogo público é lido pela Neon Data API com autenticação anônima para respeitar as políticas de acesso do banco. Não há servidor de aplicação: recursos que exigirem sessão ou escrita usam Neon Auth e RLS, e a ingestão de dados roda em scripts separados do frontend.
 
 ```text
 Navegador
@@ -47,6 +47,10 @@ Fontes oficiais → pipeline de ingestão → normalização → revisão → Ne
 
 `client/src/lib/neon.ts` contém o cliente público do Neon e o adaptador que combina registros do banco com o modelo editorial. O próximo ciclo deve mover as consultas de promessas e evidências para essa camada.
 
+## Painéis de exploração
+
+Painéis analíticos ficam em `client/public/explorar/` como páginas estáticas, fora do roteador React. Cada painel lê arquivos JSON gerados por scripts em `scripts/` a partir das fontes oficiais. O primeiro é o de votações da Câmara, documentado em [PAINEL-VOTACOES.md](PAINEL-VOTACOES.md).
+
 ## Dados e proveniência
 
 O banco oficial do produto é PostgreSQL no Neon. O arquivo de referência é `neon/schema.sql`.
@@ -77,7 +81,7 @@ Nunca usar credenciais privilegiadas no navegador. Nunca remover RLS para aceler
 O build de produção do frontend é:
 
 ```bash
-pnpm build:static
+pnpm build
 ```
 
 O resultado fica em `dist/public`. `wrangler.jsonc` define esse diretório como origem de assets e usa fallback SPA para rotas do React.

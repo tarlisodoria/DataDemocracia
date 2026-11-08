@@ -4,121 +4,109 @@
 
 O DataDemocracia é uma plataforma cívica independente criada por **Tarliso Doria** para organizar dados públicos, documentos oficiais e evidências sobre candidatos, representantes e instituições políticas brasileiras.
 
-O produto transforma registros dispersos em uma experiência de leitura clara: cada informação deve carregar fonte, data, escopo, contexto e limitações. A proposta não é criar um ranking de “melhores políticos”, publicar um fluxo de notícias ou substituir a decisão do eleitor. É oferecer um histórico verificável para que cada pessoa possa investigar, acompanhar e formar a própria opinião.
+Cada informação carrega fonte, data, escopo, contexto e limitações. O projeto não publica ranking de "melhores políticos", não agrega notícias e não substitui a decisão do eleitor: oferece um histórico verificável para que cada pessoa investigue e forme a própria opinião.
+
+## Destaque: painel de votações da Câmara
+
+[`/explorar/votacoes-2025.html`](client/public/explorar/votacoes-2025.html) reúne as **429 votações nominais do Plenário da Câmara em 2025**, com o voto de cada um dos 551 deputados, coletadas da API oficial de dados abertos.
+
+- Filtro cruzado em todos os visuais: mapa do Brasil por estado e região, tipo de voto, mês, partido, tema, votação e deputado. Ctrl/Shift soma seleções.
+- Títulos que descrevem o achado do recorte atual, recalculados a cada clique.
+- Universo de cálculo visível em cada número e fonte em cada card.
+- Modo auditoria com link para cada votação na API da Câmara.
+
+Detalhes de método e formato dos dados em [docs/PAINEL-VOTACOES.md](docs/PAINEL-VOTACOES.md).
 
 ## Estado atual
 
-O MVP está publicado e possui uma camada pública conectada ao Neon. A interface já entrega:
+- Home editorial com busca e apresentação da metodologia.
+- Exploração de políticos com filtros por cargo, estado e situação.
+- Perfis com visão geral, trajetória, promessas, atuação e integridade.
+- Cadeia visual de evidências e ficha exportável.
+- Radar analítico com dimensões independentes e explicações.
+- Comparação factual sem nota geral.
+- Painel de votações nominais da Câmara com dados oficiais de 2025.
+- Catálogo público no Neon (3 perfis e 9 promessas **demonstrativos**), com fallback local se a API não responder.
 
-- home editorial com busca e apresentação da metodologia;
-- exploração de políticos com filtros por cargo, estado e situação;
-- perfis com overview, trajetória, promessas, atuação e integridade;
-- cadeia visual de evidências e ficha exportável;
-- radar analítico com dimensões independentes, fontes e explicações;
-- comparação factual sem nota geral ou ranking partidário;
-- área de monitoramento preparada para autenticação;
-- catálogo público com 3 perfis e 9 promessas demonstrativas no Neon;
-- fallback local para preservar a navegação durante indisponibilidade da API.
-
-A versão publicada no ambiente gerenciado é o resultado do checkpoint `4bf4d0e`. A publicação em Cloudflare Workers Static Assets utiliza a mesma aplicação estática e o mesmo branch principal.
-
-## Visão do produto
-
-O DataDemocracia é organizado em quatro camadas:
-
-1. **Leitura cidadã:** explicações progressivas, linguagem simples e contexto antes da métrica.
-2. **Registro documental:** fonte original, documento, página, data de extração e data de revisão.
-3. **Análise avançada:** indicadores com fórmula, denominador, período e limites explícitos.
-4. **Acompanhamento:** monitoramento personalizado de políticos, promessas, temas, cidades e órgãos.
-
-A plataforma deve permanecer não partidária. Não há cores de partidos, selo moral, placar esportivo ou recomendação de voto. Processos, investigações, denúncias, decisões, condenações, absolvições e arquivamentos devem ser tratados como estados jurídicos diferentes.
+Perfis, promessas e evidências ainda são demonstrativos e estão rotulados assim na interface. O painel de votações usa dados reais.
 
 ## Stack
 
-- React 19 + TypeScript + Vite;
-- Wouter para rotas do frontend;
-- Tailwind CSS e CSS editorial próprio;
-- Recharts para visualizações explicáveis;
-- Lucide React para iconografia;
-- Neon Data API para leitura pública e futura autenticação;
-- PostgreSQL no Neon com RLS;
-- Cloudflare Workers Static Assets para publicação;
-- Vitest e TypeScript para verificação local.
+- React 19, TypeScript e Vite
+- Wouter para rotas
+- Tailwind CSS 4 e CSS editorial próprio
+- Neon (PostgreSQL com RLS e Data API) para leitura pública
+- ECharts no painel de votações
+- Cloudflare Workers Static Assets para publicação
+- Vitest e TypeScript estrito para verificação
 
-## Desenvolvimento local
+## Desenvolvimento
 
 ```bash
 pnpm install
-pnpm check
-pnpm dev:static
+pnpm dev          # http://localhost:3000
+pnpm check        # TypeScript
+pnpm test         # Vitest
+pnpm build        # gera dist/public
+pnpm deploy       # build + wrangler deploy
+pnpm dados:votacoes 2025   # recoleta os dados do painel na API da Câmara
 ```
 
-O servidor de desenvolvimento utiliza a porta `3000` por padrão. Para a aplicação completa com o servidor Express:
+Variáveis públicas de build (veja `.env.example`):
 
-```bash
-pnpm dev
-```
+- `VITE_NEON_DATA_API_URL`
+- `VITE_NEON_AUTH_URL`
 
-Comandos de qualidade e publicação:
+Nunca coloque connection string, senha de banco ou credencial administrativa no frontend.
 
-```bash
-pnpm check
-pnpm test
-pnpm build:static
-pnpm deploy:cloudflare
-```
-
-A publicação estática exige as variáveis públicas de build:
-
-- `VITE_NEON_DATA_API_URL`;
-- `VITE_NEON_AUTH_URL`.
-
-Use `.env.example` como referência. Nunca coloque connection string PostgreSQL, senha de banco ou credencial administrativa no frontend.
-
-## Estrutura principal
+## Estrutura
 
 ```text
 client/
-  public/                 manifesto de rotas e arquivos públicos
+  public/
+    explorar/             painéis estáticos e seus dados (votacoes-2025.html)
   src/
-    App.tsx               composição das rotas
-    pages/                telas de produto
-    components/datademocracia/ componentes editoriais e de evidência
+    App.tsx               rotas
+    pages/                telas do produto
+    components/datademocracia/  componentes editoriais e de evidência
+    components/ui/        primitivas de interface
     data/demo.ts          dados demonstrativos e tipos de domínio
     lib/neon.ts           cliente Neon e adaptação do catálogo público
-    index.css             tokens visuais, layout e responsividade
-server/
-  _core/                  runtime HTTP e integrações do servidor
-  routers.ts              procedimentos tRPC
-  storage.ts              camada de persistência do servidor
+    index.css             tokens visuais e layout
+scripts/
+  coletar-votacoes-camara.mjs  coleta das votações na API da Câmara
 neon/
   schema.sql              schema PostgreSQL, grants e políticas RLS
-drizzle/
-  schema.ts               tabela de usuários do runtime e migrações do servidor
-docs/
-  ROADMAP.md              backlog estratégico priorizado
-  ARQUITETURA.md          mapa técnico e decisões de fronteira
-  MODELO-DE-DADOS.md      entidades, proveniência e regras de integridade
-  OPERACAO.md             desenvolvimento, dados, deploy e recuperação
-  GUIA-DE-CONTINUIDADE.md guia para assumir o projeto sem perder contexto
-  PRODUCAO-NEON.md        configuração publicada e checklist operacional
+docs/                     arquitetura, dados, operação e roadmap
 ```
 
-## Princípios de manutenção
+## Documentação
+
+| Documento                                            | Conteúdo                                         |
+| ---------------------------------------------------- | ------------------------------------------------ |
+| [Roadmap](docs/ROADMAP.md)                           | Evolução do produto, dados, segurança e operação |
+| [Arquitetura](docs/ARQUITETURA.md)                   | Fronteiras entre frontend, banco e publicação    |
+| [Modelo de dados](docs/MODELO-DE-DADOS.md)           | Entidades, proveniência e regras de ausência     |
+| [Painel de votações](docs/PAINEL-VOTACOES.md)        | Método, formato e limitações do painel           |
+| [Operação](docs/OPERACAO.md)                         | Verificações, deploy e recuperação               |
+| [Produção](docs/PRODUCAO-NEON.md)                    | Configuração publicada e checklist               |
+| [Guia de continuidade](docs/GUIA-DE-CONTINUIDADE.md) | Como assumir o projeto sem perder contexto       |
+
+## Princípios
 
 - Fonte oficial antes de interpretação.
 - Data e escopo em toda métrica.
 - Ausência de registro não significa resultado zero.
 - Toda classificação sensível deve ser revisável.
-- Nenhum indicador deve ser convertido em nota geral de valor político.
-- Dados demonstrativos devem ser rotulados como demonstrativos.
-- Um perfil deve explicar também o que não mede.
-- Alterações no schema precisam atualizar documentação, consultas e políticas RLS.
+- Nenhum indicador vira nota geral de valor político.
+- Dado demonstrativo é rotulado como demonstrativo.
 
 ## Créditos
 
-Projeto independente criado por **Tarliso Doria**. O DataDemocracia é desenvolvido como uma vitrine de engenharia cívica, design editorial de informação e transparência pública.
+Projeto independente criado por **Tarliso Doria** ([LinkedIn](https://www.linkedin.com/in/tarlisodoria/)).
+
+Mapa do Brasil no painel de votações: [@svg-maps/brazil](https://github.com/VictorCazanave/svg-maps), de Victor Cazanave, sob CC BY 4.0. Dados de votações: Câmara dos Deputados, API Dados Abertos.
 
 ## Licença
 
-O código deste repositório é distribuído sob a [MIT License](LICENSE). Dados, documentos, marcas e conteúdos de fontes públicas de terceiros continuam sujeitos às respectivas condições de uso, autoria e licença.
+Código sob [MIT License](LICENSE). Dados, documentos e marcas de fontes públicas de terceiros seguem as condições de uso de cada fonte.

@@ -44,11 +44,11 @@ Configuração do Worker em `wrangler.jsonc`:
 Comandos:
 
 ```bash
-pnpm build:static
+pnpm build
 npx wrangler deploy
 ```
 
-A branch principal é a origem do código publicado. Antes de publicar, executar `pnpm check`, `pnpm test` e `pnpm build:static`.
+A branch principal é a origem do código publicado. Antes de publicar, executar `pnpm check`, `pnpm test` e `pnpm build`.
 
 ## Verificação pós-publicação
 
@@ -56,7 +56,7 @@ Confirmar:
 
 - home retornando HTTP 200;
 - `/buscar` e uma rota dinâmica retornando a aplicação;
-- `/manus-routes.json` retornando JSON estático;
+- `/explorar/votacoes-2025.html` carregando os dados do painel;
 - catálogo público carregando pelo cliente Neon;
 - fallback demonstrativo funcionando quando a API não responder;
 - nenhuma credencial privada presente no bundle.

@@ -35,7 +35,7 @@ O produto é uma plataforma pública, não um portal partidário, um ranking, um
 5. Implementar tipos e consultas antes dos componentes visuais.
 6. Criar estado de carregamento, vazio, erro e fallback.
 7. Atualizar manifesto de rotas se necessário.
-8. Executar `pnpm check`, `pnpm test` e `pnpm build:static`.
+8. Executar `pnpm check`, `pnpm test` e `pnpm build`.
 9. Atualizar documentação de dados e operação.
 10. Fazer commit pequeno, com mensagem que descreva o resultado entregue.
 

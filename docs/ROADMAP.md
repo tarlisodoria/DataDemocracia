@@ -17,7 +17,7 @@ Cada item deve sair do backlog apenas quando houver código, fonte ou política 
 
 - [x] Identidade DataDemocracia e direção visual Arquivo Cívico Editorial.
 - [x] Home, busca, perfil, promessas, evidências, comparação, radar, monitoramento e metodologia.
-- [x] Rotas declaradas em `client/public/manus-routes.json`.
+- [x] Painel de votações nominais da Câmara (2025) com filtro cruzado, mapa por estado e dados oficiais.
 - [x] Build estático para `dist/public` e fallback SPA.
 - [x] Publicação no Cloudflare Workers Static Assets.
 - [x] Schema inicial do Neon com RLS para leitura pública e monitoramento privado.
@@ -133,8 +133,15 @@ Cada item deve sair do backlog apenas quando houver código, fonte ou política 
 - [ ] Medir performance de carregamento, tamanho do bundle e tempo de primeira renderização.
 - [ ] Criar monitoramento de disponibilidade da API pública e do endpoint de publicação.
 - [ ] Criar política de logs sem dados pessoais desnecessários.
-- [ ] Adicionar verificação do manifesto `/manus-routes.json` no CI.
+- [ ] Adicionar CI com `pnpm check`, `pnpm test` e `pnpm build` a cada push.
 - [ ] Manter dependências atualizadas e revisar permissões do banco em cada migração.
+
+## Direção de arquitetura
+
+- **Páginas públicas com HTML gerado no build** (Astro com ilhas React) para que perfis sejam indexados por buscadores, mantendo Neon e Cloudflare.
+- **Coleta agendada em Python** (GitHub Actions), gravando no Neon e preservando os arquivos originais em armazenamento de objetos.
+- **Arquivos Parquet + DuckDB-WASM** para painéis com filtro cruzado sobre volumes maiores que o do painel atual.
+- O painel de votações em `client/public/explorar/` serve de referência visual e de interação para essa migração.
 
 ## Ordem recomendada para a próxima execução
 

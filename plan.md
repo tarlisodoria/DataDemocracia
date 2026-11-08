@@ -17,8 +17,8 @@ O MVP navegável está publicado como frontend estático. Home e Explorar consul
 - Neon Auth para o futuro fluxo de conta e monitoramento;
 - PostgreSQL com RLS;
 - Cloudflare Workers Static Assets para publicação;
-- `pnpm build:static` como build público;
-- `client/public/manus-routes.json` como manifesto das páginas.
+- `pnpm build` como build público;
+- painéis analíticos estáticos em `client/public/explorar/`, alimentados por scripts de coleta.
 
 ## Direção visual
 
