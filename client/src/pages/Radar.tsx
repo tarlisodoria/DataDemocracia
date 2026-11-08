@@ -41,7 +41,7 @@ function pointsString(values: number[], scale = radius) {
 
 export default function Radar() {
   const { id } = useParams<{ id: string }>();
-  const politician = getPolitician(id);
+  const politician = getPolitician(id)!; // a rota só renderiza com id válido
   const [period, setPeriod] = useState("2023–2026");
   const data = useMemo(
     () => getRadarData(politician, period),

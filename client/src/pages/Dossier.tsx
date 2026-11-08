@@ -26,7 +26,7 @@ import {
 
 export default function Dossier() {
   const { id } = useParams<{ id: string }>();
-  const politician = getPolitician(id);
+  const politician = getPolitician(id)!; // a rota só renderiza com id válido
   const dossier = getDossierData(politician);
 
   const downloadDossier = () => {

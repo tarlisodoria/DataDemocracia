@@ -111,7 +111,11 @@ export default function Promises() {
               placeholder="Buscar promessa"
             />
           </label>
-          <select value={theme} onChange={e => setTheme(e.target.value)}>
+          <select
+            aria-label="Filtrar por tema"
+            value={theme}
+            onChange={e => setTheme(e.target.value)}
+          >
             <option>Todos os temas</option>
             <option>Saúde</option>
             <option>Educação</option>

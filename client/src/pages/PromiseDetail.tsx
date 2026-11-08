@@ -32,7 +32,7 @@ import {
 
 export default function PromiseDetail() {
   const { id } = useParams<{ id: string }>();
-  const promise = allPromises.find(item => item.id === id) ?? allPromises[0];
+  const promise = allPromises.find(item => item.id === id)!; // a rota só renderiza com id válido
   const audit = getPromiseAuditMeta(promise);
   const exportEvidence = () => {
     const payload = {

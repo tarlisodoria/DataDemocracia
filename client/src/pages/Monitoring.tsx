@@ -185,6 +185,7 @@ export default function Monitoring() {
                 <small>Resumo de atualizações</small>
               </div>
               <select
+                aria-label="Frequência do resumo de atualizações"
                 value={frequency}
                 onChange={e => setFrequency(e.target.value)}
               >

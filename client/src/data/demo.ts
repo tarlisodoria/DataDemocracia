@@ -125,8 +125,7 @@ export const politicians: Politician[] = [
     state: "MG",
     city: "Belo Horizonte",
     period: "2023–2027",
-    portrait:
-      "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=420&q=80",
+    portrait: "",
     type: "mandato",
     summary:
       "Parlamentar em exercício, com atuação concentrada em saúde pública, educação técnica e transparência orçamentária.",
@@ -254,8 +253,7 @@ export const politicians: Politician[] = [
     state: "PR",
     city: "Londrina",
     period: "Eleição 2024",
-    portrait:
-      "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=420&q=80",
+    portrait: "",
     type: "candidatura",
     summary:
       "Candidatura não eleita em 2024. Perfil demonstrativo para acompanhar propostas e histórico eleitoral.",
@@ -332,8 +330,7 @@ export const politicians: Politician[] = [
     state: "PE",
     city: "Recife",
     period: "2023–2031",
-    portrait:
-      "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=420&q=80",
+    portrait: "",
     type: "mandato",
     summary:
       "Senadora em exercício, com registros demonstrativos de atuação em direitos sociais e orçamento público.",
@@ -457,6 +454,10 @@ export const updates = [
   },
 ];
 
+politicians.forEach(p => {
+  if (!p.portrait) p.portrait = initialsAvatar(p.name);
+});
+
 export const allPromises = politicians.flatMap(politician =>
   politician.promisesList.map(promise => ({
     ...promise,
@@ -466,7 +467,20 @@ export const allPromises = politicians.flatMap(politician =>
 );
 
 export function getPolitician(id: string | undefined) {
-  return politicians.find(politician => politician.id === id) ?? politicians[0];
+  return politicians.find(politician => politician.id === id);
+}
+
+// Retrato neutro com as iniciais. Perfis demonstrativos não usam foto de pessoa real.
+export function initialsAvatar(name: string) {
+  const initials = name
+    .split(/\s+/)
+    .filter(word => word.length > 2)
+    .map(word => word[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" fill="#dce7e8"/><text x="60" y="72" font-family="Inter,Arial,sans-serif" font-size="40" font-weight="600" fill="#0f4c5c" text-anchor="middle">${initials}</text></svg>`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
 export function getPromiseAuditMeta(promise: PromiseItem): PromiseAuditMeta {

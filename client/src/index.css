@@ -179,7 +179,7 @@ select:focus-visible {
   align-items: center;
   gap: 7px;
   padding: 8px 10px;
-  color: #687678;
+  color: #657375;
   white-space: nowrap;
   font-size: 13px;
   border-bottom: 2px solid transparent;
@@ -278,7 +278,7 @@ select:focus-visible {
   flex-wrap: wrap;
   gap: 6px;
   align-items: center;
-  color: #738184;
+  color: #657174;
   font-size: 12px;
   margin: 0 0 28px;
 }
@@ -380,7 +380,7 @@ select:focus-visible {
   color: var(--brand);
 }
 .footer-credit {
-  color: #849092;
+  color: #667071;
   border-left: 1px solid #cad5d4;
   padding-left: 20px;
 }
@@ -425,7 +425,7 @@ select:focus-visible {
   box-shadow: 0 12px 34px rgba(18, 65, 72, 0.08);
 }
 .search-box > svg {
-  color: #719194;
+  color: #5a7376;
   flex: 0 0 auto;
 }
 .search-box input {
@@ -438,7 +438,7 @@ select:focus-visible {
   font-size: 13px;
 }
 .search-box input::placeholder {
-  color: #9aa6a6;
+  color: #687070;
 }
 .search-box button {
   color: white;
@@ -467,7 +467,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 7px;
-  color: #809091;
+  color: #667373;
   font-size: 11px;
   margin-top: 12px;
 }
@@ -486,7 +486,7 @@ select:focus-visible {
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #6c7d7f;
+  color: #637274;
 }
 .hero-aside-top {
   justify-content: space-between;
@@ -523,7 +523,7 @@ select:focus-visible {
   min-height: 240px;
   background: #d7e7e4;
   transform: rotate(4deg);
-  color: #72908f;
+  color: #5b7372;
 }
 .document-card.back span {
   font-size: 9px;
@@ -536,7 +536,7 @@ select:focus-visible {
   font:
     22px Georgia,
     serif;
-  color: #5c7f7d;
+  color: #547472;
 }
 .document-card.back small {
   display: block;
@@ -608,19 +608,20 @@ select:focus-visible {
   padding: 17px 0;
   align-items: center;
 }
-.trust-strip > div {
+.trust-strip > div,
+.trust-strip > a {
   display: flex;
   align-items: center;
   gap: 11px;
   padding: 0 20px;
   border-right: 1px solid var(--line);
-  color: #7a898a;
+  color: #667373;
   font-size: 11px;
 }
-.trust-strip > div:first-child {
+.trust-strip > :first-child {
   padding-left: 0;
 }
-.trust-strip > div:last-child {
+.trust-strip > :last-child {
   border-right: 0;
   justify-content: flex-end;
   color: var(--brand);
@@ -685,7 +686,7 @@ select:focus-visible {
 }
 .step-index {
   display: block;
-  color: #91a2a3;
+  color: #657172;
   font-size: 11px;
   letter-spacing: 0.12em;
   margin-bottom: 32px;
@@ -751,7 +752,7 @@ select:focus-visible {
 .politician-card-meta {
   display: flex;
   justify-content: space-between;
-  color: #859193;
+  color: #677172;
   text-transform: uppercase;
   letter-spacing: 0.09em;
   font-size: 9px;
@@ -781,19 +782,19 @@ select:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: #6b7b7c;
+  color: #647374;
   font-size: 10px;
   line-height: 1.2;
 }
 .source-pill.quiet {
   font-size: 10px;
-  color: #779294;
+  color: #5f7476;
 }
 .audit-stamp {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: #718487;
+  color: #637476;
   font-family: "Courier New", monospace;
   font-size: 9px;
   letter-spacing: 0.02em;
@@ -812,7 +813,7 @@ select:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  color: #718082;
+  color: #657374;
   font-size: 10px;
 }
 .evidence-strength strong {
@@ -840,7 +841,7 @@ select:focus-visible {
   background: #8b9799;
 }
 .evidence-strength.insufficient strong {
-  color: #667477;
+  color: #637174;
 }
 .provenance-panel {
   padding: 17px;
@@ -884,7 +885,7 @@ select:focus-visible {
   font-size: 11px;
 }
 .provenance-source small {
-  color: #778687;
+  color: #667374;
   font-size: 10px;
   margin-top: 3px;
 }
@@ -899,7 +900,7 @@ select:focus-visible {
   padding-top: 8px;
 }
 .provenance-meta dt {
-  color: #849393;
+  color: #667272;
   font-size: 9px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -911,7 +912,7 @@ select:focus-visible {
   margin: 4px 0 0;
 }
 .provenance-note {
-  color: #718284;
+  color: #637274;
   font-size: 10px;
   line-height: 1.45;
   margin: 14px 0 0;
@@ -952,7 +953,7 @@ select:focus-visible {
   font-size: 13px;
 }
 .topic-row small {
-  color: #7d898a;
+  color: #687373;
   font-weight: 400;
   font-size: 11px;
 }
@@ -987,7 +988,7 @@ select:focus-visible {
 }
 .update-date,
 .update-type {
-  color: #809091;
+  color: #667373;
   font-size: 11px;
 }
 .update-type {
@@ -1079,7 +1080,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 9px;
-  color: #7a8888;
+  color: #667272;
   font-size: 11px;
 }
 .profile-kicker {
@@ -1101,7 +1102,7 @@ select:focus-visible {
   margin: 10px 0 5px;
 }
 .profile-role span {
-  color: #91a2a2;
+  color: #657171;
   padding: 0 4px;
 }
 .profile-location {
@@ -1128,7 +1129,7 @@ select:focus-visible {
   align-items: center;
   padding: 12px 0;
   border-bottom: 1px solid var(--line);
-  color: #758385;
+  color: #667375;
   font-size: 11px;
 }
 .profile-context-line span {
@@ -1175,7 +1176,7 @@ select:focus-visible {
   display: block;
 }
 .metric-tile span {
-  color: #7c898a;
+  color: #687373;
   font-size: 10px;
 }
 .metric-tile strong {
@@ -1186,7 +1187,7 @@ select:focus-visible {
   letter-spacing: -0.05em;
 }
 .metric-tile small {
-  color: #899596;
+  color: #687171;
   font-size: 10px;
 }
 .profile-grid {
@@ -1216,7 +1217,7 @@ select:focus-visible {
 }
 .small-label {
   display: block;
-  color: #718083;
+  color: #657375;
   font-size: 11px;
 }
 .overview-progress-head strong {
@@ -1251,7 +1252,7 @@ select:focus-visible {
   background: var(--amber);
 }
 .overview-progress p {
-  color: #849193;
+  color: #667172;
   font-size: 10px;
   margin: 13px 0 0;
 }
@@ -1269,7 +1270,7 @@ select:focus-visible {
   display: block;
 }
 .overview-facts span {
-  color: #7b898a;
+  color: #677373;
   font-size: 10px;
 }
 .overview-facts strong {
@@ -1279,7 +1280,7 @@ select:focus-visible {
   margin: 4px 0;
 }
 .overview-facts small {
-  color: #859394;
+  color: #677273;
   font-size: 10px;
 }
 .promise-preview-list {
@@ -1340,7 +1341,7 @@ select:focus-visible {
   border-color: #f1dbad;
 }
 .status-badge.neutral {
-  color: #687678;
+  color: #657375;
   background: #edf1f2;
   border-color: #dce4e4;
 }
@@ -1364,7 +1365,7 @@ select:focus-visible {
   flex: 1;
 }
 .promise-progress-row > span {
-  color: #768486;
+  color: #657173;
   font-size: 10px;
   min-width: 28px;
   text-align: right;
@@ -1375,7 +1376,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #849092;
+  color: #667071;
   font-size: 10px;
 }
 .promise-preview-foot {
@@ -1408,7 +1409,7 @@ select:focus-visible {
 .activity-card-top {
   display: flex;
   justify-content: space-between;
-  color: #758486;
+  color: #647173;
   font-size: 11px;
 }
 .activity-card-top svg {
@@ -1423,7 +1424,7 @@ select:focus-visible {
 }
 .activity-card > small {
   display: block;
-  color: #889496;
+  color: #677071;
   font-size: 10px;
   margin-top: 10px;
 }
@@ -1474,7 +1475,7 @@ select:focus-visible {
   display: block;
 }
 .integrity-card span {
-  color: #819091;
+  color: #677373;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-size: 9px;
@@ -1486,7 +1487,7 @@ select:focus-visible {
   margin: 5px 0;
 }
 .integrity-card small {
-  color: #839091;
+  color: #687373;
   font-size: 10px;
   line-height: 1.35;
 }
@@ -1510,7 +1511,7 @@ select:focus-visible {
   font-size: 12px;
 }
 .evidence-note p {
-  color: #667879;
+  color: #617374;
   font-size: 11px;
   line-height: 1.45;
   margin: 6px 0 10px;
@@ -1543,7 +1544,7 @@ select:focus-visible {
 .mandate-labels {
   display: flex;
   justify-content: space-between;
-  color: #8a9797;
+  color: #687272;
   font-size: 9px;
 }
 .mandate-line {
@@ -1570,7 +1571,7 @@ select:focus-visible {
 }
 .mandate-progress p,
 .side-card > p {
-  color: #788687;
+  color: #677374;
   font-size: 11px;
   line-height: 1.5;
   margin: 0;
@@ -1632,7 +1633,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 7px;
-  color: #718082;
+  color: #657374;
   font-size: 11px;
 }
 .search-page-note svg {
@@ -1650,7 +1651,7 @@ select:focus-visible {
   align-items: center;
   gap: 7px;
   padding: 13px 14px;
-  color: #768586;
+  color: #657273;
   background: transparent;
   white-space: nowrap;
   border-bottom: 2px solid transparent;
@@ -1694,14 +1695,14 @@ select:focus-visible {
   font-weight: 800;
 }
 .filter-heading button {
-  color: #7a8989;
+  color: #667373;
   background: none;
   font-size: 10px;
   cursor: pointer;
 }
 .filter-panel > label {
   display: block;
-  color: #758486;
+  color: #647173;
   font-size: 10px;
   margin: 0 0 17px;
 }
@@ -1729,7 +1730,7 @@ select:focus-visible {
 .filter-caption {
   text-transform: uppercase;
   letter-spacing: 0.11em;
-  color: #849092;
+  color: #667071;
   font-size: 9px;
   font-weight: 800;
 }
@@ -1743,7 +1744,7 @@ select:focus-visible {
   accent-color: var(--brand);
 }
 .check-row label {
-  color: #6e7d7f;
+  color: #657274;
   font-size: 11px;
 }
 .filter-tip {
@@ -1752,7 +1753,7 @@ select:focus-visible {
   margin-top: 27px;
   padding: 12px;
   background: #edf5f2;
-  color: #687b7b;
+  color: #617373;
 }
 .filter-tip p {
   font-size: 10px;
@@ -1786,7 +1787,7 @@ select:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  color: #718083;
+  color: #657375;
   background: transparent;
   font-size: 11px;
   cursor: pointer;
@@ -1822,7 +1823,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #839091;
+  color: #687373;
   font-size: 10px;
 }
 .result-meta [data-slot="badge"] {
@@ -1835,7 +1836,7 @@ select:focus-visible {
   margin: 4px 0 2px;
 }
 .result-info p {
-  color: #718082;
+  color: #657374;
   margin: 0 0 7px;
   font-size: 11px;
 }
@@ -1859,7 +1860,7 @@ select:focus-visible {
   min-height: 280px;
   padding: 40px;
   border: 1px dashed #c6d5d3;
-  color: #7c898a;
+  color: #687373;
   margin-top: 17px;
 }
 .empty-search > svg {
@@ -1939,7 +1940,7 @@ select:focus-visible {
 }
 .status-filter-row button {
   white-space: nowrap;
-  color: #7c898a;
+  color: #687373;
   background: transparent;
   font-size: 10px;
   padding: 8px 9px;
@@ -1964,7 +1965,7 @@ select:focus-visible {
   border: 1px solid var(--line);
   background: #fff;
   padding: 6px 9px;
-  color: #839091;
+  color: #687373;
 }
 .inline-search input {
   width: 100%;
@@ -2008,7 +2009,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 5px;
-  color: #849193;
+  color: #667172;
   font-size: 10px;
   margin-bottom: 17px;
 }
@@ -2062,7 +2063,7 @@ select:focus-visible {
   align-items: flex-end;
   gap: 9px;
   font-size: 10px;
-  color: #7e8c8d;
+  color: #677273;
   white-space: nowrap;
 }
 .promise-detail-grid {
@@ -2145,7 +2146,7 @@ select:focus-visible {
   font-size: 12px;
 }
 .found-item p {
-  color: #788687;
+  color: #677374;
   font-size: 11px;
   line-height: 1.45;
   margin: 6px 0 8px;
@@ -2167,7 +2168,7 @@ select:focus-visible {
   margin: 5px 0 0;
 }
 .evidence-chain-heading > span {
-  color: #859293;
+  color: #677172;
   font-size: 10px;
   white-space: nowrap;
 }
@@ -2220,7 +2221,7 @@ select:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  color: #879697;
+  color: #667172;
   font-size: 9px;
 }
 .chain-item-meta span:last-child {
@@ -2234,7 +2235,7 @@ select:focus-visible {
   margin: 8px 0 5px;
 }
 .chain-item-body p {
-  color: #768586;
+  color: #657273;
   font-size: 10px;
   line-height: 1.4;
   margin: 0;
@@ -2246,7 +2247,7 @@ select:focus-visible {
   padding: 11px 0 2px;
 }
 .evidence-strength-line > span:last-child {
-  color: #849192;
+  color: #667171;
   font-size: 10px;
 }
 .promise-classification {
@@ -2276,14 +2277,14 @@ select:focus-visible {
 }
 .classification-score small {
   display: block;
-  color: #77918f;
+  color: #5f7372;
   font-size: 9px;
   letter-spacing: 0;
   font-weight: 400;
 }
 .promise-classification > p {
   max-width: 650px;
-  color: #68807f;
+  color: #5f7574;
   font-size: 11px;
   margin: 13px 0 0;
 }
@@ -2300,7 +2301,7 @@ select:focus-visible {
   display: block;
 }
 .classification-factors span {
-  color: #7d9290;
+  color: #637473;
   font-size: 9px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -2327,7 +2328,7 @@ select:focus-visible {
   border-bottom: 1px solid var(--line);
 }
 .history-date {
-  color: #819091;
+  color: #677373;
   font-size: 10px;
   padding-top: 3px;
 }
@@ -2350,7 +2351,7 @@ select:focus-visible {
   margin: 0 0 3px;
 }
 .history-item p {
-  color: #788687;
+  color: #677374;
   font-size: 11px;
   margin: 0 0 6px;
 }
@@ -2461,13 +2462,13 @@ select:focus-visible {
   border-bottom: 1px solid var(--line);
 }
 .candidacy-table-head {
-  color: #889697;
+  color: #677172;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-size: 9px;
 }
 .candidacy-row {
-  color: #667677;
+  color: #637374;
   font-size: 11px;
 }
 .candidacy-row strong {
@@ -2505,7 +2506,7 @@ select:focus-visible {
   font-weight: 800;
 }
 .dossier-indicator-head small {
-  color: #899697;
+  color: #687172;
   font-size: 10px;
   margin-top: 4px;
 }
@@ -2566,7 +2567,7 @@ select:focus-visible {
   margin-top: 10px;
 }
 .dossier-theme-card small {
-  color: #889596;
+  color: #677171;
   font-size: 9px;
   margin-top: 4px;
 }
@@ -2601,7 +2602,7 @@ select:focus-visible {
   font-size: 12px;
 }
 .legal-record p {
-  color: #768586;
+  color: #657273;
   font-size: 11px;
   line-height: 1.45;
   margin: 6px 0 10px;
@@ -2617,7 +2618,7 @@ select:focus-visible {
   border-bottom: 1px solid var(--line);
 }
 .asset-row span {
-  color: #879394;
+  color: #697273;
   font:
     10px "Courier New",
     monospace;
@@ -2628,11 +2629,11 @@ select:focus-visible {
   font-size: 15px;
 }
 .asset-row small {
-  color: #829091;
+  color: #677373;
   font-size: 9px;
 }
 .dossier-footnote {
-  color: #7b8a8b;
+  color: #677374;
   font-size: 10px;
   line-height: 1.45;
   margin: 13px 0 0;
@@ -2646,7 +2647,7 @@ select:focus-visible {
   align-items: center;
   gap: 8px;
   padding: 22px 0 0;
-  color: #7d8b8c;
+  color: #667172;
   font-size: 10px;
 }
 .dossier-footer-note svg {
@@ -2688,7 +2689,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 5px;
-  color: #7d8d8e;
+  color: #667374;
   font-size: 10px;
   font-weight: 800;
 }
@@ -2783,7 +2784,7 @@ select:focus-visible {
   gap: 17px;
   border-top: 1px solid var(--line);
   padding-top: 14px;
-  color: #7b8b8c;
+  color: #647172;
   font-size: 10px;
 }
 .radar-legend span {
@@ -2832,7 +2833,7 @@ select:focus-visible {
   font-size: 12px;
 }
 .radar-dimension-head small {
-  color: #859495;
+  color: #677374;
   font-size: 10px;
   margin-top: 4px;
 }
@@ -2842,7 +2843,7 @@ select:focus-visible {
   letter-spacing: -0.05em;
 }
 .radar-dimension-head em {
-  color: #839091;
+  color: #687373;
   font-size: 9px;
   font-style: normal;
   font-weight: 400;
@@ -2856,7 +2857,7 @@ select:focus-visible {
   margin-top: 12px;
 }
 .radar-dimension-foot > span {
-  color: #8a9899;
+  color: #667071;
   font-size: 9px;
   text-align: right;
 }
@@ -2881,7 +2882,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 7px;
-  color: #7e8d8e;
+  color: #677374;
   font-size: 10px;
   padding: 24px 0 0;
 }
@@ -2903,7 +2904,7 @@ select:focus-visible {
   padding: 10px 0;
 }
 .metadata-list dt {
-  color: #879394;
+  color: #697273;
   font-size: 10px;
 }
 .metadata-list dd {
@@ -2921,7 +2922,7 @@ select:focus-visible {
 .plain-list li {
   display: flex;
   gap: 7px;
-  color: #728183;
+  color: #647173;
   font-size: 11px;
   padding: 7px 0;
 }
@@ -2942,7 +2943,7 @@ select:focus-visible {
   padding: 13px 15px;
   background: #f3f5ef;
   border: 1px solid #dde5d6;
-  color: #67756d;
+  color: #64726a;
   margin-bottom: 22px;
 }
 .compare-warning svg {
@@ -2977,7 +2978,7 @@ select:focus-visible {
 }
 .compare-person-selector > span {
   display: block;
-  color: #8a9797;
+  color: #687272;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-size: 9px;
@@ -3005,7 +3006,7 @@ select:focus-visible {
   font-size: 14px;
 }
 .compare-person-preview small {
-  color: #7d898a;
+  color: #687373;
   font-size: 10px;
   margin-top: 2px;
 }
@@ -3068,7 +3069,7 @@ select:focus-visible {
   font-size: 13px;
 }
 .comparison-heading small {
-  color: #7a8989;
+  color: #667373;
   font-size: 10px;
   margin-top: 3px;
 }
@@ -3083,7 +3084,7 @@ select:focus-visible {
 }
 .metric-label small {
   display: block;
-  color: #879394;
+  color: #697273;
   font-size: 9px;
   margin-top: 2px;
 }
@@ -3130,7 +3131,7 @@ select:focus-visible {
   justify-content: space-between;
   align-items: center;
   padding: 14px 21px;
-  color: #7a898a;
+  color: #667373;
   font-size: 10px;
 }
 .comparison-foot span {
@@ -3191,7 +3192,7 @@ select:focus-visible {
 }
 .monitoring-summary p {
   max-width: 510px;
-  color: #6e807f;
+  color: #627372;
   font-size: 13px;
   margin: 0;
 }
@@ -3213,7 +3214,7 @@ select:focus-visible {
   letter-spacing: -0.07em;
 }
 .monitoring-summary-stats span {
-  color: #718382;
+  color: #637372;
   font-size: 10px;
   line-height: 1.25;
 }
@@ -3261,7 +3262,7 @@ select:focus-visible {
   margin: 0 0 3px;
 }
 .tracked-info span {
-  color: #849192;
+  color: #667171;
   font-size: 10px;
 }
 .tracked-update {
@@ -3299,7 +3300,7 @@ select:focus-visible {
 .alert-meta {
   display: flex;
   gap: 9px;
-  color: #899596;
+  color: #687171;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: 8px;
@@ -3323,7 +3324,7 @@ select:focus-visible {
   font-size: 11px;
 }
 .radar-list strong {
-  color: #849192;
+  color: #667171;
   font-size: 10px;
   font-weight: 500;
 }
@@ -3344,7 +3345,7 @@ select:focus-visible {
   font-size: 11px;
 }
 .preference-row small {
-  color: #869394;
+  color: #687273;
   font-size: 10px;
   margin-top: 2px;
 }
@@ -3407,7 +3408,7 @@ select:focus-visible {
   position: absolute;
   top: 13px;
   right: 16px;
-  color: #708082;
+  color: #647374;
   font-size: 25px;
   background: transparent;
   cursor: pointer;
@@ -3419,7 +3420,7 @@ select:focus-visible {
   margin: 5px 0 8px;
 }
 .monitor-modal > p {
-  color: #748284;
+  color: #667274;
   font-size: 13px;
   margin: 0 0 20px;
 }
@@ -3450,7 +3451,7 @@ select:focus-visible {
   font-size: 13px;
 }
 .monitor-options button > span small {
-  color: #7d8c8d;
+  color: #667273;
   font-size: 11px;
   margin-top: 2px;
 }
@@ -3541,7 +3542,7 @@ select:focus-visible {
   font-size: 13px;
 }
 .chain-row small {
-  color: #778586;
+  color: #667273;
   font-size: 10px;
   line-height: 1.4;
   margin-top: 5px;
@@ -3593,7 +3594,7 @@ select:focus-visible {
   margin: 0 0 3px;
 }
 .source-method-card p {
-  color: #7b898a;
+  color: #677373;
   font-size: 10px;
   margin: 0 0 7px;
 }
@@ -3620,7 +3621,7 @@ select:focus-visible {
   padding: 20px;
 }
 .layers-grid span {
-  color: #739490;
+  color: #5b7673;
   font-size: 11px;
 }
 .layers-grid h3 {
@@ -3629,7 +3630,7 @@ select:focus-visible {
   margin: 27px 0 5px;
 }
 .layers-grid p {
-  color: #748485;
+  color: #637172;
   font-size: 11px;
   margin: 0;
 }
@@ -3651,7 +3652,7 @@ select:focus-visible {
   margin: 6px 0 13px;
 }
 .correction-copy p {
-  color: #758486;
+  color: #647173;
   font-size: 13px;
   max-width: 470px;
   margin: 0 0 20px;
@@ -3685,7 +3686,7 @@ select:focus-visible {
   font-size: 12px;
 }
 .correction-steps small {
-  color: #7d8c8d;
+  color: #667273;
   font-size: 10px;
   margin-top: 2px;
 }
@@ -3706,7 +3707,7 @@ select:focus-visible {
   margin: 7px 0 10px;
 }
 .correction-form-section > div:first-child p {
-  color: #758486;
+  color: #647173;
   font-size: 12px;
   margin: 0;
 }
@@ -3715,7 +3716,7 @@ select:focus-visible {
   gap: 12px;
 }
 .correction-form label {
-  color: #718082;
+  color: #657374;
   font-size: 10px;
 }
 .correction-form input,
@@ -3760,7 +3761,7 @@ select:focus-visible {
   font-size: 13px;
 }
 .correction-success p {
-  color: #6d887d;
+  color: #5d746b;
   font-size: 11px;
   margin: 5px 0 0;
 }
@@ -3800,7 +3801,7 @@ select:focus-visible {
 }
 .faq-item p {
   max-width: 650px;
-  color: #748485;
+  color: #637172;
   font-size: 12px;
   margin: -2px 0 17px;
 }
@@ -3828,7 +3829,7 @@ select:focus-visible {
   margin: 2px 0 4px;
 }
 .independence-card p {
-  color: #708182;
+  color: #627172;
   font-size: 11px;
   margin: 0;
 }
@@ -3891,7 +3892,7 @@ select:focus-visible {
   gap: 8px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #809091;
+  color: #667373;
   font-size: 9px;
 }
 .timeline-kind {
@@ -3903,7 +3904,7 @@ select:focus-visible {
   margin: 8px 0 4px;
 }
 .timeline-card p {
-  color: #788687;
+  color: #677374;
   font-size: 11px;
   margin: 0 0 9px;
 }
@@ -4042,11 +4043,12 @@ select:focus-visible {
     grid-template-columns: repeat(2, 1fr);
     gap: 13px 0;
   }
-  .trust-strip > div {
+  .trust-strip > div,
+  .trust-strip > a {
     border-right: 0;
     padding: 0 12px;
   }
-  .trust-strip > div:nth-child(odd) {
+  .trust-strip > :nth-child(odd) {
     padding-left: 0;
     border-right: 1px solid var(--line);
   }

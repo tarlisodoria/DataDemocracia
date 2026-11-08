@@ -96,7 +96,11 @@ export default function Compare() {
               </small>
             </div>
           </div>
-          <select value={left} onChange={e => setLeft(e.target.value)}>
+          <select
+            aria-label="Primeira pessoa da comparação"
+            value={left}
+            onChange={e => setLeft(e.target.value)}
+          >
             {politicians.map(p => (
               <option key={p.id} value={p.id}>
                 {p.name}
@@ -122,7 +126,11 @@ export default function Compare() {
               </small>
             </div>
           </div>
-          <select value={right} onChange={e => setRight(e.target.value)}>
+          <select
+            aria-label="Segunda pessoa da comparação"
+            value={right}
+            onChange={e => setRight(e.target.value)}
+          >
             {politicians.map(p => (
               <option key={p.id} value={p.id}>
                 {p.name}

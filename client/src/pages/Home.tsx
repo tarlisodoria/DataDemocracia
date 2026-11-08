@@ -121,21 +121,21 @@ export default function Home() {
       </section>
 
       <section className="trust-strip">
-        <div>
-          <span className="trust-number">4</span>
-          <span>camadas de evidência</span>
-        </div>
-        <div>
-          <span className="trust-number">12</span>
-          <span>fontes conectadas</span>
-        </div>
+        <a href="/explorar/votacoes-2025.html">
+          <span className="trust-number">429</span>
+          <span>votações reais da Câmara em 2025</span>
+        </a>
+        <a href="/explorar/votacoes-2025.html">
+          <span className="trust-number">551</span>
+          <span>deputados com voto registrado</span>
+        </a>
         <div>
           <span className="trust-number">0</span>
-          <span>opiniões vendidas</span>
+          <span>notas ou rankings gerais</span>
         </div>
-        <div className="trust-note">
-          <ShieldCheck size={17} /> Metodologia aberta
-        </div>
+        <a className="trust-note" href="/explorar/votacoes-2025.html">
+          <ShieldCheck size={17} /> Explorar o painel de votações
+        </a>
       </section>
 
       <section className="how-section">

@@ -1,5 +1,9 @@
 import { createClient } from "@neondatabase/neon-js";
-import { politicians as demoPoliticians, type Politician } from "@/data/demo";
+import {
+  initialsAvatar,
+  politicians as demoPoliticians,
+  type Politician,
+} from "@/data/demo";
 
 const dataApiUrl = import.meta.env.VITE_NEON_DATA_API_URL?.trim();
 const authUrl = import.meta.env.VITE_NEON_AUTH_URL?.trim();
@@ -85,7 +89,7 @@ export function mergePublicPoliticians(
       state: record.state ?? "UF não informada",
       city: record.city ?? "Município não informado",
       period: record.period ?? "Período não informado",
-      portrait: record.portrait_url ?? "",
+      portrait: record.portrait_url ?? initialsAvatar(record.name),
       type: isCandidacy ? "candidatura" : "mandato",
       summary:
         "Perfil público em fase de catalogação. Consulte as fontes e o histórico de revisão antes de tirar conclusões.",

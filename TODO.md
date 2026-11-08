@@ -19,6 +19,42 @@ Este arquivo é o recorte operacional do [roadmap completo](docs/ROADMAP.md). It
 - [x] Home e Explorar conectados ao catálogo público do Neon, com fallback demonstrativo.
 - [x] Build estático, typecheck e publicação em Cloudflare Workers Static Assets.
 
+## Revisão completa do site — novembro de 2026
+
+Navegação por todas as rotas em desktop (1440 px) e celular (390 px), com verificação automática de acessibilidade (axe, WCAG 2.1 AA).
+
+### Corrigido nesta revisão
+
+- [x] Perfis demonstrativos usavam fotos de banco de imagens de pessoas reais; agora usam iniciais.
+- [x] Endereços inválidos (`/politico/qualquer-coisa`, `/promessa/x`) mostravam outro perfil; agora mostram 404.
+- [x] `/politico/:id/atuacao` e `/integridade` abriam o topo do perfil; agora abrem na seção certa.
+- [x] Todas as páginas tinham o mesmo título na aba do navegador.
+- [x] Zoom bloqueado no celular (`maximum-scale=1`).
+- [x] 75 tons de cinza de texto abaixo do contraste mínimo de 4,5:1.
+- [x] Seletores sem rótulo, botão de busca sem nome e barras de progresso com ARIA inválido.
+- [x] A home dizia "12 fontes conectadas" sem nenhuma fonte conectada; agora mostra os números reais do painel de votações.
+
+### P0 — confiança
+
+- [ ] Remover o contador fixo "2" do sino de monitoramento e o botão "Entrar" que não faz nada, ou marcá-los como "em breve".
+- [ ] Revisar textos que afirmam funcionalidades inexistentes ("rastreabilidade por registro", "atualizações relevantes").
+- [ ] Mostrar a faixa "dados demonstrativos" de forma consistente no topo de perfis, promessas, dossiê e radar.
+- [ ] Trocar o retrato vazio do radar e da comparação pelo mesmo avatar de iniciais.
+
+### P1 — produto
+
+- [ ] Home: dar ao painel de votações um bloco próprio com o achado principal, no lugar do card estático "O que foi prometido?".
+- [ ] Busca: pesquisar também deputados reais do painel (551) e levar ao painel filtrado.
+- [ ] Perfil: para deputados do painel, mostrar votos reais (participação, distribuição por tipo) com link para o painel.
+- [ ] Páginas de perfil com título e descrição próprios para compartilhamento (Open Graph).
+- [ ] Bundle principal acima de 500 kB: dividir rotas com `import()`.
+
+### P2 — acabamento
+
+- [ ] Alvos de toque menores que 32 px em chips e links de rodapé (média de 10 por página).
+- [ ] Página 404 com busca e links úteis em vez de só voltar ao início.
+- [ ] Painel de votações: botão de compartilhar o recorte atual (filtros na URL).
+
 ## Próximo ciclo — dados públicos conectados
 
 ### Catálogo e perfil

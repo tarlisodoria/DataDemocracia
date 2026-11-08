@@ -16,8 +16,8 @@ import {
   Vote,
   WalletCards,
 } from "lucide-react";
-import { Link, useParams } from "wouter";
-import { useState } from "react";
+import { Link, useLocation, useParams } from "wouter";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { getPolitician } from "@/data/demo";
@@ -37,7 +37,13 @@ import {
 
 export default function PoliticianProfile() {
   const { id } = useParams<{ id: string }>();
-  const politician = getPolitician(id);
+  const politician = getPolitician(id)!; // a rota só renderiza com id válido
+  const [location] = useLocation();
+  // /atuacao e /integridade abrem o perfil já na seção correspondente.
+  useEffect(() => {
+    const section = location.split("/")[3];
+    if (section) document.getElementById(section)?.scrollIntoView();
+  }, [location]);
   const [tracked, setTracked] = useState(politician.tracked);
   const [showToast, setShowToast] = useState(false);
   const activePromises = politician.promisesList.filter(
@@ -238,6 +244,7 @@ export default function PoliticianProfile() {
             ))}
           </div>
           <SectionHeading
+            id="atuacao"
             eyebrow="Atuação"
             title="O que aparece nos registros"
             description="Métricas compatíveis com o cargo e com o período consultado."
@@ -286,6 +293,7 @@ export default function PoliticianProfile() {
             <Timeline events={politician.timeline} />
           </div>
           <SectionHeading
+            id="integridade"
             eyebrow="Integridade"
             title="Leia cada situação jurídica com precisão"
             description="A plataforma não transforma investigação, denúncia ou processo em condenação."

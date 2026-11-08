@@ -200,14 +200,16 @@ export function SectionHeading({
   title,
   description,
   action,
+  id,
 }: {
   eyebrow?: string;
   title: string;
   description?: string;
   action?: ReactNode;
+  id?: string;
 }) {
   return (
-    <div className="section-heading">
+    <div className="section-heading" id={id}>
       <div>
         {eyebrow && <div className="eyebrow">{eyebrow}</div>}
         <h2>{title}</h2>
@@ -496,7 +498,14 @@ export function ProgressBar({
   tone?: "blue" | "teal" | "amber";
 }) {
   return (
-    <div className="progress-track" aria-label={`${value}%`}>
+    <div
+      className="progress-track"
+      role="progressbar"
+      aria-valuenow={value}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-label={`${value}%`}
+    >
       <span
         className={`progress-fill ${tone}`}
         style={{ width: `${value}%` }}
@@ -547,7 +556,7 @@ export function SearchBox({
         placeholder="Busque um político, cidade, partido, tema ou promessa"
         aria-label="Buscar no DataDemocracia"
       />
-      <button type="submit">
+      <button type="submit" aria-label="Pesquisar">
         {compact ? <ArrowUpRight size={17} /> : "Pesquisar"}
       </button>
     </form>
