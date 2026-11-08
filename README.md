@@ -8,7 +8,7 @@ Cada informação carrega fonte, data, escopo, contexto e limitações. O projet
 
 ## Destaque: painel de votações da Câmara
 
-[`/explorar/votacoes-2025.html`](client/public/explorar/votacoes-2025.html) reúne as **429 votações nominais do Plenário da Câmara em 2025**, com o voto de cada um dos 551 deputados, coletadas da API oficial de dados abertos.
+[`/explorar/votacoes-2025.html`](client/explorar/votacoes-2025.html) reúne as **429 votações nominais do Plenário da Câmara em 2025**, com o voto de cada um dos 551 deputados, coletadas da API oficial de dados abertos.
 
 - Filtro cruzado em todos os visuais: mapa do Brasil por estado e região, tipo de voto, mês, partido, tema, votação e deputado. Ctrl/Shift soma seleções.
 - Títulos que descrevem o achado do recorte atual, recalculados a cada clique.
@@ -63,8 +63,8 @@ Nunca coloque connection string, senha de banco ou credencial administrativa no 
 
 ```text
 client/
-  public/
-    explorar/             painéis estáticos e seus dados (votacoes-2025.html)
+  explorar/               painéis analíticos (votacoes-2025.html), entradas próprias do Vite
+  public/explorar/dados/  dados dos painéis, gerados por scripts/
   src/
     App.tsx               rotas
     pages/                telas do produto

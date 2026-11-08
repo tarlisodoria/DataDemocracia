@@ -1,6 +1,6 @@
 # Painel de votações da Câmara
 
-Página estática em `client/public/explorar/votacoes-2025.html`, publicada em `/explorar/votacoes-2025.html`. Fica fora do roteador React de propósito: carrega só o necessário (ECharts e dois arquivos JSON) e pode ser compartilhada isoladamente.
+Página própria em `client/explorar/votacoes-2025.html`, publicada em `/explorar/votacoes-2025.html`. É uma segunda entrada do build do Vite, fora do roteador React: carrega só o necessário (os módulos do ECharts que usa e dois arquivos JSON em `client/public/explorar/dados/`) e pode ser compartilhada isoladamente. Nenhum recurso vem de CDN externo.
 
 ## Fonte e coleta
 

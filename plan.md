@@ -18,7 +18,7 @@ O MVP navegável está publicado como frontend estático. Home e Explorar consul
 - PostgreSQL com RLS;
 - Cloudflare Workers Static Assets para publicação;
 - `pnpm build` como build público;
-- painéis analíticos estáticos em `client/public/explorar/`, alimentados por scripts de coleta.
+- painéis analíticos em `client/explorar/` (entradas próprias do Vite), alimentados por scripts de coleta.
 
 ## Direção visual
 

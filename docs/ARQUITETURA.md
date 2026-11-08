@@ -49,7 +49,7 @@ Fontes oficiais → pipeline de ingestão → normalização → revisão → Ne
 
 ## Painéis de exploração
 
-Painéis analíticos ficam em `client/public/explorar/` como páginas estáticas, fora do roteador React. Cada painel lê arquivos JSON gerados por scripts em `scripts/` a partir das fontes oficiais. O primeiro é o de votações da Câmara, documentado em [PAINEL-VOTACOES.md](PAINEL-VOTACOES.md).
+Painéis analíticos ficam em `client/explorar/` como entradas próprias do build do Vite, fora do roteador React; seus dados ficam em `client/public/explorar/dados/`. Cada painel lê arquivos JSON gerados por scripts em `scripts/` a partir das fontes oficiais. O primeiro é o de votações da Câmara, documentado em [PAINEL-VOTACOES.md](PAINEL-VOTACOES.md).
 
 ## Dados e proveniência
 

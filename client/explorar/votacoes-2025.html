@@ -871,8 +871,28 @@
     </div>
     <div class="tip" id="tip" role="tooltip"></div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.1/echarts.min.js"></script>
-    <script>
+    <script type="module">
+      import * as echarts from "echarts/core";
+      import { BarChart, PieChart, HeatmapChart } from "echarts/charts";
+      import {
+        GridComponent,
+        TooltipComponent,
+        VisualMapComponent,
+        GraphicComponent,
+      } from "echarts/components";
+      import { CanvasRenderer } from "echarts/renderers";
+
+      echarts.use([
+        BarChart,
+        PieChart,
+        HeatmapChart,
+        GridComponent,
+        TooltipComponent,
+        VisualMapComponent,
+        GraphicComponent,
+        CanvasRenderer,
+      ]);
+
       function start(D, BR) {
         const MESES = [
           "jan",

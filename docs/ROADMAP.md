@@ -141,7 +141,7 @@ Cada item deve sair do backlog apenas quando houver código, fonte ou política 
 - **Páginas públicas com HTML gerado no build** (Astro com ilhas React) para que perfis sejam indexados por buscadores, mantendo Neon e Cloudflare.
 - **Coleta agendada em Python** (GitHub Actions), gravando no Neon e preservando os arquivos originais em armazenamento de objetos.
 - **Arquivos Parquet + DuckDB-WASM** para painéis com filtro cruzado sobre volumes maiores que o do painel atual.
-- O painel de votações em `client/public/explorar/` serve de referência visual e de interação para essa migração.
+- O painel de votações em `client/explorar/` serve de referência visual e de interação para essa migração.
 
 ## Ordem recomendada para a próxima execução
 

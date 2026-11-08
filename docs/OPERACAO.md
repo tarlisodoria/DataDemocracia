@@ -13,7 +13,7 @@ Preencha apenas valores públicos de frontend no ambiente local. A connection st
 
 1. Leia `README.md`, `docs/ROADMAP.md` e a documentação específica da área.
 2. Verifique `git status` e preserve alterações existentes.
-3. Confirme as rotas em `client/src/App.tsx` e os links para páginas em `client/public/explorar/`.
+3. Confirme as rotas em `client/src/App.tsx` e os links para os painéis em `client/explorar/`.
 4. Entenda se a tela usa Neon, fallback demonstrativo ou ambos.
 5. Faça a alteração no menor conjunto de arquivos possível.
 
