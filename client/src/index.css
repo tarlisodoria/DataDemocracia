@@ -4424,3 +4424,12 @@ select:focus-visible {
   color: var(--muted-foreground);
   font-size: 13px;
 }
+.how-figure {
+  display: block;
+  color: var(--brand-dark);
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}

@@ -138,6 +138,54 @@ export default function Home() {
         </a>
       </section>
 
+      {/* shortcut: números fixos da coleta de 03/11/2026; ler do arquivo quando a coleta for agendada */}
+      <section className="how-section">
+        <SectionHeading
+          eyebrow="Dados reais"
+          title="O que o Plenário da Câmara votou em 2025"
+          description="429 votações nominais e o voto de 551 deputados, coletados da API de dados abertos da Câmara em 03/11/2026."
+          action={
+            <a href="/explorar/votacoes-2025.html" className="text-link">
+              Abrir o painel <ArrowRight size={15} />
+            </a>
+          }
+        />
+        <div className="how-grid">
+          <div className="how-step highlighted">
+            <span className="how-figure">58,5%</span>
+            <h3>dos votos registrados foram "Sim"</h3>
+            <p>
+              Entre os partidos com 10 ou mais deputados, a proporção foi de
+              53,6% (PSOL) a 62,7% (PODE).
+            </p>
+            <a href="/explorar/votacoes-2025.html">
+              Ver por partido <ArrowRight size={15} />
+            </a>
+          </div>
+          <div className="how-step">
+            <span className="how-figure">55</span>
+            <h3>votações em novembro, o mês mais intenso</h3>
+            <p>
+              Janeiro não teve votação nominal: o Congresso estava em recesso.
+            </p>
+            <a href="/explorar/votacoes-2025.html?mes=11">
+              Ver novembro <ArrowRight size={15} />
+            </a>
+          </div>
+          <div className="how-step">
+            <span className="how-figure">27,7%</span>
+            <h3>das situações não têm voto registrado</h3>
+            <p>
+              Inclui faltas, licenças, missões oficiais e suplentes fora de
+              exercício. Não é sinônimo de ausência.
+            </p>
+            <a href="/explorar/votacoes-2025.html">
+              Entender o cálculo <ArrowRight size={15} />
+            </a>
+          </div>
+        </div>
+      </section>
+
       <section className="how-section">
         <SectionHeading
           eyebrow="Como funciona"
