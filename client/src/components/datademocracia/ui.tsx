@@ -158,6 +158,11 @@ export function PageShell({
 }) {
   return (
     <div className="app-shell">
+      <div className="demo-notice" role="note">
+        Perfis, promessas e evidências são <strong>demonstrativos</strong>. As{" "}
+        <a href="/explorar/votacoes-2025.html">votações da Câmara</a> e a busca
+        de deputados usam dados oficiais.
+      </div>
       <SiteHeader />
       <main className="container page-main">
         {title && (

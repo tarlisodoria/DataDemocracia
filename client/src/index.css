@@ -4433,3 +4433,14 @@ select:focus-visible {
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
+.demo-notice {
+  padding: 7px 16px;
+  background: var(--brand-dark);
+  color: #e8f1f1;
+  font-size: 12.5px;
+  text-align: center;
+}
+.demo-notice a {
+  color: #fff;
+  text-decoration: underline;
+}

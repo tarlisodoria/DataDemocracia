@@ -38,7 +38,7 @@ Navegação por todas as rotas em desktop (1440 px) e celular (390 px), com veri
 
 - [x] Remover o contador fixo "2" do sino de monitoramento e desativar "Entrar" até existir login (com aviso ao passar o mouse).
 - [ ] Revisar textos que afirmam funcionalidades inexistentes ("rastreabilidade por registro", "atualizações relevantes").
-- [ ] Mostrar a faixa "dados demonstrativos" de forma consistente no topo de perfis, promessas, dossiê e radar.
+- [x] Faixa única no topo de todas as telas separando dados demonstrativos de dados oficiais.
 - [ ] Trocar o retrato vazio do radar e da comparação pelo mesmo avatar de iniciais.
 
 ### P1 — produto
