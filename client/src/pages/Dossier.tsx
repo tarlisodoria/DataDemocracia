@@ -80,7 +80,7 @@ export default function Dossier() {
               {politician.state}
             </p>
             <AuditStamp
-              protocol={`DD-DOSSIE-${politician.id.slice(0, 4).toUpperCase()}-2026`}
+              protocol="Registro demonstrativo"
               version="v0.4 demonstrativo"
               reviewedAt="28 out. 2026"
             />

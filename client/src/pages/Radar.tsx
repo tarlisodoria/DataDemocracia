@@ -73,7 +73,7 @@ export default function Radar() {
             de {politician.shortName}. Nenhuma delas representa uma nota geral.
           </p>
           <AuditStamp
-            protocol={`DD-RADAR-${politician.id.slice(0, 4).toUpperCase()}-2026`}
+            protocol="Registro demonstrativo"
             version="v0.4 demonstrativo"
             reviewedAt="28 out. 2026"
           />

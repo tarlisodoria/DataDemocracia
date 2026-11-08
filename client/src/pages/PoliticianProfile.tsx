@@ -120,7 +120,7 @@ export default function PoliticianProfile() {
           <CalendarDays size={15} /> Atualizado em 28 out. 2026
         </span>
         <AuditStamp
-          protocol="DD-PERFIL-MA-2026"
+          protocol="Registro demonstrativo"
           version="v0.4 demonstrativo"
           reviewedAt="28 out. 2026"
         />

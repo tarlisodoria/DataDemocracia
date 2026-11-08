@@ -321,8 +321,8 @@ export function ProvenancePanel({
         </div>
       </dl>
       <p className="provenance-note">
-        O protocolo identifica esta versão demonstrativa. A integração real
-        preservará o link e o documento original.
+        Registros demonstrativos não têm protocolo. Na integração com as fontes
+        oficiais, este campo mostra o identificador do documento original.
       </p>
     </div>
   );

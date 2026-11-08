@@ -479,7 +479,7 @@ export function getPromiseAuditMeta(promise: PromiseItem): PromiseAuditMeta {
         : "Parcial";
 
   return {
-    protocol: `DD-${promise.id.toUpperCase()}-2026`,
+    protocol: "Sem protocolo (registro demonstrativo)",
     version: "v0.4 demonstrativo",
     extractedAt: promise.updated,
     reviewedAt: "28 out. 2026",
