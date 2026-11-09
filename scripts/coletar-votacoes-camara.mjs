@@ -10,6 +10,7 @@ import { writeFile } from "node:fs/promises";
 const API = "https://dadosabertos.camara.leg.br/api/v2";
 const ANO = Number(process.argv[2] ?? 2025);
 const SAIDA = `client/public/explorar/dados/votacoes-plenario-${ANO}.json`;
+const SAIDA_DEPUTADOS = `client/public/explorar/dados/deputados-${ANO}.json`;
 const PLENARIO = 180;
 const CONCORRENCIA = 6;
 // Votações com poucos votos registrados são simbólicas ou têm só o voto do presidente.
@@ -189,7 +190,28 @@ async function main() {
     temas,
     v,
   };
+  // Cadastro de cada deputado: nome civil, foto oficial, e-mail do gabinete e redes sociais.
+  const cadastros = await emLotes(deps, d => get(`/deputados/${d[0]}`));
+  const perfis = Object.fromEntries(
+    deps.map((d, i) => {
+      const c = cadastros[i];
+      return [
+        d[0],
+        {
+          nomeCivil: c?.nomeCivil ?? null,
+          foto: c?.ultimoStatus?.urlFoto ?? null,
+          email: c?.ultimoStatus?.gabinete?.email ?? null,
+          redes: (c?.redeSocial ?? []).filter(u => /^https?:\/\//.test(u)),
+        },
+      ];
+    })
+  );
+
   await writeFile(SAIDA, JSON.stringify(dados));
+  await writeFile(
+    SAIDA_DEPUTADOS,
+    JSON.stringify({ coleta: dados.coleta, perfis })
+  );
   console.log(
     `${SAIDA}: ${deps.length} deputados, ${vot.length} votações, ${temas.length} temas`
   );

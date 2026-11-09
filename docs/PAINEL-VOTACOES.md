@@ -25,6 +25,8 @@ O arquivo é compacto para carregar rápido (cerca de 350 KB, 70 KB com gzip):
 | `v`      | uma string por votação, um caractere por deputado: `S` sim, `N` não, `A` abstenção, `O` obstrução, `R` artigo 17, `.` sem registro |
 | `coleta` | data da coleta                                                                                                                     |
 
+O cadastro dos deputados fica em `dados/deputados-2025.json`: para cada id, nome civil, foto oficial, e-mail do gabinete e redes sociais (`/deputados/{id}` da API). As páginas `/deputado/:id` funcionam sem esse arquivo, só sem foto e redes.
+
 O mapa usa `dados/brasil-uf.json`, com os contornos dos estados de [@svg-maps/brazil](https://github.com/VictorCazanave/svg-maps) (CC BY 4.0).
 
 ## Regras de cálculo
