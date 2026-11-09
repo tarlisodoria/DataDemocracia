@@ -21,6 +21,8 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 22
+          # O script não usa dependências; sem isso a v5 tenta o cache do pnpm.
+          package-manager-cache: false
       - name: Coletar na API da Câmara
         run: node scripts/coletar-votacoes-camara.mjs ${{ inputs.ano || '2025' }}
       - name: Registrar mudanças
