@@ -5,6 +5,7 @@ export type VotacoesArquivo = {
   deps: [number, string, string, string][];
   // [id, data, o que foi votado, proposição, idProposição, temas]
   vot?: [string, string, string, string, number | null, number[]][];
+  temas?: string[];
   v: string[];
 };
 
@@ -175,6 +176,142 @@ export function perfilDeputado(
     alinhamento,
     ultimos: ultimos.reverse().slice(0, 10),
   };
+}
+
+// Índices dos colegas de sigla, sem o próprio deputado.
+const colegasDe = (dados: VotacoesArquivo, j: number) =>
+  dados.deps.flatMap((d, k) =>
+    d[2] === dados.deps[j][2] && k !== j ? [k] : []
+  );
+
+// Voto da maioria dos colegas entre Sim e Não; null em empate ou sem votos.
+function maioria(linha: string, colegas: number[]) {
+  let s = 0;
+  let n = 0;
+  for (const k of colegas) {
+    if (linha[k] === "S") s++;
+    else if (linha[k] === "N") n++;
+  }
+  return { voto: s === n ? null : s > n ? "S" : "N", s, n };
+}
+
+export type Divergencia = {
+  id: string;
+  data: string;
+  proposicao: string;
+  oQue: string;
+  voto: string;
+  partidoSim: number;
+  partidoNao: number;
+};
+
+// Votações em que o Sim/Não do deputado foi o oposto do da maioria da sigla.
+export function divergencias(dados: VotacoesArquivo, j: number): Divergencia[] {
+  const colegas = colegasDe(dados, j);
+  const saida: Divergencia[] = [];
+  dados.v.forEach((linha, i) => {
+    const c = linha[j];
+    if (c !== "S" && c !== "N") return;
+    const m = maioria(linha, colegas);
+    const v = dados.vot?.[i];
+    if (m.voto && m.voto !== c && v)
+      saida.push({
+        id: v[0],
+        data: v[1],
+        proposicao: v[3],
+        oQue: v[2],
+        voto: NOME_VOTO[c],
+        partidoSim: m.s,
+        partidoNao: m.n,
+      });
+  });
+  return saida.reverse();
+}
+
+export type TemaVoto = {
+  tema: string;
+  votos: number;
+  simDeputado: number;
+  simPartido: number | null;
+  simCamara: number;
+};
+
+// % de Sim por tema: deputado, colegas de sigla e Câmara inteira, sobre votos registrados.
+export function votosPorTema(
+  dados: VotacoesArquivo,
+  j: number,
+  minimo = 5
+): TemaVoto[] {
+  if (!dados.vot || !dados.temas) return [];
+  const colegas = colegasDe(dados, j);
+  const acc = dados.temas.map(() => ({ d: [0, 0], p: [0, 0], c: [0, 0] }));
+  const conta = (alvo: number[], c: string) => {
+    if (c === ".") return;
+    alvo[1]++;
+    if (c === "S") alvo[0]++;
+  };
+  dados.v.forEach((linha, i) => {
+    for (const t of dados.vot![i][5]) {
+      const a = acc[t];
+      conta(a.d, linha[j]);
+      for (const k of colegas) conta(a.p, linha[k]);
+      for (let k = 0; k < linha.length; k++) conta(a.c, linha[k]);
+    }
+  });
+  return acc
+    .map((a, t) => ({
+      tema: dados.temas![t],
+      votos: a.d[1],
+      simDeputado: a.d[1] ? a.d[0] / a.d[1] : 0,
+      simPartido: a.p[1] ? a.p[0] / a.p[1] : null,
+      simCamara: a.c[1] ? a.c[0] / a.c[1] : 0,
+    }))
+    .filter(x => x.votos >= minimo)
+    .sort((x, y) => y.votos - x.votos);
+}
+
+export type Semelhante = {
+  id: number;
+  nome: string;
+  partido: string;
+  uf: string;
+  concordancia: number;
+  emComum: number;
+};
+
+// Deputados que mais votaram igual (Sim/Não) nas votações em que ambos votaram.
+export function maisParecidos(
+  dados: VotacoesArquivo,
+  j: number,
+  quantos = 5,
+  minimoEmComum = 100
+): Semelhante[] {
+  const saida: Semelhante[] = [];
+  dados.deps.forEach(([id, nome, partido, uf], k) => {
+    if (k === j) return;
+    let comum = 0;
+    let iguais = 0;
+    for (const linha of dados.v) {
+      const a = linha[j];
+      const b = linha[k];
+      if ((a === "S" || a === "N") && (b === "S" || b === "N")) {
+        comum++;
+        if (a === b) iguais++;
+      }
+    }
+    if (comum >= minimoEmComum)
+      saida.push({
+        id,
+        nome,
+        partido,
+        uf,
+        concordancia: iguais / comum,
+        emComum: comum,
+      });
+  });
+  return saida
+    .sort((x, y) => y.concordancia - x.concordancia || y.emComum - x.emComum)
+    .slice(0, quantos);
 }
 
 export type Rede = { nome: string; url: string };

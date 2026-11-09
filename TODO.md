@@ -57,6 +57,31 @@ Navegação por todas as rotas em desktop (1440 px) e celular (390 px), com veri
 - [ ] Página 404 com busca e links úteis em vez de só voltar ao início.
 - [x] Painel de votações: botão de compartilhar o recorte atual (filtros na URL).
 
+## Perfil de deputado — referência da página oficial da Câmara
+
+A página `camara.leg.br/deputados/{id}` já mostra dados brutos do mandato. O DataDemocracia não deve repeti-la: deve trazer o que ela não faz (contexto, comparação, divergências, afinidade e cruzamento com outras fontes).
+
+### Feito
+
+- [x] Resumo em texto do ano, recalculado a cada coleta.
+- [x] Voto por tema comparado ao partido e à Câmara.
+- [x] Votações em que o deputado contrariou a maioria da sigla.
+- [x] Deputados com maior afinidade de voto (mínimo de 100 votações em comum).
+
+### Aproveitar da página oficial (via API de dados abertos)
+
+- [ ] Presença em Plenário e em comissões, com a média da Câmara ao lado (`/deputados/{id}/eventos`).
+- [ ] Cota parlamentar por mês e por tipo de despesa, comparada à mediana da UF (`/deputados/{id}/despesas`).
+- [ ] Proposições de autoria e relatoria, com situação de tramitação (`/proposicoes?idDeputadoAutor`).
+- [ ] Comissões e cargos de liderança (`/deputados/{id}/orgaos`).
+- [ ] Emendas ao orçamento autorizadas, empenhadas e pagas (Portal da Transparência).
+
+### Diferenciais seguintes
+
+- [ ] Comparar dois deputados lado a lado com dados reais (hoje a comparação usa perfis demonstrativos).
+- [ ] Histórico eleitoral do TSE: candidaturas, votos recebidos e bens declarados.
+- [ ] Mudanças de partido no ano refletidas nos cálculos (hoje vale a sigla do último voto).
+
 ## Próximo ciclo — dados públicos conectados
 
 ### Catálogo e perfil

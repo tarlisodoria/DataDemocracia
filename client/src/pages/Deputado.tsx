@@ -12,7 +12,7 @@ import {
   Youtube,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useParams } from "wouter";
+import { Link, useParams } from "wouter";
 import { Badge } from "@/components/ui/badge";
 import { initialsAvatar } from "@/data/demo";
 import {
@@ -20,7 +20,13 @@ import {
   carregarVotacoes,
   identificarRede,
   painelDeputado,
+  divergencias,
+  maisParecidos,
   perfilDeputado,
+  votosPorTema,
+  type Divergencia,
+  type Semelhante,
+  type TemaVoto,
   type PerfilCadastro,
   type PerfilVotos,
 } from "@/lib/camara";
@@ -58,6 +64,9 @@ type Estado =
       partido: string;
       uf: string;
       cadastro?: PerfilCadastro;
+      divergiu: Divergencia[];
+      temas: TemaVoto[];
+      parecidos: Semelhante[];
     };
 
 export default function Deputado() {
@@ -70,6 +79,7 @@ export default function Deputado() {
       .then(([dados, cadastros]) => {
         if (!ativo) return;
         const votos = perfilDeputado(dados, Number(id));
+        const j = dados.deps.findIndex(d => d[0] === Number(id));
         if (!votos) return setEstado({ fase: "ausente" });
         const [, nome, partido, uf] = dados.deps.find(
           d => d[0] === Number(id)
@@ -83,6 +93,9 @@ export default function Deputado() {
           partido,
           uf,
           cadastro: cadastros[id],
+          divergiu: divergencias(dados, j),
+          temas: votosPorTema(dados, j).slice(0, 10),
+          parecidos: maisParecidos(dados, j),
         });
       })
       .catch(() => ativo && setEstado({ fase: "erro" }));
@@ -110,7 +123,17 @@ export default function Deputado() {
       </PageShell>
     );
 
-  const { votos, nome, partido, uf, cadastro, coleta } = estado;
+  const {
+    votos,
+    nome,
+    partido,
+    uf,
+    cadastro,
+    coleta,
+    divergiu,
+    temas,
+    parecidos,
+  } = estado;
   const { resumo, tipos, alinhamento } = votos;
   const total = resumo.registrados + resumo.semRegistro;
   const redes = (cadastro?.redes ?? []).map(identificarRede);
@@ -200,6 +223,24 @@ export default function Deputado() {
         />
         <span>Votações nominais do Plenário em 2025</span>
       </div>
+
+      <p className="dep-lede">
+        Em 2025, {nome} registrou voto em{" "}
+        <strong>{pct(resumo.registrados, total)}</strong> das votações nominais
+        do Plenário (média da Câmara: {pct(votos.mediaParticipacao, 1)}). Votou
+        com a maioria do {partido} em{" "}
+        <strong>{pct(alinhamento.comMaioria, alinhamento.base)}</strong> dos
+        votos Sim/Não e votou contra ela em <strong>{divergiu.length}</strong>{" "}
+        votações.
+        {parecidos[0] && (
+          <>
+            {" "}
+            Quem mais votou igual: <strong>{parecidos[0].nome}</strong> (
+            {parecidos[0].partido}-{parecidos[0].uf}), em{" "}
+            {pct(parecidos[0].concordancia, 1)} das votações em comum.
+          </>
+        )}
+      </p>
 
       <section className="profile-metrics">
         <MetricTile
@@ -297,6 +338,115 @@ export default function Deputado() {
           </table>
         </div>
       </section>
+
+      {temas.length > 0 && (
+        <section className="dep-section">
+          <SectionHeading
+            eyebrow="Por tema"
+            title="Como votou em cada assunto"
+            description="Percentual de votos Sim por tema da proposição, comparado ao partido e à Câmara inteira. Mostra os temas com mais votos."
+          />
+          <div className="dep-table-wrap">
+            <table className="dep-table">
+              <thead>
+                <tr>
+                  <th>Tema</th>
+                  <th className="n">Votos</th>
+                  <th className="n">Sim · deputado</th>
+                  <th className="n">Sim · {partido}</th>
+                  <th className="n">Sim · Câmara</th>
+                </tr>
+              </thead>
+              <tbody>
+                {temas.map(t => (
+                  <tr key={t.tema}>
+                    <td>{t.tema}</td>
+                    <td className="n">{t.votos}</td>
+                    <td className="n">
+                      <strong>{pct(t.simDeputado, 1)}</strong>
+                    </td>
+                    <td className="n">
+                      {t.simPartido === null ? "—" : pct(t.simPartido, 1)}
+                    </td>
+                    <td className="n">{pct(t.simCamara, 1)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
+
+      <section className="dep-section">
+        <SectionHeading
+          eyebrow="Divergências"
+          title={`Quando votou diferente do ${partido}`}
+          description={`${divergiu.length} votações em que o voto Sim/Não foi o oposto do da maioria dos colegas de sigla. As mais recentes primeiro.`}
+        />
+        {divergiu.length === 0 ? (
+          <p className="dep-empty">Nenhuma divergência registrada em 2025.</p>
+        ) : (
+          <div className="dep-table-wrap">
+            <table className="dep-table">
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>O que foi votado</th>
+                  <th>Voto</th>
+                  <th>Colegas de sigla</th>
+                </tr>
+              </thead>
+              <tbody>
+                {divergiu.slice(0, 10).map(d => (
+                  <tr key={d.id}>
+                    <td>{d.data.split("-").reverse().join("/")}</td>
+                    <td>
+                      <a href={`/explorar/votacoes-2025.html?votacao=${d.id}`}>
+                        {d.proposicao ? `${d.proposicao}: ` : ""}
+                        {d.oQue}
+                      </a>
+                    </td>
+                    <td>
+                      <strong>{d.voto}</strong>
+                    </td>
+                    <td>
+                      {d.partidoSim} Sim · {d.partidoNao} Não
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+
+      {parecidos.length > 0 && (
+        <section className="dep-section">
+          <SectionHeading
+            eyebrow="Afinidade de voto"
+            title="Quem mais votou igual"
+            description="Deputados com o maior percentual de votos Sim/Não iguais nas votações em que os dois votaram (mínimo de 100 em comum). Não indica aliança nem qualidade."
+          />
+          <ul className="dep-peers">
+            {parecidos.map(s => (
+              <li key={s.id}>
+                <Link href={`/deputado/${s.id}`}>
+                  <img src={initialsAvatar(s.nome)} alt="" />
+                  <span>
+                    <strong>{s.nome}</strong>
+                    <small>
+                      {s.partido}-{s.uf}
+                      {s.partido !== partido && " · outro partido"}
+                    </small>
+                  </span>
+                  <b>{pct(s.concordancia, 1)}</b>
+                  <small>{s.emComum} em comum</small>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className="dep-section dep-notes">
         <h2>Como ler estes números</h2>

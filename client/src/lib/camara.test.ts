@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   buscarDeputados,
+  divergencias,
+  maisParecidos,
+  votosPorTema,
   identificarRede,
   perfilDeputado,
   resumirDeputados,
@@ -79,5 +82,50 @@ describe("identificarRede", () => {
       "Facebook"
     );
     expect(identificarRede("https://fulano.com.br").nome).toBe("Site");
+  });
+});
+
+describe("comparações do perfil", () => {
+  const arq = {
+    coleta: "x",
+    deps: [
+      [1, "Ana", "PT", "PA"],
+      [2, "Bia", "PT", "SP"],
+      [3, "Caio", "PT", "RJ"],
+      [4, "Davi", "PL", "SP"],
+    ] as [number, string, string, string][],
+    vot: [
+      ["v1", "2025-02-01", "Votação 1", "PL 1/2025", 1, [0]],
+      ["v2", "2025-03-01", "Votação 2", "PL 2/2025", 2, [0, 1]],
+      ["v3", "2025-04-01", "Votação 3", "PL 3/2025", 3, [1]],
+    ] as [string, string, string, string, number | null, number[]][],
+    temas: ["Saúde", "Educação"],
+    v: ["SSSN", "NSSN", "SNNS"],
+  };
+
+  it("lista as votações em que o deputado contrariou a maioria da sigla", () => {
+    const d = divergencias(arq, 0);
+    // v2: colegas S,S e Ana N; v3: colegas N,N e Ana S. Mais recente primeiro.
+    expect(d.map(x => x.id)).toEqual(["v3", "v2"]);
+    expect(d[1]).toMatchObject({ voto: "Não", partidoSim: 2, partidoNao: 0 });
+  });
+
+  it("calcula % de Sim por tema para deputado, partido e Câmara", () => {
+    const [saude] = votosPorTema(arq, 0, 1);
+    expect(saude.tema).toBe("Saúde");
+    expect(saude.votos).toBe(2);
+    expect(saude.simDeputado).toBe(0.5);
+    expect(saude.simPartido).toBe(1);
+    expect(saude.simCamara).toBe(5 / 8);
+  });
+
+  it("ordena quem mais vota igual, exigindo votações em comum", () => {
+    const p = maisParecidos(arq, 0, 3, 1);
+    expect(p[0]).toMatchObject({
+      nome: "Davi",
+      concordancia: 2 / 3,
+      emComum: 3,
+    });
+    expect(maisParecidos(arq, 0, 3, 10)).toEqual([]);
   });
 });

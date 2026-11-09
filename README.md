@@ -19,6 +19,13 @@ Cada informação carrega fonte, data, escopo, contexto e limitações. O projet
 
 Cada um dos 551 deputados tem uma página própria em `/deputado/:id`, com foto oficial, redes sociais, distribuição dos votos, participação comparada à média da Câmara e alinhamento com a maioria do partido. A busca do site leva a essas páginas.
 
+O que a página oficial da Câmara não mostra e o DataDemocracia calcula:
+
+- **Contexto:** participação comparada à média da Câmara e voto por tema comparado ao partido e à Câmara.
+- **Divergências:** a lista de votações em que o deputado votou contra a maioria da própria sigla.
+- **Afinidade de voto:** quem mais votou igual a ele, inclusive de outros partidos.
+- **Resumo em texto** que se recalcula com os dados de cada coleta.
+
 Detalhes de método e formato dos dados em [docs/PAINEL-VOTACOES.md](docs/PAINEL-VOTACOES.md).
 
 ## Estado atual
