@@ -4420,6 +4420,7 @@ select:focus-visible {
   font-size: 15px;
 }
 .real-deputies-more {
+  justify-self: start;
   margin: 0;
   color: var(--muted-foreground);
   font-size: 13px;

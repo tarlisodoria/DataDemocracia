@@ -46,20 +46,26 @@ export default function SearchPage() {
     deputados: DeputadoResumo[];
   } | null>(null);
 
-  // Os votos reais só são baixados quando há algo digitado.
   useEffect(() => {
-    if (!query.trim() || camara) return;
     carregarDeputados()
       .then(setCamara)
       .catch(() => {
         // Sem o arquivo do painel, a busca segue só com o catálogo.
       });
-  }, [query, camara]);
+  }, []);
 
+  // Sem termo de busca, lista todos os deputados em ordem alfabética.
   const deputados = useMemo(
-    () => (camara ? buscarDeputados(camara.deputados, query) : []),
+    () =>
+      !camara
+        ? []
+        : query.trim()
+          ? buscarDeputados(camara.deputados, query)
+          : camara.deputados,
     [camara, query]
   );
+  const [limite, setLimite] = useState(20);
+  useEffect(() => setLimite(20), [query]);
 
   useEffect(() => {
     if (!isNeonConfigured) return;
@@ -133,17 +139,11 @@ export default function SearchPage() {
               key={tab}
             >
               {tab}
-              <span>
-                {tab === "Políticos"
-                  ? 3
-                  : tab === "Promessas"
-                    ? 7
-                    : tab === "Proposições"
-                      ? 12
-                      : tab === "Temas"
-                        ? 18
-                        : 27}
-              </span>
+              {tab === "Políticos" && (
+                <span>
+                  {directory.length + (camara?.deputados.length ?? 0)}
+                </span>
+              )}
             </button>
           )
         )}
@@ -293,7 +293,7 @@ export default function SearchPage() {
                       source={`Câmara dos Deputados · coleta ${camara.coleta}`}
                     />
                   </div>
-                  {deputados.slice(0, 20).map(d => (
+                  {deputados.slice(0, limite).map(d => (
                     <Link
                       href={paginaDeputado(d.id)}
                       className="result-row"
@@ -331,11 +331,14 @@ export default function SearchPage() {
                       </div>
                     </Link>
                   ))}
-                  {deputados.length > 20 && (
-                    <p className="real-deputies-more">
-                      e mais {deputados.length - 20}. Refine a busca para ver os
-                      demais.
-                    </p>
+                  {deputados.length > limite && (
+                    <Button
+                      variant="outline"
+                      className="real-deputies-more"
+                      onClick={() => setLimite(n => n + 30)}
+                    >
+                      Mostrar mais ({deputados.length - limite} restantes)
+                    </Button>
                   )}
                 </div>
               )}
