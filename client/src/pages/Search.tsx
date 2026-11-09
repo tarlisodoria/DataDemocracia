@@ -15,7 +15,7 @@ import { initialsAvatar, politicians } from "@/data/demo";
 import {
   buscarDeputados,
   carregarDeputados,
-  painelDeputado,
+  paginaDeputado,
   type DeputadoResumo,
 } from "@/lib/camara";
 import {
@@ -294,8 +294,8 @@ export default function SearchPage() {
                     />
                   </div>
                   {deputados.slice(0, 20).map(d => (
-                    <a
-                      href={painelDeputado(d.id)}
+                    <Link
+                      href={paginaDeputado(d.id)}
                       className="result-row"
                       key={d.id}
                     >
@@ -329,7 +329,7 @@ export default function SearchPage() {
                         </span>
                         <ArrowRight size={18} />
                       </div>
-                    </a>
+                    </Link>
                   ))}
                   {deputados.length > 20 && (
                     <p className="real-deputies-more">

@@ -45,7 +45,7 @@ Navegação por todas as rotas em desktop (1440 px) e celular (390 px), com veri
 
 - [x] Home: bloco "Dados reais" com três achados do painel de votações e links para o recorte de cada um.
 - [x] Busca: pesquisar também deputados reais do painel (551) e levar ao painel filtrado.
-- [ ] Perfil: para deputados do painel, mostrar votos reais (participação, distribuição por tipo) com link para o painel.
+- [x] Página `/deputado/:id` para os 551 deputados: foto oficial, redes sociais, participação, distribuição dos votos, alinhamento com o partido e últimas votações.
 - [ ] Páginas de perfil com título e descrição próprios para compartilhamento (Open Graph).
 - [x] Bundle principal acima de 500 kB: rotas e SDK do Neon carregados sob demanda (520 → 344 kB).
 

@@ -17,6 +17,8 @@ Cada informação carrega fonte, data, escopo, contexto e limitações. O projet
 - Universo de cálculo visível em cada número e fonte em cada card.
 - Modo auditoria com link para cada votação na API da Câmara.
 
+Cada um dos 551 deputados tem uma página própria em `/deputado/:id`, com foto oficial, redes sociais, distribuição dos votos, participação comparada à média da Câmara e alinhamento com a maioria do partido. A busca do site leva a essas páginas.
+
 Detalhes de método e formato dos dados em [docs/PAINEL-VOTACOES.md](docs/PAINEL-VOTACOES.md).
 
 ## Estado atual

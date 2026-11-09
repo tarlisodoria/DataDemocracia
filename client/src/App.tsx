@@ -18,6 +18,7 @@ const Monitoring = lazy(() => import("./pages/Monitoring"));
 const Methodology = lazy(() => import("./pages/Methodology"));
 const Dossier = lazy(() => import("./pages/Dossier"));
 const Radar = lazy(() => import("./pages/Radar"));
+const Deputado = lazy(() => import("./pages/Deputado"));
 
 const TITLES: [string, string][] = [
   ["/buscar", "Políticos"],
@@ -73,6 +74,7 @@ function Router() {
             )
           }
         </Route>
+        <Route path="/deputado/:id" component={Deputado} />
         <Route path="/comparar" component={Compare} />
         <Route path="/monitoramento" component={Monitoring} />
         <Route path="/metodologia" component={Methodology} />

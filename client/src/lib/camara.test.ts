@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { buscarDeputados, resumirDeputados } from "./camara";
+import {
+  buscarDeputados,
+  identificarRede,
+  perfilDeputado,
+  resumirDeputados,
+} from "./camara";
 
 const dados = {
   coleta: "03/11/2026",
@@ -26,5 +31,53 @@ describe("buscarDeputados", () => {
   });
   it("não devolve nada com termo vazio", () => {
     expect(buscarDeputados(lista, "  ")).toEqual([]);
+  });
+});
+
+describe("perfilDeputado", () => {
+  const arquivo = {
+    coleta: "09/11/2026",
+    deps: [
+      [1, "Ana", "PT", "PA"],
+      [2, "Bia", "PT", "SP"],
+      [3, "Caio", "PT", "RJ"],
+      [4, "Davi", "PL", "SP"],
+    ] as [number, string, string, string][],
+    vot: [
+      ["v1", "2025-02-01", "Votação 1", "PL 1/2025", 1, []],
+      ["v2", "2025-03-01", "Votação 2", "PL 2/2025", 2, []],
+      ["v3", "2025-04-01", "Votação 3", "", null, []],
+    ] as [string, string, string, string, number | null, number[]][],
+    v: ["SSSN", "NSSN", "A.SS"],
+  };
+
+  it("conta tipos de voto e alinhamento com a maioria do partido", () => {
+    const p = perfilDeputado(arquivo, 1)!;
+    expect(p.tipos).toEqual({ sim: 1, nao: 1, abstencao: 1, obstrucao: 0 });
+    // v1: colegas S,S -> maioria S, Ana S (alinha); v2: colegas S,S -> maioria S, Ana N (não alinha); v3: abstenção não entra
+    expect(p.alinhamento).toEqual({ comMaioria: 1, base: 2 });
+    expect(p.ultimos.map(u => u.id)).toEqual(["v3", "v2", "v1"]);
+    expect(p.ultimos[0].voto).toBe("Abstenção");
+  });
+
+  it("ignora votações sem registro e devolve null para id desconhecido", () => {
+    expect(perfilDeputado(arquivo, 2)!.ultimos.map(u => u.id)).toEqual([
+      "v2",
+      "v1",
+    ]);
+    expect(perfilDeputado(arquivo, 99)).toBeNull();
+  });
+});
+
+describe("identificarRede", () => {
+  it("reconhece redes pelo domínio e usa Site para o resto", () => {
+    expect(identificarRede("https://www.instagram.com/fulano").nome).toBe(
+      "Instagram"
+    );
+    expect(identificarRede("https://x.com/fulano").nome).toBe("X");
+    expect(identificarRede("https://m.facebook.com/fulano").nome).toBe(
+      "Facebook"
+    );
+    expect(identificarRede("https://fulano.com.br").nome).toBe("Site");
   });
 });
