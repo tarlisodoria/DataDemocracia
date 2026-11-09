@@ -1,11 +1,4 @@
-import {
-  ArrowRight,
-  CalendarDays,
-  Filter,
-  Flag,
-  Info,
-  Search,
-} from "lucide-react";
+import { ArrowRight, CalendarDays, Flag, Info, Search } from "lucide-react";
 import { Link } from "wouter";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -53,11 +46,6 @@ export default function Promises() {
       eyebrow="Monitoramento"
       title="Promessas e compromissos"
       description="Acompanhe o que foi declarado, o que está documentado e o que ainda não tem evidência suficiente."
-      actions={
-        <Button>
-          <Flag size={16} /> Acompanhar tema
-        </Button>
-      }
     >
       <Breadcrumbs
         items={[{ label: "Início", href: "/" }, { label: "Promessas" }]}
@@ -123,9 +111,6 @@ export default function Promises() {
             <option>Mobilidade</option>
             <option>Zeladoria</option>
           </select>
-          <Button variant="outline" size="icon" aria-label="Mais filtros">
-            <Filter size={16} />
-          </Button>
         </div>
       </div>
       <div className="promise-list-page">

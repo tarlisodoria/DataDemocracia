@@ -3,7 +3,6 @@ import {
   Filter,
   MapPin,
   Search as SearchIcon,
-  SlidersHorizontal,
   Sparkles,
   UsersRound,
 } from "lucide-react";
@@ -110,11 +109,6 @@ export default function SearchPage() {
       eyebrow="Explorar"
       title="Encontre o que importa para você"
       description="Pesquise pessoas, candidaturas, promessas, temas e cidades. Depois, escolha o que acompanhar."
-      actions={
-        <Button variant="outline">
-          <SlidersHorizontal size={16} /> Salvar busca
-        </Button>
-      }
     >
       <Breadcrumbs
         items={[{ label: "Início", href: "/" }, { label: "Explorar" }]}
@@ -225,9 +219,6 @@ export default function SearchPage() {
                 {results.length + deputados.length} resultados encontrados
               </h2>
             </div>
-            <button className="sort-button">
-              <SlidersHorizontal size={15} /> Mais relevantes
-            </button>
           </div>
           {activeTab !== "Políticos" ? (
             <div className="empty-search">

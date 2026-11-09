@@ -117,7 +117,6 @@ export default function Monitoring() {
           <SectionHeading
             eyebrow="Alertas recentes"
             title="O que mudou na sua rota"
-            action={<button className="text-button">Marcar como lidos</button>}
           />
           <div className="alert-list">
             {updates.map((update, index) => (

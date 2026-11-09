@@ -51,8 +51,14 @@ export default function Methodology() {
       title="A fonte vem antes da opinião"
       description="O DataDemocracia explica de onde vem cada informação, como ela foi tratada e onde ainda existem limites."
       actions={
-        <Button variant="outline">
-          <GitBranch size={16} /> Ver changelog
+        <Button variant="outline" asChild>
+          <a
+            href="https://github.com/tarlisodoria/DataDemocracia/commits/main"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <GitBranch size={16} /> Ver changelog
+          </a>
         </Button>
       }
     >

@@ -112,7 +112,12 @@ export default function PoliticianProfile() {
           >
             Radar analítico
           </Link>
-          <button className="icon-action" aria-label="Compartilhar perfil">
+          <button
+            className="icon-action"
+            aria-label="Copiar link do perfil"
+            title="Copiar link do perfil"
+            onClick={() => navigator.clipboard?.writeText(window.location.href)}
+          >
             <Link2 size={18} />
           </button>
         </div>

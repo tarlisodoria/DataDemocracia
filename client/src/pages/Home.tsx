@@ -219,8 +219,8 @@ export default function Home() {
             <Landmark size={22} />
             <h3>Acompanhe</h3>
             <p>
-              Monte sua própria rota de monitoramento e receba atualizações
-              relevantes.
+              Escolha políticos, temas e promessas para acompanhar. Os alertas
+              chegam quando as contas de usuário estiverem disponíveis.
             </p>
             <Link href="/monitoramento">
               Criar monitoramento <ArrowRight size={15} />

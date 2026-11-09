@@ -3,7 +3,6 @@ import {
   ArrowRight,
   CalendarDays,
   CheckCircle2,
-  ChevronDown,
   CircleAlert,
   Download,
   FileCheck2,
@@ -119,7 +118,10 @@ export default function PromiseDetail() {
                   source="Proposta de governo · página 18"
                   date="2022"
                 />
-                <button>
+                <button
+                  disabled
+                  title="Registro demonstrativo: não há documento original"
+                >
                   <Link2 size={14} /> Abrir documento
                 </button>
               </div>
@@ -237,9 +239,6 @@ export default function PromiseDetail() {
                 <h2>O que mudou ao longo do tempo</h2>
               </div>
               <div className="history-actions">
-                <button className="sort-button">
-                  Mais recente <ChevronDown size={15} />
-                </button>
                 <button
                   className="button button-secondary export-button"
                   onClick={exportEvidence}

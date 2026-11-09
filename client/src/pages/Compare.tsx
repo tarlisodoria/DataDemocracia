@@ -63,8 +63,10 @@ export default function Compare() {
       title="Compare sem transformar pessoas em placar"
       description="Veja registros lado a lado, com o período, o escopo e a fonte de cada métrica."
       actions={
-        <Button variant="outline">
-          <Scale size={16} /> Como comparar
+        <Button variant="outline" asChild>
+          <Link href="/metodologia">
+            <Scale size={16} /> Como comparar
+          </Link>
         </Button>
       }
     >
