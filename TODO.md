@@ -37,7 +37,9 @@ Navegação por todas as rotas em desktop (1440 px) e celular (390 px), com veri
 ### P0 — confiança
 
 - [x] Remover o contador fixo "2" do sino de monitoramento e desativar "Entrar" até existir login (com aviso ao passar o mouse).
-- [ ] Revisar textos que afirmam funcionalidades inexistentes ("rastreabilidade por registro", "atualizações relevantes").
+- [x] Revisar textos que afirmam funcionalidades inexistentes ("atualizações relevantes" virou aviso de que alertas dependem de contas).
+- [x] Remover ou ligar botões sem ação encontrados por varredura automática: Salvar busca, Mais relevantes, Acompanhar tema, Mais filtros, Marcar como lidos, Mais recente; "Como comparar" e "Ver changelog" viraram links; "Compartilhar perfil" copia o link; "Abrir documento" fica desativado em registros demonstrativos.
+- [x] Testes de navegação (Playwright) no CI: rotas principais sem erro e sem botões mortos, 404, busca de deputados e painel com filtro na URL.
 - [x] Faixa única no topo de todas as telas separando dados demonstrativos de dados oficiais.
 - [ ] Trocar o retrato vazio do radar e da comparação pelo mesmo avatar de iniciais.
 

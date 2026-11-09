@@ -51,6 +51,7 @@ pnpm install
 pnpm dev          # http://localhost:3000
 pnpm check        # TypeScript
 pnpm test         # Vitest
+pnpm e2e          # Playwright: navegação, 404, busca e painel
 pnpm build        # gera dist/public
 pnpm deploy       # build + wrangler deploy
 pnpm dados:votacoes 2025   # recoleta os dados do painel na API da Câmara

@@ -18,7 +18,8 @@
     "test": "vitest run",
     "format": "prettier --write .",
     "deploy": "pnpm build && wrangler deploy",
-    "dados:votacoes": "node scripts/coletar-votacoes-camara.mjs"
+    "dados:votacoes": "node scripts/coletar-votacoes-camara.mjs",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@neondatabase/neon-js": "0.9.0-beta",
@@ -40,6 +41,7 @@
     "wouter": "^3.3.5"
   },
   "devDependencies": {
+    "@playwright/test": "1.63.0",
     "@tailwindcss/vite": "^4.1.3",
     "@types/node": "^24.7.0",
     "@types/react": "^19.2.1",
