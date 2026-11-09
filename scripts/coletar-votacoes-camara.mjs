@@ -80,8 +80,10 @@ async function listarVotacoes() {
   const todas = [];
   for (const [ini, fim] of meses) {
     for (let pagina = 1; ; pagina++) {
+      // A listagem não tem repescagem no fim (dela depende o resto), então insiste mais.
       const lote = await get(
-        `/votacoes?idOrgao=${PLENARIO}&dataInicio=${ANO}-${ini}&dataFim=${ANO}-${fim}&itens=100&pagina=${pagina}`
+        `/votacoes?idOrgao=${PLENARIO}&dataInicio=${ANO}-${ini}&dataFim=${ANO}-${fim}&itens=100&pagina=${pagina}`,
+        12
       );
       if (!lote?.length) break;
       todas.push(...lote);
