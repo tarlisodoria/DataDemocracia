@@ -41,17 +41,31 @@ async function get(caminho, tentativas = 6) {
   }
 }
 
+// Uma falha isolada não derruba a coleta: os itens que falharam são refeitos
+// um a um ao final. Se ainda falharem, a coleta para sem gravar o arquivo,
+// para nunca publicar dados incompletos.
 async function emLotes(itens, fn) {
   const saida = new Array(itens.length);
+  const falhas = [];
   let i = 0;
   await Promise.all(
     Array.from({ length: CONCORRENCIA }, async () => {
       while (i < itens.length) {
         const k = i++;
-        saida[k] = await fn(itens[k], k);
+        try {
+          saida[k] = await fn(itens[k], k);
+        } catch (err) {
+          falhas.push(k);
+          console.warn(`falhou, será refeito: ${err.message}`);
+        }
       }
     })
   );
+  if (falhas.length) {
+    console.log(`refazendo ${falhas.length} item(ns) após 30 s`);
+    await espera(30_000);
+    for (const k of falhas) saida[k] = await fn(itens[k], k);
+  }
   return saida;
 }
 
