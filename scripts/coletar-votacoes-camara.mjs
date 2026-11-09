@@ -17,11 +17,18 @@ const MIN_VOTOS_NOMINAL = 50;
 
 const espera = ms => new Promise(r => setTimeout(r, ms));
 
-async function get(caminho, tentativas = 4) {
+// A API da Câmara responde 504 com frequência em consultas longas; esperamos
+// cada vez mais entre as tentativas.
+async function get(caminho, tentativas = 6) {
   for (let t = 1; t <= tentativas; t++) {
     try {
       const r = await fetch(API + caminho, {
-        headers: { Accept: "application/json" },
+        headers: {
+          Accept: "application/json",
+          "User-Agent":
+            "DataDemocracia (github.com/tarlisodoria/DataDemocracia)",
+        },
+        signal: AbortSignal.timeout(60_000),
       });
       if (r.status === 429 || r.status >= 500)
         throw new Error(`HTTP ${r.status}`);
@@ -29,7 +36,7 @@ async function get(caminho, tentativas = 4) {
       return (await r.json()).dados;
     } catch (err) {
       if (t === tentativas) throw new Error(`${caminho}: ${err.message}`);
-      await espera(1500 * t);
+      await espera(Math.min(60_000, 5_000 * 2 ** (t - 1)));
     }
   }
 }
@@ -48,16 +55,15 @@ async function emLotes(itens, fn) {
   return saida;
 }
 
-// A API limita o intervalo de datas por consulta; consultamos por trimestre.
+// Consultas mês a mês: intervalos maiores fazem a API estourar o tempo (HTTP 504).
 async function listarVotacoes() {
-  const trimestres = [
-    ["01-01", "03-31"],
-    ["04-01", "06-30"],
-    ["07-01", "09-30"],
-    ["10-01", "12-31"],
-  ];
+  const meses = Array.from({ length: 12 }, (_, m) => {
+    const mm = String(m + 1).padStart(2, "0");
+    const ultimo = new Date(Date.UTC(ANO, m + 1, 0)).getUTCDate();
+    return [`${mm}-01`, `${mm}-${ultimo}`];
+  });
   const todas = [];
-  for (const [ini, fim] of trimestres) {
+  for (const [ini, fim] of meses) {
     for (let pagina = 1; ; pagina++) {
       const lote = await get(
         `/votacoes?idOrgao=${PLENARIO}&dataInicio=${ANO}-${ini}&dataFim=${ANO}-${fim}&itens=100&pagina=${pagina}`
