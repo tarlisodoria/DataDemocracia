@@ -25,6 +25,7 @@ O que a página oficial da Câmara não mostra e o DataDemocracia calcula:
 - **Divergências:** a lista de votações em que o deputado votou contra a maioria da própria sigla.
 - **Afinidade de voto:** quem mais votou igual a ele, inclusive de outros partidos.
 - **Resumo em texto** que se recalcula com os dados de cada coleta.
+- **Cota parlamentar com contexto:** gastos por mês, por tipo e maiores fornecedores, com a média mensal comparada à mediana dos deputados do mesmo estado.
 
 Detalhes de método e formato dos dados em [docs/PAINEL-VOTACOES.md](docs/PAINEL-VOTACOES.md).
 
@@ -63,6 +64,7 @@ pnpm e2e          # Playwright: navegação, 404, busca e painel
 pnpm build        # gera dist/public
 pnpm deploy       # build + wrangler deploy
 pnpm dados:votacoes 2025   # recoleta os dados do painel na API da Câmara
+pnpm dados:cota 2025       # resume a cota parlamentar do ano
 ```
 
 Variáveis públicas de build (veja `.env.example`):
@@ -88,6 +90,7 @@ client/
     index.css             tokens visuais e layout
 scripts/
   coletar-votacoes-camara.mjs  coleta das votações na API da Câmara
+  coletar-cota-camara.mjs      resumo da cota parlamentar por deputado
 neon/
   schema.sql              schema PostgreSQL, grants e políticas RLS
 docs/                     arquitetura, dados, operação e roadmap
@@ -101,6 +104,7 @@ docs/                     arquitetura, dados, operação e roadmap
 | [Arquitetura](docs/ARQUITETURA.md)                   | Fronteiras entre frontend, banco e publicação    |
 | [Modelo de dados](docs/MODELO-DE-DADOS.md)           | Entidades, proveniência e regras de ausência     |
 | [Painel de votações](docs/PAINEL-VOTACOES.md)        | Método, formato e limitações do painel           |
+| [Cota parlamentar](docs/COTA-PARLAMENTAR.md)         | Fonte, formato e decisões do resumo de gastos    |
 | [Operação](docs/OPERACAO.md)                         | Verificações, deploy e recuperação               |
 | [Produção](docs/PRODUCAO-NEON.md)                    | Configuração publicada e checklist               |
 | [Guia de continuidade](docs/GUIA-DE-CONTINUIDADE.md) | Como assumir o projeto sem perder contexto       |
@@ -118,7 +122,7 @@ docs/                     arquitetura, dados, operação e roadmap
 
 Projeto independente criado por **Tarliso Doria** ([LinkedIn](https://www.linkedin.com/in/tarlisodoria/)).
 
-Mapa do Brasil no painel de votações: [@svg-maps/brazil](https://github.com/VictorCazanave/svg-maps), de Victor Cazanave, sob CC BY 4.0. Dados de votações: Câmara dos Deputados, API Dados Abertos.
+Mapa do Brasil no painel de votações: [@svg-maps/brazil](https://github.com/VictorCazanave/svg-maps), de Victor Cazanave, sob CC BY 4.0. Dados de votações e da cota parlamentar: Câmara dos Deputados, API Dados Abertos e arquivos anuais da CEAP.
 
 ## Licença
 
