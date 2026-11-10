@@ -86,6 +86,8 @@ A página `camara.leg.br/deputados/{id}` já mostra dados brutos do mandato. O D
 - [ ] Histórico eleitoral do TSE: candidaturas, votos recebidos e bens declarados.
 - [ ] Mudanças de partido no ano refletidas nos cálculos (hoje vale a sigla do último voto).
 - [x] Página `/gastos` com a cota da Câmara inteira: por tipo, por estado, por partido e tabela filtrável.
+- [x] Comparação com presença, projetos como primeiro autor e média mensal da cota.
+- [ ] Monitoramento: avisar quando a coleta mensal trouxer votos, gastos ou projetos novos de quem a pessoa acompanha.
 
 ## Próximo ciclo — dados públicos conectados
 

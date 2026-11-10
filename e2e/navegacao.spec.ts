@@ -179,3 +179,16 @@ test("página da cota sem o arquivo explica a ausência", async ({ page }) => {
   await page.goto("/gastos");
   await expect(page.getByText("ainda não foram coletados")).toBeVisible();
 });
+
+test("comparação inclui presença, projetos e cota quando há dados", async ({
+  page,
+}) => {
+  for (const arquivo of ["cota", "atuacao"])
+    await page.route(`**/explorar/dados/${arquivo}-2025.json`, route =>
+      route.fulfill({ path: `e2e/fixtures/${arquivo}-2025.json` })
+    );
+  await page.goto("/comparar?a=204379&b=220573");
+  const coluna = page.locator(".cmp-col").first();
+  await expect(coluna).toContainText("105 de 120");
+  await expect(coluna).toContainText("mediana de AP");
+});

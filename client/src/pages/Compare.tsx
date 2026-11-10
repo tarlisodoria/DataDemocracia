@@ -4,8 +4,14 @@ import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { initialsAvatar } from "@/data/demo";
 import {
+  carregarAtuacao,
   carregarCadastros,
+  carregarCota,
   carregarVotacoes,
+  resumoAtuacao,
+  resumoCota,
+  type AtuacaoArquivo,
+  type CotaArquivo,
   paginaDeputado,
   perfilDeputado,
   type PerfilCadastro,
@@ -21,6 +27,13 @@ const pct = (a: number, b: number) =>
   b
     ? `${((100 * a) / b).toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%`
     : "sem dado";
+
+const real = (v: number) =>
+  v.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    maximumFractionDigits: 0,
+  });
 
 // Votações em que os dois votaram Sim ou Não, e quantas vezes votaram igual.
 function concordancia(dados: VotacoesArquivo, a: number, b: number) {
@@ -44,8 +57,16 @@ export default function Compare() {
     {}
   );
   const [ids, setIds] = useState<[number, number] | null>(null);
+  // Arquivos opcionais: sem eles, as linhas de presença, projetos e cota não aparecem.
+  const [extras, setExtras] = useState<{
+    cota: CotaArquivo | null;
+    atuacao: AtuacaoArquivo | null;
+  }>({ cota: null, atuacao: null });
 
   useEffect(() => {
+    Promise.all([carregarCota(), carregarAtuacao()]).then(([cota, atuacao]) =>
+      setExtras({ cota, atuacao })
+    );
     Promise.all([carregarVotacoes(), carregarCadastros()]).then(([d, c]) => {
       setDados(d);
       setCadastros(c);
@@ -70,9 +91,18 @@ export default function Compare() {
     return ids.map(id => {
       const j = dados.deps.findIndex(d => d[0] === id);
       const [, nome, partido, uf] = dados.deps[j];
-      return { id, j, nome, partido, uf, votos: perfilDeputado(dados, id)! };
+      return {
+        id,
+        j,
+        nome,
+        partido,
+        uf,
+        votos: perfilDeputado(dados, id)!,
+        cota: extras.cota && resumoCota(extras.cota, dados, id),
+        atuacao: extras.atuacao && resumoAtuacao(extras.atuacao, dados, id),
+      };
     });
-  }, [dados, ids]);
+  }, [dados, ids, extras]);
 
   const entreEles =
     lados && dados ? concordancia(dados, lados[0].j, lados[1].j) : null;
@@ -178,6 +208,45 @@ export default function Compare() {
                         <small>{l.votos.alinhamento.base} votos Sim/Não</small>
                       </dd>
                     </div>
+                    {l.atuacao && (
+                      <>
+                        <div>
+                          <dt>Presença em sessões deliberativas</dt>
+                          <dd>
+                            {pct(
+                              l.atuacao.sessoes.presente,
+                              l.atuacao.sessoes.total
+                            )}{" "}
+                            <small>
+                              {l.atuacao.sessoes.presente} de{" "}
+                              {l.atuacao.sessoes.total}
+                            </small>
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>Projetos como primeiro autor</dt>
+                          <dd>
+                            {l.atuacao.projetos.principal}{" "}
+                            <small>
+                              mediana da Câmara:{" "}
+                              {l.atuacao.projetos.medianaPrincipal}
+                            </small>
+                          </dd>
+                        </div>
+                      </>
+                    )}
+                    {l.cota && (
+                      <div>
+                        <dt>Cota: média por mês com gasto</dt>
+                        <dd>
+                          {real(l.cota.mediaMensal)}{" "}
+                          <small>
+                            mediana de {l.cota.uf.sigla}:{" "}
+                            {real(l.cota.uf.mediana)}
+                          </small>
+                        </dd>
+                      </div>
+                    )}
                   </dl>
                 </div>
               );
