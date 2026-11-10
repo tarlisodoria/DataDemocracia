@@ -67,7 +67,8 @@ export function buscarDeputados(lista: DeputadoResumo[], termo: string) {
 }
 
 const json = <T>(url: string) =>
-  fetch(url).then(r => {
+  // no-cache: revalida com o servidor, para não mostrar a coleta anterior.
+  fetch(url, { cache: "no-cache" }).then(r => {
     if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
     return r.json() as Promise<T>;
   });

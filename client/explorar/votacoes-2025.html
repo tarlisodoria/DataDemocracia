@@ -2309,7 +2309,7 @@
         });
       }
       const carregar = u =>
-        fetch(u).then(r => {
+        fetch(u, { cache: "no-cache" }).then(r => {
           if (!r.ok) throw new Error(u + ": HTTP " + r.status);
           return r.json();
         });
