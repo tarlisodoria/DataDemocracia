@@ -71,10 +71,11 @@ A página `camara.leg.br/deputados/{id}` já mostra dados brutos do mandato. O D
 
 ### Aproveitar da página oficial (via API de dados abertos)
 
-- [ ] Presença em Plenário e em comissões, com a média da Câmara ao lado (`/deputados/{id}/eventos`).
+- [x] Presença em Plenário e em comissões, com a mediana da Câmara ao lado (arquivos de eventos e presença; ver docs/ATUACAO.md).
 - [x] Cota parlamentar por mês, por tipo e por fornecedor, comparada à mediana da UF (arquivo anual da CEAP; ver docs/COTA-PARLAMENTAR.md).
-- [ ] Proposições de autoria e relatoria, com situação de tramitação (`/proposicoes?idDeputadoAutor`).
-- [ ] Comissões e cargos de liderança (`/deputados/{id}/orgaos`).
+- [x] Proposições de autoria com situação de tramitação, separando primeiro autor de coautor.
+- [ ] Relatorias em andamento (campo `ultimoStatus.uriRelator` do arquivo de proposições).
+- [x] Comissões e cargos no ano (arquivo `orgaosDeputados`).
 - [ ] Emendas ao orçamento autorizadas, empenhadas e pagas (Portal da Transparência).
 
 ### Diferenciais seguintes
