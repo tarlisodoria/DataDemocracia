@@ -20,6 +20,7 @@
     "deploy": "pnpm build && wrangler deploy",
     "dados:votacoes": "node scripts/coletar-votacoes-camara.mjs",
     "dados:cota": "node scripts/coletar-cota-camara.mjs",
+    "dados:atuacao": "node scripts/coletar-atuacao-camara.mjs",
     "e2e": "playwright test"
   },
   "dependencies": {

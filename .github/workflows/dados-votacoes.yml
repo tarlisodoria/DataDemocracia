@@ -1,6 +1,6 @@
-name: Dados · votações e cota da Câmara
+name: Dados da Câmara
 
-# Recoleta as votações nominais do Plenário e a cota parlamentar e abre um commit se algo mudou.
+# Recoleta votações nominais, cota parlamentar e atuação dos deputados e abre um commit se algo mudou.
 on:
   workflow_dispatch:
     inputs:
@@ -27,6 +27,9 @@ jobs:
         # Se o arquivo da cota falhar, a coleta das votações segue normalmente.
         continue-on-error: true
         run: node scripts/coletar-cota-camara.mjs ${{ inputs.ano || '2025' }}
+      - name: Coletar presença, comissões e proposições
+        continue-on-error: true
+        run: node --max-old-space-size=6144 scripts/coletar-atuacao-camara.mjs ${{ inputs.ano || '2025' }}
       - name: Coletar na API da Câmara
         run: node scripts/coletar-votacoes-camara.mjs ${{ inputs.ano || '2025' }}
       - name: Registrar mudanças
