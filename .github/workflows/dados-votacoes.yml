@@ -1,11 +1,11 @@
-name: Dados · votações da Câmara
+name: Dados · votações e cota da Câmara
 
-# Recoleta as votações nominais do Plenário e abre um commit se algo mudou.
+# Recoleta as votações nominais do Plenário e a cota parlamentar e abre um commit se algo mudou.
 on:
   workflow_dispatch:
     inputs:
       ano:
-        description: Ano das votações
+        description: Ano dos dados
         default: "2025"
   schedule:
     - cron: "17 9 1 * *" # dia 1 de cada mês, 06:17 em Brasília
@@ -23,16 +23,22 @@ jobs:
           node-version: 22
           # O script não usa dependências; sem isso a v5 tenta o cache do pnpm.
           package-manager-cache: false
+      - name: Coletar a cota parlamentar
+        # Se o arquivo da cota falhar, a coleta das votações segue normalmente.
+        continue-on-error: true
+        run: node scripts/coletar-cota-camara.mjs ${{ inputs.ano || '2025' }}
       - name: Coletar na API da Câmara
         run: node scripts/coletar-votacoes-camara.mjs ${{ inputs.ano || '2025' }}
       - name: Registrar mudanças
+        # Grava o que foi coletado mesmo se a etapa das votações falhar.
+        if: always()
         run: |
-          if git diff --quiet -- client/public/explorar/dados; then
+          if [ -z "$(git status --porcelain -- client/public/explorar/dados)" ]; then
             echo "Sem mudanças nos dados."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add client/public/explorar/dados
-          git commit -m "Atualiza dados de votações da Câmara (${{ inputs.ano || '2025' }})"
+          git commit -m "Atualiza dados da Câmara (${{ inputs.ano || '2025' }})"
           git push

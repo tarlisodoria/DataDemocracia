@@ -19,6 +19,7 @@
     "format": "prettier --write .",
     "deploy": "pnpm build && wrangler deploy",
     "dados:votacoes": "node scripts/coletar-votacoes-camara.mjs",
+    "dados:cota": "node scripts/coletar-cota-camara.mjs",
     "e2e": "playwright test"
   },
   "dependencies": {
