@@ -205,6 +205,7 @@ export function SiteFooter() {
           <Link href="/metodologia">Metodologia</Link>
           <Link href="/metodologia#fontes">Fontes</Link>
           <a href="/explorar/votacoes-2025.html">Votações da Câmara em 2025</a>
+          <Link href="/gastos">Cota parlamentar</Link>
           <Link href="/metodologia">Apoie e conheça o projeto</Link>
           <span className="footer-credit">
             Projeto criado por Tarliso Doria

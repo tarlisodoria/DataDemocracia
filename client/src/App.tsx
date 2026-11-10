@@ -19,6 +19,7 @@ const Methodology = lazy(() => import("./pages/Methodology"));
 const Dossier = lazy(() => import("./pages/Dossier"));
 const Radar = lazy(() => import("./pages/Radar"));
 const Deputado = lazy(() => import("./pages/Deputado"));
+const Gastos = lazy(() => import("./pages/Gastos"));
 
 const TITLES: [string, string][] = [
   ["/buscar", "Políticos"],
@@ -26,6 +27,7 @@ const TITLES: [string, string][] = [
   ["/comparar", "Comparar"],
   ["/monitoramento", "Monitoramento"],
   ["/metodologia", "Metodologia"],
+  ["/gastos", "Cota parlamentar"],
   ["/politico", "Perfil"],
 ];
 
@@ -46,6 +48,7 @@ function Router() {
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/buscar" component={SearchPage} />
+        <Route path="/gastos" component={Gastos} />
         <Route path="/politico/:id/dossie">
           {p => (getPolitician(p.id) ? <Dossier /> : <NotFound />)}
         </Route>

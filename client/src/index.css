@@ -5126,3 +5126,97 @@ select:focus-visible {
   text-transform: uppercase;
   line-height: 1.4;
 }
+
+/* Página da cota parlamentar */
+.gastos-resumo {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 8px 0 32px;
+}
+.gastos-resumo > div {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  padding: 16px 18px;
+}
+.gastos-resumo span {
+  display: block;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.gastos-resumo strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 30px;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.gastos-tipos {
+  max-width: 920px;
+}
+.gastos-tipos .dep-bar.cota-bar {
+  grid-template-columns: minmax(0, 1fr) minmax(80px, 260px) 120px;
+}
+.gastos-dupla {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px;
+}
+.gastos-grupos .dep-bar.cota-bar {
+  grid-template-columns: 92px 1fr 88px;
+}
+.gastos-grupos span small {
+  color: var(--muted-foreground);
+  font-size: 11px;
+}
+.dep-bar.cota-bar.ativo i {
+  background: #b7791f;
+}
+.dep-bar.cota-bar.ativo span {
+  font-weight: 700;
+}
+.gastos-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.gastos-filtros label {
+  display: grid;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.gastos-filtros select {
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--foreground);
+  font-size: 14px;
+}
+.gastos-mais {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 38px;
+  margin-top: 12px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--brand);
+  font-weight: 600;
+  cursor: pointer;
+}
+@media (max-width: 900px) {
+  .gastos-resumo,
+  .gastos-dupla {
+    grid-template-columns: 1fr;
+  }
+  .gastos-tipos .dep-bar.cota-bar {
+    grid-template-columns: minmax(0, 1fr) 70px 100px;
+  }
+}

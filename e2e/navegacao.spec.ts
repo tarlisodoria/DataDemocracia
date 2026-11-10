@@ -9,6 +9,7 @@ const rotas = [
   "/comparar",
   "/monitoramento",
   "/metodologia",
+  "/gastos",
   "/politico/marina-albuquerque",
   "/politico/marina-albuquerque/dossie",
   "/politico/marina-albuquerque/radar",
@@ -150,4 +151,31 @@ test("perfil mostra presença, comissões e projetos quando o arquivo existe", a
   );
   await expect(secao.locator(".atu-orgaos li")).toHaveCount(5);
   await expect(secao.locator(".atu-props li")).toHaveCount(3);
+});
+
+test("página da cota mostra o panorama e filtra por partido", async ({
+  page,
+}) => {
+  await page.route("**/explorar/dados/cota-2025.json", route =>
+    route.fulfill({ path: "e2e/fixtures/cota-2025.json" })
+  );
+  await page.goto("/gastos");
+  await expect(page.locator(".gastos-resumo strong").nth(1)).toHaveText("14");
+  await expect(page.locator(".dep-table tbody tr")).toHaveCount(14);
+  await page.getByLabel("Ordenar por").selectOption("nome");
+  await expect(page.locator(".dep-table tbody tr").first()).toContainText(
+    "Acácio Favacho"
+  );
+  await page.getByLabel("Partido").selectOption("MDB");
+  const linhas = page.locator(".dep-table tbody tr");
+  await expect(linhas.first()).toContainText("MDB-AP");
+  expect(await linhas.count()).toBeLessThan(14);
+});
+
+test("página da cota sem o arquivo explica a ausência", async ({ page }) => {
+  await page.route("**/explorar/dados/cota-2025.json", route =>
+    route.fulfill({ status: 404 })
+  );
+  await page.goto("/gastos");
+  await expect(page.getByText("ainda não foram coletados")).toBeVisible();
 });

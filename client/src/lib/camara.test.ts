@@ -10,6 +10,7 @@ import {
   identificarRede,
   perfilDeputado,
   resumirDeputados,
+  panoramaCota,
   resumoAtuacao,
   resumoCota,
   rotuloTipo,
@@ -220,6 +221,17 @@ describe("cota parlamentar", () => {
     });
     expect(resumoCota(cota, votos, 2)!.uf.posicao).toBe(1);
     expect(resumoCota(cota, votos, 99)).toBeNull();
+  });
+
+  it("monta o panorama da Câmara por tipo, estado e partido", () => {
+    const p = panoramaCota(cota, votos);
+    expect(p.deputados).toBe(4);
+    expect(p.total).toBe(1200 + 900 + 2400 + 99999);
+    expect(p.porTipo[0].tipo).toBe("Divulgação da atividade parlamentar");
+    expect(p.porUf.map(g => g.nome)).toEqual(["SP", "PA"]);
+    expect(p.porUf[1]).toEqual({ nome: "PA", mediana: 200, deputados: 3 });
+    // Nenhum partido tem 5 deputados no exemplo.
+    expect(p.porPartido).toEqual([]);
   });
 
   it("deixa os tipos legíveis", () => {

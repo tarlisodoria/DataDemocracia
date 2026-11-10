@@ -585,3 +585,64 @@ export function resumoAtuacao(
     })),
   };
 }
+
+export type LinhaCota = {
+  id: number;
+  nome: string;
+  partido: string;
+  uf: string;
+  total: number;
+  meses: number;
+  mediaMensal: number;
+};
+export type GrupoCota = { nome: string; mediana: number; deputados: number };
+
+// Visão da Câmara inteira, só com deputados que têm voto registrado no ano.
+export function panoramaCota(cota: CotaArquivo, dados: VotacoesArquivo) {
+  const linhas: LinhaCota[] = dados.deps
+    .filter(([id]) => cota.deps[id])
+    .map(([id, nome, partido, uf]) => {
+      const d = cota.deps[id];
+      return {
+        id,
+        nome,
+        partido,
+        uf,
+        total: d.t,
+        meses: d.m.filter(v => v > 0).length,
+        mediaMensal: mediaMensal(d),
+      };
+    });
+  const porTipo = new Map<number, number>();
+  for (const [id] of dados.deps)
+    for (const [k, v] of Object.entries(cota.deps[id]?.k ?? {}))
+      porTipo.set(Number(k), (porTipo.get(Number(k)) ?? 0) + v);
+  const total = linhas.reduce((s, l) => s + l.total, 0);
+  const agrupar = (chave: (l: LinhaCota) => string, minimo: number) => {
+    const grupos = new Map<string, number[]>();
+    for (const l of linhas)
+      if (l.mediaMensal > 0)
+        grupos.set(chave(l), [...(grupos.get(chave(l)) ?? []), l.mediaMensal]);
+    return [...grupos]
+      .filter(([, v]) => v.length >= minimo)
+      .map(([nome, v]) => ({ nome, mediana: mediana(v), deputados: v.length }))
+      .sort((a, b) => b.mediana - a.mediana);
+  };
+  return {
+    total,
+    deputados: linhas.length,
+    medianaMensal: mediana(linhas.map(l => l.mediaMensal).filter(v => v > 0)),
+    porTipo: [...porTipo]
+      .filter(([, v]) => v > 0)
+      .map(([k, v]) => ({
+        tipo: rotuloTipo(cota.tipos[k]),
+        valor: v,
+        parte: total ? v / total : 0,
+      }))
+      .sort((a, b) => b.valor - a.valor),
+    porUf: agrupar(l => l.uf, 1),
+    // Partidos pequenos ficam de fora: mediana de 2 ou 3 deputados oscila demais.
+    porPartido: agrupar(l => l.partido, 5),
+    linhas,
+  };
+}

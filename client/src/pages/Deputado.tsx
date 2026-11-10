@@ -632,6 +632,9 @@ function SecaoCota({ cota, coleta }: { cota: ResumoCota; coleta?: string }) {
         >
           Notas fiscais no portal da Câmara <ArrowRight size={13} />
         </a>
+        <Link href="/gastos">
+          Ver a cota de todos os deputados <ArrowRight size={13} />
+        </Link>
       </div>
     </section>
   );
