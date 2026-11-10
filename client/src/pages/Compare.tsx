@@ -1,67 +1,87 @@
-import {
-  ArrowRight,
-  Check,
-  FileText,
-  GitCompareArrows,
-  Info,
-  Scale,
-  Vote,
-  WalletCards,
-} from "lucide-react";
-import { Link } from "wouter";
-import { useState } from "react";
+import { ArrowRight, Scale } from "lucide-react";
+import { Link, useSearch } from "wouter";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { politicians } from "@/data/demo";
+import { initialsAvatar } from "@/data/demo";
+import {
+  carregarCadastros,
+  carregarVotacoes,
+  paginaDeputado,
+  perfilDeputado,
+  type PerfilCadastro,
+  type VotacoesArquivo,
+} from "@/lib/camara";
 import {
   Breadcrumbs,
-  EvidenceNote,
   PageShell,
   SourcePill,
 } from "@/components/datademocracia/ui";
 
-const comparisonRows = [
-  {
-    label: "Presença em sessões",
-    key: "presence",
-    values: ["92%", "96%"],
-    note: "Legislatura atual",
-  },
-  {
-    label: "Proposições apresentadas",
-    key: "proposals",
-    values: ["38", "—"],
-    note: "Desde o início do mandato",
-  },
-  {
-    label: "Relatorias registradas",
-    key: "rapporteur",
-    values: ["7", "12"],
-    note: "Com registro público",
-  },
-  {
-    label: "Promessas acompanhadas",
-    key: "promises",
-    values: ["12", "9"],
-    note: "No recorte demonstrativo",
-  },
-  {
-    label: "Despesas no recorte",
-    key: "expenses",
-    values: ["R$ 184 mil", "R$ 96 mil"],
-    note: "Ano de 2026",
-  },
-];
+const pct = (a: number, b: number) =>
+  b
+    ? `${((100 * a) / b).toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%`
+    : "sem dado";
+
+// Votações em que os dois votaram Sim ou Não, e quantas vezes votaram igual.
+function concordancia(dados: VotacoesArquivo, a: number, b: number) {
+  let comum = 0;
+  let iguais = 0;
+  for (const linha of dados.v) {
+    const x = linha[a];
+    const y = linha[b];
+    if ((x === "S" || x === "N") && (y === "S" || y === "N")) {
+      comum++;
+      if (x === y) iguais++;
+    }
+  }
+  return { comum, iguais };
+}
 
 export default function Compare() {
-  const [left, setLeft] = useState(politicians[0].id);
-  const [right, setRight] = useState(politicians[2].id);
-  const leftPerson = politicians.find(p => p.id === left) ?? politicians[0];
-  const rightPerson = politicians.find(p => p.id === right) ?? politicians[2];
+  const params = new URLSearchParams(useSearch());
+  const [dados, setDados] = useState<VotacoesArquivo | null>(null);
+  const [cadastros, setCadastros] = useState<Record<string, PerfilCadastro>>(
+    {}
+  );
+  const [ids, setIds] = useState<[number, number] | null>(null);
+
+  useEffect(() => {
+    Promise.all([carregarVotacoes(), carregarCadastros()]).then(([d, c]) => {
+      setDados(d);
+      setCadastros(c);
+      const pedidos = [Number(params.get("a")), Number(params.get("b"))];
+      const valido = (id: number) => d.deps.some(x => x[0] === id);
+      setIds([
+        valido(pedidos[0]) ? pedidos[0] : d.deps[0][0],
+        valido(pedidos[1]) ? pedidos[1] : d.deps[1][0],
+      ]);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Mantém a escolha no endereço, para o link da comparação poder ser compartilhado.
+  useEffect(() => {
+    if (ids)
+      history.replaceState(null, "", `/comparar?a=${ids[0]}&b=${ids[1]}`);
+  }, [ids]);
+
+  const lados = useMemo(() => {
+    if (!dados || !ids) return null;
+    return ids.map(id => {
+      const j = dados.deps.findIndex(d => d[0] === id);
+      const [, nome, partido, uf] = dados.deps[j];
+      return { id, j, nome, partido, uf, votos: perfilDeputado(dados, id)! };
+    });
+  }, [dados, ids]);
+
+  const entreEles =
+    lados && dados ? concordancia(dados, lados[0].j, lados[1].j) : null;
+
   return (
     <PageShell
-      eyebrow="Análise"
-      title="Compare sem transformar pessoas em placar"
-      description="Veja registros lado a lado, com o período, o escopo e a fonte de cada métrica."
+      eyebrow="Comparar"
+      title="Compare dois deputados pelos votos"
+      description="Os mesmos indicadores, no mesmo período e com a mesma fonte, lado a lado. Sem nota, sem vencedor."
       actions={
         <Button variant="outline" asChild>
           <Link href="/metodologia">
@@ -73,172 +93,122 @@ export default function Compare() {
       <Breadcrumbs
         items={[{ label: "Início", href: "/" }, { label: "Comparar" }]}
       />
-      <div className="compare-warning">
-        <Info size={17} />
-        <p>
-          A comparação só é válida quando cargo, período e fonte são
-          compatíveis. Atividade não é sinônimo de qualidade total.
-        </p>
-        <Link href="/metodologia">
-          Ver metodologia <ArrowRight size={14} />
-        </Link>
-      </div>
-      <section className="compare-selectors">
-        <div className="compare-person-selector">
-          <span>Perfil A</span>
-          <div className="compare-person-preview">
-            <div
-              className="compare-avatar"
-              style={{ backgroundImage: `url(${leftPerson.portrait})` }}
-            />
-            <div>
-              <strong>{leftPerson.name}</strong>
-              <small>
-                {leftPerson.role} · {leftPerson.state}
-              </small>
-            </div>
-          </div>
-          <select
-            aria-label="Primeira pessoa da comparação"
-            value={left}
-            onChange={e => setLeft(e.target.value)}
-          >
-            {politicians.map(p => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
+      {!dados || !lados || !ids ? (
+        <p>Carregando…</p>
+      ) : (
+        <>
+          <div className="cmp-pickers">
+            {lados.map((l, k) => (
+              <label key={k}>
+                {k === 0 ? "Primeiro deputado" : "Segundo deputado"}
+                <select
+                  value={l.id}
+                  onChange={e => {
+                    const novo = [...ids] as [number, number];
+                    novo[k] = Number(e.target.value);
+                    setIds(novo);
+                  }}
+                >
+                  {dados.deps.map(([id, nome, partido, uf]) => (
+                    <option key={id} value={id}>
+                      {nome} ({partido}-{uf})
+                    </option>
+                  ))}
+                </select>
+              </label>
             ))}
-          </select>
-        </div>
-        <div className="compare-symbol">
-          <GitCompareArrows size={20} />
-          <span>lado a lado</span>
-        </div>
-        <div className="compare-person-selector">
-          <span>Perfil B</span>
-          <div className="compare-person-preview">
-            <div
-              className="compare-avatar"
-              style={{ backgroundImage: `url(${rightPerson.portrait})` }}
-            />
-            <div>
-              <strong>{rightPerson.name}</strong>
-              <small>
-                {rightPerson.role} · {rightPerson.state}
-              </small>
-            </div>
           </div>
-          <select
-            aria-label="Segunda pessoa da comparação"
-            value={right}
-            onChange={e => setRight(e.target.value)}
-          >
-            {politicians.map(p => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      </section>
-      <section className="comparison-table-wrap">
-        <div className="comparison-table-head">
-          <div>
-            <span className="eyebrow">Recorte demonstrativo</span>
-            <h2>Indicadores em comum</h2>
-          </div>
-          <SourcePill source="Câmara · Senado · TSE" date="28 out. 2026" />
-        </div>
-        <div className="comparison-table">
-          <div className="comparison-row comparison-heading">
-            <div>Métrica</div>
-            <div>
-              <strong>{leftPerson.shortName}</strong>
-              <small>{leftPerson.period}</small>
-            </div>
-            <div>
-              <strong>{rightPerson.shortName}</strong>
-              <small>{rightPerson.period}</small>
-            </div>
-          </div>
-          {comparisonRows.map((row, index) => (
-            <div className="comparison-row" key={row.key}>
-              <div className="metric-label">
-                <span className={`comparison-icon icon-${index}`}>
-                  <IconFor index={index} />
-                </span>
-                <span>
-                  {row.label}
-                  <small>{row.note}</small>
-                </span>
-              </div>
-              <div className="comparison-value">
-                {row.values[0]}
-                {index < 4 && (
-                  <span className="comparison-bar">
-                    <i style={{ width: `${[92, 68, 58, 72, 64][index]}%` }} />
-                  </span>
-                )}
-              </div>
-              <div className="comparison-value">
-                {row.values[1]}
-                {index < 4 && (
-                  <span className="comparison-bar">
-                    <i style={{ width: `${[96, 0, 83, 52, 48][index]}%` }} />
-                  </span>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="comparison-foot">
-          <span>
-            <FileText size={15} /> Dados ausentes aparecem como “—”, nunca como
-            zero.
-          </span>
-          <Link href="/metodologia">
-            Ver fórmulas e limitações <ArrowRight size={14} />
-          </Link>
-        </div>
-      </section>
-      <div className="compare-bottom-grid">
-        <EvidenceNote>
-          Esta tela oferece comparação factual. O DataDemocracia não atribui uma
-          nota geral e não define quem é o “melhor político”.
-        </EvidenceNote>
-        <div className="side-card">
-          <div className="side-card-head">
-            <div>
-              <span className="eyebrow">Próximos passos</span>
-              <h3>Continue investigando</h3>
-            </div>
-            <Check size={18} />
-          </div>
-          <div className="quick-links">
-            <Link href={`/politico/${leftPerson.id}`}>
-              Abrir perfil de {leftPerson.shortName.split(" ")[0]}{" "}
-              <ArrowRight size={15} />
-            </Link>
-            <Link href={`/politico/${rightPerson.id}`}>
-              Abrir perfil de {rightPerson.shortName.split(" ")[0]}{" "}
-              <ArrowRight size={15} />
-            </Link>
-            <Link href="/promessas">
-              Comparar promessas <ArrowRight size={15} />
-            </Link>
-          </div>
-        </div>
-      </div>
-    </PageShell>
-  );
-}
 
-function IconFor({ index }: { index: number }) {
-  return index === 0 ? (
-    <Vote size={14} />
-  ) : index === 4 ? (
-    <WalletCards size={14} />
-  ) : (
-    <FileText size={14} />
+          <div className="cmp-grid">
+            {lados.map(l => {
+              const r = l.votos.resumo;
+              const total = r.registrados + r.semRegistro;
+              const foto = cadastros[l.id]?.foto;
+              return (
+                <div className="cmp-col" key={l.id}>
+                  <Link href={paginaDeputado(l.id)} className="cmp-head">
+                    <img
+                      src={foto ?? initialsAvatar(l.nome)}
+                      alt=""
+                      onError={e =>
+                        (e.currentTarget.src = initialsAvatar(l.nome))
+                      }
+                    />
+                    <span>
+                      <strong>{l.nome}</strong>
+                      <small>
+                        {l.partido}-{l.uf} · ver perfil <ArrowRight size={12} />
+                      </small>
+                    </span>
+                  </Link>
+                  <dl className="cmp-list">
+                    <div>
+                      <dt>Votos registrados</dt>
+                      <dd>
+                        {pct(r.registrados, total)}{" "}
+                        <small>
+                          {r.registrados} de {total}
+                        </small>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>Votos Sim</dt>
+                      <dd>{pct(l.votos.tipos.sim, r.registrados)}</dd>
+                    </div>
+                    <div>
+                      <dt>Votos Não</dt>
+                      <dd>{pct(l.votos.tipos.nao, r.registrados)}</dd>
+                    </div>
+                    <div>
+                      <dt>Abstenção e obstrução</dt>
+                      <dd>
+                        {pct(
+                          l.votos.tipos.abstencao + l.votos.tipos.obstrucao,
+                          r.registrados
+                        )}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>Com a maioria do próprio partido</dt>
+                      <dd>
+                        {pct(
+                          l.votos.alinhamento.comMaioria,
+                          l.votos.alinhamento.base
+                        )}{" "}
+                        <small>{l.votos.alinhamento.base} votos Sim/Não</small>
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              );
+            })}
+          </div>
+
+          {entreEles && (
+            <div className="cmp-together">
+              <span className="eyebrow">Entre os dois</span>
+              <p>
+                Nas <strong>{entreEles.comum}</strong> votações em que ambos
+                votaram Sim ou Não, votaram igual em{" "}
+                <strong>{pct(entreEles.iguais, entreEles.comum)}</strong> delas.
+              </p>
+              <a href={`/explorar/votacoes-2025.html?deputado=${lados[0].id}`}>
+                Abrir o painel de votações <ArrowRight size={14} />
+              </a>
+            </div>
+          )}
+
+          <div className="dep-source">
+            <SourcePill
+              source={`Câmara dos Deputados · API Dados Abertos · coleta ${dados.coleta}`}
+            />
+            <span>
+              Votações nominais do Plenário em 2025. Participação baixa pode ser
+              licença ou suplência.
+            </span>
+          </div>
+        </>
+      )}
+    </PageShell>
   );
 }
