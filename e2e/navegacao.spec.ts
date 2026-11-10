@@ -136,3 +136,18 @@ test("perfil sem o arquivo da cota não quebra", async ({ page }) => {
   await expect(page.locator("h1")).toHaveText("Acácio Favacho");
   await expect(page.locator(".cota-grid")).toHaveCount(0);
 });
+
+test("perfil mostra presença, comissões e projetos quando o arquivo existe", async ({
+  page,
+}) => {
+  await page.route("**/explorar/dados/atuacao-2025.json", route =>
+    route.fulfill({ path: "e2e/fixtures/atuacao-2025.json" })
+  );
+  await page.goto("/deputado/204379");
+  const secao = page.locator("section", { has: page.locator(".atu-tiles") });
+  await expect(secao.locator(".atu-tiles > div").first()).toContainText(
+    "105 de 120"
+  );
+  await expect(secao.locator(".atu-orgaos li")).toHaveCount(5);
+  await expect(secao.locator(".atu-props li")).toHaveCount(3);
+});

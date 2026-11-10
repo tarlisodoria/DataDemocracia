@@ -20,7 +20,10 @@ import { alternarAcompanhado, lerAcompanhados } from "@/lib/acompanhar";
 import { initialsAvatar } from "@/data/demo";
 import {
   carregarCadastros,
+  carregarAtuacao,
   carregarCota,
+  resumoAtuacao,
+  type ResumoAtuacao,
   resumoCota,
   type ResumoCota,
   carregarVotacoes,
@@ -74,6 +77,8 @@ type Estado =
       temas: TemaVoto[];
       parecidos: Semelhante[];
       cota: ResumoCota | null;
+      atuacao: ResumoAtuacao | null;
+      atuacaoColeta?: string;
       cotaColeta?: string;
     };
 
@@ -85,8 +90,13 @@ export default function Deputado() {
 
   useEffect(() => {
     let ativo = true;
-    Promise.all([carregarVotacoes(), carregarCadastros(), carregarCota()])
-      .then(([dados, cadastros, cota]) => {
+    Promise.all([
+      carregarVotacoes(),
+      carregarCadastros(),
+      carregarCota(),
+      carregarAtuacao(),
+    ])
+      .then(([dados, cadastros, cota, atuacao]) => {
         if (!ativo) return;
         const votos = perfilDeputado(dados, Number(id));
         const j = dados.deps.findIndex(d => d[0] === Number(id));
@@ -108,6 +118,8 @@ export default function Deputado() {
           parecidos: maisParecidos(dados, j),
           cota: cota && resumoCota(cota, dados, Number(id)),
           cotaColeta: cota?.coleta,
+          atuacao: atuacao && resumoAtuacao(atuacao, dados, Number(id)),
+          atuacaoColeta: atuacao?.coleta,
         });
       })
       .catch(() => ativo && setEstado({ fase: "erro" }));
@@ -470,6 +482,10 @@ export default function Deputado() {
         </section>
       )}
 
+      {estado.atuacao && (
+        <SecaoAtuacao atuacao={estado.atuacao} coleta={estado.atuacaoColeta} />
+      )}
+
       {estado.cota && (
         <SecaoCota cota={estado.cota} coleta={estado.cotaColeta} />
       )}
@@ -490,6 +506,16 @@ export default function Deputado() {
           <li>
             "Sim" pode significar aprovar ou rejeitar algo, conforme o objeto
             votado. Abra a votação para ler o contexto.
+          </li>
+          <li>
+            <strong>Presença</strong> vem do registro de comparecimento da
+            Câmara. Sessões e reuniões perdidas podem ser licença, missão
+            oficial ou período antes da posse.
+          </li>
+          <li>
+            <strong>Proposições</strong> contam só projetos (PL, PLP, PEC, PDL)
+            e requerimentos apresentados em 2025. Quantidade não mede qualidade
+            nem resultado.
           </li>
           <li>
             <strong>Cota parlamentar</strong> é a verba para despesas do mandato
@@ -606,6 +632,100 @@ function SecaoCota({ cota, coleta }: { cota: ResumoCota; coleta?: string }) {
         >
           Notas fiscais no portal da Câmara <ArrowRight size={13} />
         </a>
+      </div>
+    </section>
+  );
+}
+
+const num = (v: number) => Math.round(v).toLocaleString("pt-BR");
+
+function SecaoAtuacao({
+  atuacao,
+  coleta,
+}: {
+  atuacao: ResumoAtuacao;
+  coleta?: string;
+}) {
+  const { sessoes, reunioes, projetos } = atuacao;
+  return (
+    <section className="dep-section">
+      <SectionHeading
+        eyebrow="Atuação"
+        title="Presença, comissões e projetos em 2025"
+        description="Registros de comparecimento, participação em órgãos e proposições apresentadas, com a mediana da Câmara ao lado."
+      />
+      <div className="atu-tiles">
+        <div>
+          <span>Sessões deliberativas do Plenário</span>
+          <strong>
+            {num(sessoes.presente)} <small>de {num(sessoes.total)}</small>
+          </strong>
+          <p>Mediana da Câmara: {num(sessoes.mediana)}</p>
+        </div>
+        <div>
+          <span>Reuniões de comissão e audiências</span>
+          <strong>{num(reunioes.presente)}</strong>
+          <p>Mediana da Câmara: {num(reunioes.mediana)}</p>
+        </div>
+        <div>
+          <span>Projetos como primeiro autor</span>
+          <strong>
+            {num(projetos.principal)}{" "}
+            <small>de {num(projetos.total)} assinados</small>
+          </strong>
+          <p>Mediana da Câmara: {num(projetos.medianaPrincipal)}</p>
+        </div>
+        <div>
+          <span>Requerimentos e indicações</span>
+          <strong>{num(atuacao.requerimentos)}</strong>
+          <p>Pedidos de informação, audiências e providências</p>
+        </div>
+      </div>
+
+      {atuacao.orgaos.length > 0 && (
+        <>
+          <h3 className="atu-sub">Comissões e cargos no ano</h3>
+          <ul className="atu-orgaos">
+            {atuacao.orgaos.map(o => (
+              <li key={o.sigla}>
+                <span>{o.nome}</span>
+                <b className={o.cargo === "Suplente" ? "sup" : undefined}>
+                  {o.cargo}
+                </b>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      {atuacao.exemplos.length > 0 && (
+        <>
+          <h3 className="atu-sub">Projetos apresentados</h3>
+          <ul className="atu-props">
+            {atuacao.exemplos.map(e => (
+              <li key={e.id}>
+                <a
+                  href={`https://www.camara.leg.br/propostas-legislativas/${e.id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <strong>{e.rotulo}</strong>
+                  <span>{e.ementa}</span>
+                  <small>
+                    {e.principal ? "Primeiro autor" : "Coautor"} ·{" "}
+                    {e.data.split("-").reverse().join("/")} · {e.situacao}
+                  </small>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      <div className="dep-source">
+        <SourcePill
+          source={`Câmara dos Deputados · arquivos de dados abertos${coleta ? ` · coleta ${coleta}` : ""}`}
+        />
       </div>
     </section>
   );

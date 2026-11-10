@@ -10,6 +10,7 @@ import {
   identificarRede,
   perfilDeputado,
   resumirDeputados,
+  resumoAtuacao,
   resumoCota,
   rotuloTipo,
 } from "./camara";
@@ -228,5 +229,51 @@ describe("cota parlamentar", () => {
     expect(
       rotuloTipo("HOSPEDAGEM ,EXCETO DO PARLAMENTAR NO DISTRITO FEDERAL.")
     ).toBe("Hospedagem, exceto do parlamentar no Distrito Federal");
+  });
+});
+
+describe("resumoAtuacao", () => {
+  const votos = {
+    coleta: "",
+    deps: [
+      [1, "Ana", "PT", "PA"],
+      [2, "Bia", "PL", "PA"],
+      [3, "Caio", "PL", "SP"],
+    ] as [number, string, string, string][],
+    v: [],
+  };
+  const vazio = { o: [], a: {}, ex: [] };
+  const atuacao = {
+    coleta: "",
+    sessoes: 100,
+    orgaos: { CCJC: "Constituição e Justiça", X: "" },
+    deps: {
+      1: {
+        p: 90,
+        c: 10,
+        o: [
+          ["CCJC", "Presidente"],
+          ["X", "Titular"],
+        ],
+        a: { PL: 3, PEC: 1, REQ: 5, RIC: 2, PRL: 99 },
+        l1: 2,
+        ex: [[7, "PL 1/2025", "Cria.", "Aguardando Parecer", "2025-03-01", 1]],
+      },
+      2: { ...vazio, p: 50, c: 30, l1: 0 },
+      3: { ...vazio, p: 70, c: 20, l1: 6 },
+      // Fora do arquivo de votações: não entra nas medianas.
+      9: { ...vazio, p: 0, c: 0, l1: 100 },
+    },
+  } as never;
+
+  it("resume presença, órgãos e proposições com a mediana da Câmara", () => {
+    const r = resumoAtuacao(atuacao, votos, 1)!;
+    expect(r.sessoes).toEqual({ presente: 90, total: 100, mediana: 70 });
+    expect(r.reunioes).toEqual({ presente: 10, mediana: 20 });
+    expect(r.orgaos[1]).toEqual({ sigla: "X", nome: "X", cargo: "Titular" });
+    expect(r.projetos).toEqual({ total: 4, principal: 2, medianaPrincipal: 2 });
+    expect(r.requerimentos).toBe(7);
+    expect(r.exemplos[0].principal).toBe(true);
+    expect(resumoAtuacao(atuacao, votos, 99)).toBeNull();
   });
 });

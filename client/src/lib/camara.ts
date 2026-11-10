@@ -500,3 +500,88 @@ export function resumoCota(
     },
   };
 }
+
+// Atuação no ano: presença, comissões e proposições (scripts/coletar-atuacao-camara.mjs).
+export type AtuacaoDeputado = {
+  p: number; // sessões deliberativas do Plenário com presença
+  c: number; // reuniões de comissão e outros eventos com presença
+  o: [sigla: string, cargo: string][];
+  a: Record<string, number>; // proposições apresentadas no ano, por tipo
+  l1: number; // projetos (PL, PLP, PEC, PDL) como primeiro autor
+  ex: [
+    id: number,
+    rotulo: string,
+    ementa: string,
+    situacao: string,
+    data: string,
+    principal: 0 | 1,
+  ][];
+};
+export type AtuacaoArquivo = {
+  coleta: string;
+  sessoes: number;
+  orgaos: Record<string, string>;
+  deps: Record<string, AtuacaoDeputado>;
+};
+export const ATUACAO_URL = "/explorar/dados/atuacao-2025.json";
+
+export function carregarAtuacao(): Promise<AtuacaoArquivo | null> {
+  return json<AtuacaoArquivo>(ATUACAO_URL).catch(() => null);
+}
+
+export type ResumoAtuacao = {
+  sessoes: { presente: number; total: number; mediana: number };
+  reunioes: { presente: number; mediana: number };
+  orgaos: { sigla: string; nome: string; cargo: string }[];
+  projetos: { total: number; principal: number; medianaPrincipal: number };
+  requerimentos: number;
+  exemplos: {
+    id: number;
+    rotulo: string;
+    ementa: string;
+    situacao: string;
+    data: string;
+    principal: boolean;
+  }[];
+};
+
+const somar = (a: Record<string, number>, tipos: string[]) =>
+  tipos.reduce((s, t) => s + (a[t] ?? 0), 0);
+
+export function resumoAtuacao(
+  atuacao: AtuacaoArquivo,
+  dados: VotacoesArquivo,
+  id: number
+): ResumoAtuacao | null {
+  const d = atuacao.deps[id];
+  if (!d) return null;
+  // Medianas entre os deputados com voto registrado em 2025 (os mesmos das outras páginas).
+  const colegas = dados.deps
+    .map(x => atuacao.deps[x[0]])
+    .filter((x): x is AtuacaoDeputado => !!x);
+  const med = (f: (x: AtuacaoDeputado) => number) =>
+    colegas.length ? mediana(colegas.map(f)) : 0;
+  return {
+    sessoes: { presente: d.p, total: atuacao.sessoes, mediana: med(x => x.p) },
+    reunioes: { presente: d.c, mediana: med(x => x.c) },
+    orgaos: d.o.map(([sigla, cargo]) => ({
+      sigla,
+      nome: atuacao.orgaos[sigla] || sigla,
+      cargo,
+    })),
+    projetos: {
+      total: somar(d.a, ["PL", "PLP", "PEC", "PDL"]),
+      principal: d.l1,
+      medianaPrincipal: med(x => x.l1),
+    },
+    requerimentos: somar(d.a, ["REQ", "RIC", "INC"]),
+    exemplos: d.ex.map(([id, rotulo, ementa, situacao, data, principal]) => ({
+      id,
+      rotulo,
+      ementa,
+      situacao,
+      data,
+      principal: principal === 1,
+    })),
+  };
+}
