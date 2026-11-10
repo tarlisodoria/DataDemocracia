@@ -5,18 +5,22 @@ import {
   Search,
   ShieldCheck,
   Sparkles,
-  UsersRound,
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { politicians, sources, themes, updates } from "@/data/demo";
+import { initialsAvatar } from "@/data/demo";
 import {
-  dataSourceLabel,
-  fetchPublicPoliticians,
-  isNeonConfigured,
-  mergePublicPoliticians,
-} from "@/lib/neon";
+  carregarCadastros,
+  carregarVotacoes,
+  destaquesDoDia,
+  paginaDeputado,
+  resumirDeputados,
+  temasMaisVotados,
+  ultimasVotacoes,
+  type DeputadoResumo,
+  type PerfilCadastro,
+  type VotacaoResumo,
+} from "@/lib/camara";
 import {
   PageShell,
   SearchBox,
@@ -24,29 +28,45 @@ import {
   SourcePill,
 } from "@/components/datademocracia/ui";
 
+type DadosHome = {
+  coleta: string;
+  destaques: DeputadoResumo[];
+  votacoes: VotacaoResumo[];
+  temas: { tema: string; votacoes: number }[];
+  cadastros: Record<string, PerfilCadastro>;
+};
+
+const dataBr = (iso: string) => iso.split("-").reverse().join("/");
+const pct = (a: number, b: number) =>
+  b ? `${Math.round((100 * a) / b)}%` : "—";
+
 export default function Home() {
   const [, navigate] = useLocation();
-  const [directory, setDirectory] = useState(politicians);
-  const [usingLiveDirectory, setUsingLiveDirectory] = useState(false);
+  const [dados, setDados] = useState<DadosHome | null>(null);
 
   useEffect(() => {
-    if (!isNeonConfigured) return;
-
-    let active = true;
-    fetchPublicPoliticians()
-      .then(records => {
-        if (!active || records.length === 0) return;
-        setDirectory(mergePublicPoliticians(records));
-        setUsingLiveDirectory(true);
+    let ativo = true;
+    Promise.all([carregarVotacoes(), carregarCadastros()])
+      .then(([arquivo, cadastros]) => {
+        if (!ativo) return;
+        const todos = resumirDeputados(arquivo);
+        setDados({
+          coleta: arquivo.coleta,
+          destaques: destaquesDoDia(todos.length, 3).map(i => todos[i]),
+          votacoes: ultimasVotacoes(arquivo, 4),
+          temas: temasMaisVotados(arquivo, 4),
+          cadastros,
+        });
       })
       .catch(() => {
-        // Keep the demonstrative catalog available during a temporary API failure.
+        // Sem os arquivos de dados, a home mostra só os textos fixos.
       });
-
     return () => {
-      active = false;
+      ativo = false;
     };
   }, []);
+
+  const ultima = dados?.votacoes[0];
 
   return (
     <PageShell>
@@ -78,34 +98,49 @@ export default function Home() {
         </div>
         <div className="hero-aside" aria-label="Resumo do produto">
           <div className="hero-aside-top">
-            <span>Em foco agora</span>
+            <span>Última votação no Plenário</span>
             <span className="live-indicator">
-              <i />{" "}
-              {usingLiveDirectory
-                ? "catálogo conectado"
-                : "dados demonstrativos"}
+              <i /> dados oficiais
             </span>
           </div>
           <div className="document-stack">
             <div className="document-card back">
               <span>FONTE OFICIAL</span>
-              <b>Proposta de governo</b>
-              <small>Eleição 2024 · documento original</small>
+              <b>Câmara dos Deputados</b>
+              <small>
+                API Dados Abertos{dados ? ` · coleta ${dados.coleta}` : ""}
+              </small>
             </div>
-            <div className="document-card front">
+            <a
+              className="document-card front"
+              href={
+                ultima
+                  ? `/explorar/votacoes-2025.html?votacao=${ultima.id}`
+                  : "/explorar/votacoes-2025.html"
+              }
+            >
               <div className="doc-line">
-                <span className="doc-number">01</span>
-                <span className="doc-label">EVIDÊNCIA</span>
+                <span className="doc-number">
+                  {ultima ? dataBr(ultima.data) : "2025"}
+                </span>
+                <span className="doc-label">
+                  {ultima?.proposicao || "VOTAÇÃO"}
+                </span>
               </div>
-              <h3>O que foi prometido?</h3>
+              <h3>
+                {ultima
+                  ? `${ultima.sim} Sim · ${ultima.nao} Não`
+                  : "Votações nominais"}
+              </h3>
               <p>
-                Veja o texto original, a competência do cargo, o prazo e o que
-                já foi documentado.
+                {ultima
+                  ? ultima.oQue
+                  : "Como cada deputado votou no Plenário em 2025."}
               </p>
               <div className="doc-footer">
-                <FileCheck2 size={14} /> rastreabilidade por registro
+                <FileCheck2 size={14} /> ver o voto de cada deputado
               </div>
-            </div>
+            </a>
           </div>
           <div className="hero-aside-foot">
             <span>01</span>
@@ -232,8 +267,8 @@ export default function Home() {
       <section className="feature-section">
         <SectionHeading
           eyebrow="Comece por aqui"
-          title="Uma visão antes do julgamento"
-          description="Perfis demonstrativos para explorar trajetória, promessas e atuação com o contexto que cada dado precisa."
+          title="Conheça os deputados pelos votos"
+          description="Três dos 551 deputados com voto registrado em 2025, escolhidos a cada dia. Cada perfil mostra participação, temas, divergências com o partido e afinidade de voto."
           action={
             <Link href="/buscar" className="text-link">
               Ver todos <ArrowRight size={15} />
@@ -241,42 +276,49 @@ export default function Home() {
           }
         />
         <div className="politician-grid">
-          {directory.map(politician => (
-            <Link
-              href={`/politico/${politician.id}`}
-              className="politician-card"
-              key={politician.id}
-            >
-              <div
-                className="politician-image"
-                style={{ backgroundImage: `url(${politician.portrait})` }}
+          {(dados?.destaques ?? []).map(d => {
+            const foto = dados?.cadastros[d.id]?.foto;
+            const total = d.registrados + d.semRegistro;
+            return (
+              <Link
+                href={paginaDeputado(d.id)}
+                className="politician-card"
+                key={d.id}
               >
-                <span className="image-tag">
-                  {politician.type === "candidatura"
-                    ? "Candidatura"
-                    : "Em exercício"}
-                </span>
-              </div>
-              <div className="politician-card-body">
-                <div className="politician-card-meta">
-                  <span>{politician.role}</span>
-                  <span>{politician.state}</span>
+                <div
+                  className="politician-image"
+                  style={{
+                    backgroundImage: [
+                      foto && `url("${foto}")`,
+                      `url("${initialsAvatar(d.nome)}")`,
+                    ]
+                      .filter(Boolean)
+                      .join(", "),
+                  }}
+                >
+                  <span className="image-tag">Dados oficiais</span>
                 </div>
-                <h3>{politician.shortName}</h3>
-                <p>{politician.summary}</p>
-                <div className="politician-card-foot">
-                  <SourcePill
-                    source={
-                      usingLiveDirectory
-                        ? dataSourceLabel
-                        : "TSE · demonstrativo"
-                    }
-                  />
-                  <ArrowRight size={16} />
+                <div className="politician-card-body">
+                  <div className="politician-card-meta">
+                    <span>Deputado(a) federal</span>
+                    <span>{d.uf}</span>
+                  </div>
+                  <h3>{d.nome}</h3>
+                  <p>
+                    {d.partido}-{d.uf}. Votou em {pct(d.registrados, total)} das
+                    votações nominais de 2025; {pct(d.sim, d.registrados)} dos
+                    votos foram Sim.
+                  </p>
+                  <div className="politician-card-foot">
+                    <SourcePill
+                      source={`Câmara dos Deputados · coleta ${dados?.coleta}`}
+                    />
+                    <ArrowRight size={16} />
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </section>
 
@@ -293,34 +335,46 @@ export default function Home() {
           </Link>
         </div>
         <div className="topic-list">
-          {themes.map(theme => (
-            <Link href="/promessas" className="topic-row" key={theme.name}>
-              <span className={`topic-marker ${theme.color}`} />
-              <span>{theme.name}</span>
-              <small>{theme.count} registros demonstrativos</small>
+          {(dados?.temas ?? []).map((t, k) => (
+            <a
+              href={`/explorar/votacoes-2025.html?tema=${encodeURIComponent(t.tema)}`}
+              className="topic-row"
+              key={t.tema}
+            >
+              <span
+                className={`topic-marker ${["teal", "coral", "amber", "blue"][k % 4]}`}
+              />
+              <span>{t.tema}</span>
+              <small>{t.votacoes} votações em 2025</small>
               <ArrowRight size={16} />
-            </Link>
+            </a>
           ))}
         </div>
       </section>
 
       <section className="updates-section">
         <SectionHeading
-          eyebrow="Rastreabilidade"
-          title="O que mudou recentemente"
-          description="Atualizações com data, fonte e motivo — não um feed infinito de notícias."
+          eyebrow="Plenário"
+          title="Últimas votações nominais"
+          description="As votações mais recentes da coleta, com o placar e o link para o voto de cada deputado."
         />
         <div className="updates-list">
-          {updates.map(update => (
-            <div className="update-row" key={update.title}>
-              <div className="update-date">{update.date}</div>
-              <div className="update-type">{update.type}</div>
+          {(dados?.votacoes ?? []).map(v => (
+            <a
+              className="update-row"
+              key={v.id}
+              href={`/explorar/votacoes-2025.html?votacao=${v.id}`}
+            >
+              <div className="update-date">{dataBr(v.data)}</div>
+              <div className="update-type">{v.proposicao || "Votação"}</div>
               <div className="update-main">
-                <h3>{update.title}</h3>
-                <SourcePill source={update.source} />
+                <h3>{v.oQue}</h3>
+                <SourcePill
+                  source={`${v.sim} Sim · ${v.nao} Não · Câmara dos Deputados`}
+                />
               </div>
               <ArrowRight size={17} />
-            </div>
+            </a>
           ))}
         </div>
       </section>
@@ -330,7 +384,7 @@ export default function Home() {
           <Sparkles size={21} />
           <span>Seu olhar. Seu recorte. Sua rota.</span>
         </div>
-        <h2>Comece pelo político que você quer acompanhar.</h2>
+        <h2>Comece pelo deputado que você quer acompanhar.</h2>
         <Link href="/buscar" className="button button-primary">
           Explorar agora <ArrowRight size={17} />
         </Link>
