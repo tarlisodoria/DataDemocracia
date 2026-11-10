@@ -59,7 +59,7 @@ test("endereços inexistentes mostram 404", async ({ page }) => {
 
 test("busca lista os deputados reais e abre o perfil", async ({ page }) => {
   await page.goto("/buscar");
-  const linhas = page.locator(".real-deputies .result-row");
+  const linhas = page.locator(".results-list .result-row");
   await expect(linhas).toHaveCount(20);
   await page.getByRole("button", { name: /Mostrar mais/ }).click();
   await expect(linhas).toHaveCount(50);
@@ -75,4 +75,38 @@ test("painel de votações aplica o filtro vindo do link", async ({ page }) => {
   await expect(page.locator("canvas")).toHaveCount(6);
   await expect(page.locator("path.st")).toHaveCount(27);
   expect(erros).toEqual([]);
+});
+
+test("compara dois deputados reais e guarda a escolha no endereço", async ({
+  page,
+}) => {
+  await page.goto("/comparar?a=204379&b=204360");
+  await expect(page.locator(".cmp-col")).toHaveCount(2);
+  await expect(page.locator(".cmp-head strong").first()).toHaveText(
+    "Acácio Favacho"
+  );
+  await expect(page.locator(".cmp-together")).toContainText("votaram igual");
+});
+
+test("acompanhar um deputado o leva para o monitoramento", async ({ page }) => {
+  await page.goto("/deputado/204379");
+  await page.getByRole("button", { name: "Acompanhar" }).click();
+  await expect(
+    page.getByRole("button", { name: "Acompanhando" })
+  ).toBeVisible();
+  await page.goto("/monitoramento");
+  await expect(page.locator(".mon-card")).toHaveCount(1);
+  await expect(page.locator(".mon-card strong").first()).toHaveText(
+    "Acácio Favacho"
+  );
+});
+
+test("home destaca deputados e votações reais", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator(".politician-card")).toHaveCount(3);
+  await expect(page.locator(".politician-card").first()).toHaveAttribute(
+    "href",
+    /\/deputado\/\d+$/
+  );
+  await expect(page.locator(".update-row")).toHaveCount(4);
 });
