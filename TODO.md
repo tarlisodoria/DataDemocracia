@@ -42,7 +42,7 @@ Navegação por todas as rotas em desktop (1440 px) e celular (390 px), com veri
 - [x] Remover ou ligar botões sem ação encontrados por varredura automática: Salvar busca, Mais relevantes, Acompanhar tema, Mais filtros, Marcar como lidos, Mais recente; "Como comparar" e "Ver changelog" viraram links; "Compartilhar perfil" copia o link; "Abrir documento" fica desativado em registros demonstrativos.
 - [x] Testes de navegação (Playwright) no CI: rotas principais sem erro e sem botões mortos, 404, busca de deputados e painel com filtro na URL.
 - [x] Faixa única no topo de todas as telas separando dados demonstrativos de dados oficiais.
-- [ ] Trocar o retrato vazio do radar e da comparação pelo mesmo avatar de iniciais.
+- [x] Retratos vazios trocados pelo avatar de iniciais; a comparação passou a usar deputados reais com foto oficial.
 
 ### P1 — produto
 
@@ -54,8 +54,10 @@ Navegação por todas as rotas em desktop (1440 px) e celular (390 px), com veri
 
 ### P2 — acabamento
 
-- [ ] Alvos de toque menores que 32 px em chips e links de rodapé (média de 10 por página).
-- [ ] Página 404 com busca e links úteis em vez de só voltar ao início.
+- [x] Alvos de toque: links isolados, rodapé, trilha de navegação e menu do celular com pelo menos 28–40 px.
+- [x] Página 404 em português, na identidade do site, com busca e atalhos (mantém o endereço digitado).
+- [x] Tela de erro inesperado em português, com os detalhes técnicos recolhidos.
+- [x] Promessas marcadas como "demo" no menu.
 - [x] Painel de votações: botão de compartilhar o recorte atual (filtros na URL).
 
 ## Perfil de deputado — referência da página oficial da Câmara

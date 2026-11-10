@@ -38,7 +38,7 @@ import type {
 export const navItems = [
   { label: "Explorar", href: "/", icon: Search },
   { label: "Políticos", href: "/buscar", icon: UsersRound },
-  { label: "Promessas", href: "/promessas", icon: Flag },
+  { label: "Promessas", href: "/promessas", icon: Flag, demo: true },
   { label: "Comparar", href: "/comparar", icon: GitCompareArrows },
   { label: "Votações", href: "/explorar/votacoes-2025.html", icon: BarChart3 },
   { label: "Monitoramento", href: "/monitoramento", icon: Bell },
@@ -46,6 +46,13 @@ export const navItems = [
 ];
 
 const isStaticPage = (href: string) => href.endsWith(".html");
+
+// Seções ainda com dados demonstrativos ficam marcadas no menu.
+const NavDemo = () => (
+  <span className="nav-demo" title="Dados demonstrativos">
+    demo
+  </span>
+);
 
 export function Logo({ compact = false }: { compact?: boolean }) {
   return (
@@ -91,6 +98,7 @@ export function SiteHeader() {
                 className={cn("nav-link", active && "active")}
               >
                 <Icon size={15} /> {item.label}
+                {item.demo && <NavDemo />}
               </NavTag>
             );
           })}
@@ -134,6 +142,7 @@ export function SiteHeader() {
                 className="mobile-nav-link"
               >
                 <Icon size={17} /> {item.label}
+                {item.demo && <NavDemo />}
               </NavTag>
             );
           })}
