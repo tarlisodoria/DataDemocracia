@@ -1,287 +1,162 @@
-import {
-  ArrowRight,
-  Bell,
-  BellRing,
-  CalendarClock,
-  Check,
-  ChevronRight,
-  CircleDot,
-  Flag,
-  Plus,
-  Settings2,
-  SlidersHorizontal,
-  Trash2,
-  UsersRound,
-} from "lucide-react";
+import { ArrowRight, Bell, Search } from "lucide-react";
 import { Link } from "wouter";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { politicians, updates } from "@/data/demo";
+import { initialsAvatar } from "@/data/demo";
+import { alternarAcompanhado, lerAcompanhados } from "@/lib/acompanhar";
+import {
+  carregarCadastros,
+  carregarVotacoes,
+  divergencias,
+  paginaDeputado,
+  perfilDeputado,
+  type PerfilCadastro,
+  type VotacoesArquivo,
+} from "@/lib/camara";
 import {
   Breadcrumbs,
   PageShell,
-  SectionHeading,
   SourcePill,
-  StatusBadge,
-  ToastMessage,
 } from "@/components/datademocracia/ui";
 
+const pct = (a: number, b: number) =>
+  b ? `${Math.round((100 * a) / b)}%` : "—";
+
 export default function Monitoring() {
-  const [showModal, setShowModal] = useState(false);
-  const [toast, setToast] = useState(false);
-  const [frequency, setFrequency] = useState("Semanal");
+  const [ids, setIds] = useState<number[]>(lerAcompanhados);
+  const [dados, setDados] = useState<VotacoesArquivo | null>(null);
+  const [cadastros, setCadastros] = useState<Record<string, PerfilCadastro>>(
+    {}
+  );
+
+  useEffect(() => {
+    Promise.all([carregarVotacoes(), carregarCadastros()])
+      .then(([d, c]) => {
+        setDados(d);
+        setCadastros(c);
+      })
+      .catch(() => setDados(null));
+  }, []);
+
+  const acompanhados = dados
+    ? ids.flatMap(id => {
+        const j = dados.deps.findIndex(d => d[0] === id);
+        if (j < 0) return [];
+        const [, nome, partido, uf] = dados.deps[j];
+        return [
+          {
+            id,
+            nome,
+            partido,
+            uf,
+            votos: perfilDeputado(dados, id)!,
+            ultimaDivergencia: divergencias(dados, j)[0],
+          },
+        ];
+      })
+    : [];
+
   return (
     <PageShell
-      eyebrow="Seu espaço"
-      title="Meu monitoramento"
-      description="Uma rota pessoal para acompanhar pessoas, temas e evidências sem precisar voltar ao ponto zero."
-      actions={
-        <Button onClick={() => setShowModal(true)}>
-          <Plus size={16} /> Adicionar monitoramento
-        </Button>
-      }
+      eyebrow="Monitoramento"
+      title="Deputados que você acompanha"
+      description="Um resumo dos deputados que você marcou como acompanhados, com o último voto contra o próprio partido. A lista fica salva neste navegador."
     >
       <Breadcrumbs
-        items={[{ label: "Início", href: "/" }, { label: "Meu monitoramento" }]}
+        items={[{ label: "Início", href: "/" }, { label: "Monitoramento" }]}
       />
-      <section className="monitoring-summary">
-        <div className="monitoring-summary-copy">
-          <span className="eyebrow">Seu recorte atual</span>
-          <h2>
-            Você está acompanhando <em>2 perfis</em> e 3 temas.
-          </h2>
+      {ids.length === 0 ? (
+        <div className="empty-search">
+          <Bell size={25} />
+          <h3>Você ainda não acompanha nenhum deputado</h3>
           <p>
-            Os alertas são baseados em atualizações verificadas. Você escolhe o
-            que entra na sua rota.
+            Abra o perfil de um deputado e use o botão "Acompanhar". Ele aparece
+            aqui com o resumo dos votos.
           </p>
+          <Button asChild>
+            <Link href="/buscar">
+              <Search size={16} /> Encontrar deputados
+            </Link>
+          </Button>
         </div>
-        <div className="monitoring-summary-stats">
-          <div>
-            <strong>12</strong>
-            <span>atualizações no mês</span>
-          </div>
-          <div>
-            <strong>02</strong>
-            <span>perfis seguidos</span>
-          </div>
-          <div>
-            <strong>03</strong>
-            <span>temas seguidos</span>
-          </div>
-        </div>
-      </section>
-      <div className="monitoring-grid">
-        <main>
-          <SectionHeading
-            eyebrow="Perfis acompanhados"
-            title="O que você escolheu observar"
-            action={
-              <button
-                className="text-button"
-                onClick={() => setShowModal(true)}
-              >
-                <Plus size={15} /> Adicionar
-              </button>
-            }
-          />
-          <div className="tracked-list">
-            {politicians
-              .filter(p => p.tracked || p.id === "helena-costa")
-              .map(politician => (
-                <div className="tracked-row" key={politician.id}>
-                  <div
-                    className="tracked-avatar"
-                    style={{ backgroundImage: `url(${politician.portrait})` }}
-                  />
-                  <div className="tracked-info">
-                    <div>
-                      <h3>{politician.name}</h3>
-                      <span>
-                        {politician.role} · {politician.state}
-                      </span>
-                    </div>
-                    <div className="tracked-update">
-                      <CircleDot size={13} /> 2 atualizações recentes
-                    </div>
-                  </div>
-                  <Link
-                    href={`/politico/${politician.id}`}
-                    className="icon-link"
-                    aria-label={`Abrir ${politician.name}`}
-                  >
-                    <ChevronRight size={18} />
+      ) : !dados ? (
+        <p>Carregando…</p>
+      ) : (
+        <>
+          <ul className="mon-list">
+            {acompanhados.map(a => {
+              const r = a.votos.resumo;
+              const total = r.registrados + r.semRegistro;
+              const foto = cadastros[a.id]?.foto;
+              return (
+                <li key={a.id} className="mon-card">
+                  <Link href={paginaDeputado(a.id)} className="mon-head">
+                    <img
+                      src={foto ?? initialsAvatar(a.nome)}
+                      alt=""
+                      onError={e =>
+                        (e.currentTarget.src = initialsAvatar(a.nome))
+                      }
+                    />
+                    <span>
+                      <strong>{a.nome}</strong>
+                      <small>
+                        Deputado(a) federal · {a.partido}-{a.uf}
+                      </small>
+                    </span>
+                    <ArrowRight size={16} />
                   </Link>
-                </div>
-              ))}
+                  <dl className="mon-stats">
+                    <div>
+                      <dt>Votou em</dt>
+                      <dd>{pct(r.registrados, total)}</dd>
+                    </div>
+                    <div>
+                      <dt>Votos Sim</dt>
+                      <dd>{pct(a.votos.tipos.sim, r.registrados)}</dd>
+                    </div>
+                    <div>
+                      <dt>Com o partido</dt>
+                      <dd>
+                        {pct(
+                          a.votos.alinhamento.comMaioria,
+                          a.votos.alinhamento.base
+                        )}
+                      </dd>
+                    </div>
+                  </dl>
+                  {a.ultimaDivergencia && (
+                    <p className="mon-note">
+                      Último voto contra o {a.partido}:{" "}
+                      <strong>{a.ultimaDivergencia.voto}</strong> em{" "}
+                      {a.ultimaDivergencia.data.split("-").reverse().join("/")}{" "}
+                      —{" "}
+                      <a
+                        href={`/explorar/votacoes-2025.html?votacao=${a.ultimaDivergencia.id}`}
+                      >
+                        {a.ultimaDivergencia.proposicao || "ver votação"}
+                      </a>
+                    </p>
+                  )}
+                  <button
+                    className="text-button"
+                    onClick={() => setIds(alternarAcompanhado(a.id))}
+                  >
+                    Deixar de acompanhar
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          <div className="dep-source">
+            <SourcePill
+              source={`Câmara dos Deputados · coleta ${dados.coleta}`}
+            />
+            <span>
+              Alertas por e-mail chegam quando houver contas de usuário.
+            </span>
           </div>
-          <SectionHeading
-            eyebrow="Alertas recentes"
-            title="O que mudou na sua rota"
-          />
-          <div className="alert-list">
-            {updates.map((update, index) => (
-              <div className="alert-row" key={update.title}>
-                <div className={`alert-icon alert-${index}`}>
-                  <BellRing size={16} />
-                </div>
-                <div>
-                  <div className="alert-meta">
-                    <span>{update.date}</span>
-                    <span>{update.type}</span>
-                  </div>
-                  <h3>{update.title}</h3>
-                  <SourcePill source={update.source} />
-                </div>
-                <ChevronRight size={17} />
-              </div>
-            ))}
-          </div>
-        </main>
-        <aside>
-          <div className="side-card">
-            <div className="side-card-head">
-              <div>
-                <span className="eyebrow">Temas acompanhados</span>
-                <h3>Seu radar</h3>
-              </div>
-              <SlidersHorizontal size={18} />
-            </div>
-            <div className="radar-list">
-              <div>
-                <span className="topic-marker teal" />
-                <span>Transparência</span>
-                <strong>8 alertas</strong>
-              </div>
-              <div>
-                <span className="topic-marker coral" />
-                <span>Saúde pública</span>
-                <strong>5 alertas</strong>
-              </div>
-              <div>
-                <span className="topic-marker amber" />
-                <span>Educação</span>
-                <strong>3 alertas</strong>
-              </div>
-            </div>
-            <button
-              className="side-card-link"
-              onClick={() => setShowModal(true)}
-            >
-              Ajustar temas <ArrowRight size={15} />
-            </button>
-          </div>
-          <div className="side-card">
-            <div className="side-card-head">
-              <div>
-                <span className="eyebrow">Preferências</span>
-                <h3>Como receber</h3>
-              </div>
-              <Settings2 size={18} />
-            </div>
-            <div className="preference-row">
-              <div>
-                <strong>Frequência</strong>
-                <small>Resumo de atualizações</small>
-              </div>
-              <select
-                aria-label="Frequência do resumo de atualizações"
-                value={frequency}
-                onChange={e => setFrequency(e.target.value)}
-              >
-                <option>Diária</option>
-                <option>Semanal</option>
-                <option>Mensal</option>
-              </select>
-            </div>
-            <div className="preference-row">
-              <div>
-                <strong>Fonte</strong>
-                <small>Apenas atualizações verificadas</small>
-              </div>
-              <span className="toggle-on">
-                <Check size={13} />
-              </span>
-            </div>
-          </div>
-          <div className="side-card support-card">
-            <Bell size={19} />
-            <h3>Transparência também é sobre controle.</h3>
-            <p>
-              Você pode pausar, editar ou remover qualquer acompanhamento a
-              qualquer momento.
-            </p>
-            <button className="text-button" onClick={() => setToast(true)}>
-              Entendi <ArrowRight size={15} />
-            </button>
-          </div>
-        </aside>
-      </div>
-      {showModal && (
-        <div className="modal-backdrop" onClick={() => setShowModal(false)}>
-          <div
-            className="monitor-modal"
-            onClick={event => event.stopPropagation()}
-          >
-            <button
-              className="modal-close"
-              onClick={() => setShowModal(false)}
-              aria-label="Fechar"
-            >
-              ×
-            </button>
-            <span className="eyebrow">Novo monitoramento</span>
-            <h2>O que você quer acompanhar?</h2>
-            <p>
-              Escolha um recorte. Você poderá alterar suas preferências depois.
-            </p>
-            <div className="monitor-options">
-              <button
-                onClick={() => {
-                  setShowModal(false);
-                  setToast(true);
-                }}
-              >
-                <UsersRound size={18} />
-                <span>
-                  <strong>Um político</strong>
-                  <small>Receba atualizações sobre trajetória e atuação.</small>
-                </span>
-                <ChevronRight size={16} />
-              </button>
-              <button
-                onClick={() => {
-                  setShowModal(false);
-                  setToast(true);
-                }}
-              >
-                <Flag size={18} />
-                <span>
-                  <strong>Uma promessa</strong>
-                  <small>Observe mudanças de status e novas evidências.</small>
-                </span>
-                <ChevronRight size={16} />
-              </button>
-              <button
-                onClick={() => {
-                  setShowModal(false);
-                  setToast(true);
-                }}
-              >
-                <CalendarClock size={18} />
-                <span>
-                  <strong>Um tema ou cidade</strong>
-                  <small>Encontre mudanças em um recorte específico.</small>
-                </span>
-                <ChevronRight size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {toast && (
-        <ToastMessage onClose={() => setToast(false)}>
-          Monitoramento atualizado. Você pode editar quando quiser.
-        </ToastMessage>
+        </>
       )}
     </PageShell>
   );

@@ -1,5 +1,6 @@
 import {
   ArrowRight,
+  Bell,
   BarChart3,
   CheckCircle2,
   Facebook,
@@ -14,6 +15,8 @@ import {
 import { useEffect, useState } from "react";
 import { Link, useParams } from "wouter";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { alternarAcompanhado, lerAcompanhados } from "@/lib/acompanhar";
 import { initialsAvatar } from "@/data/demo";
 import {
   carregarCadastros,
@@ -72,6 +75,8 @@ type Estado =
 export default function Deputado() {
   const { id } = useParams<{ id: string }>();
   const [estado, setEstado] = useState<Estado>({ fase: "carregando" });
+  const [acompanhados, setAcompanhados] = useState(lerAcompanhados);
+  const acompanha = acompanhados.includes(Number(id));
 
   useEffect(() => {
     let ativo = true;
@@ -199,6 +204,16 @@ export default function Deputado() {
             </ul>
           )}
           <div className="dep-actions">
+            <Button
+              variant={acompanha ? "secondary" : "outline"}
+              aria-pressed={acompanha}
+              onClick={() => setAcompanhados(alternarAcompanhado(resumo.id))}
+            >
+              <Bell size={16} /> {acompanha ? "Acompanhando" : "Acompanhar"}
+            </Button>
+            <Link className="text-link" href={`/comparar?a=${resumo.id}`}>
+              Comparar com outro deputado <ArrowRight size={14} />
+            </Link>
             <a
               className="button button-primary"
               href={painelDeputado(resumo.id)}
