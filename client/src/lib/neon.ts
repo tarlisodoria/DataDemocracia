@@ -28,6 +28,13 @@ export const dataSourceLabel = isNeonConfigured
   ? "Neon Data API · dados conectados"
   : "Registro demonstrativo · Neon ainda não configurado";
 
+// Só fotos de fontes oficiais. O catálogo demonstrativo no banco tem fotos de banco
+// de imagens de pessoas reais, que não podem aparecer como se fossem políticos.
+export const fotoOficial = (url: string | null) =>
+  url && /^https:\/\/([a-z0-9-]+\.)*(camara|senado)\.leg\.br\//.test(url)
+    ? url
+    : null;
+
 export type PoliticianRecord = {
   id: string;
   slug: string;
@@ -78,7 +85,7 @@ export function mergePublicPoliticians(
         state: record.state ?? fallback.state,
         city: record.city ?? fallback.city,
         period: record.period ?? fallback.period,
-        portrait: record.portrait_url ?? fallback.portrait,
+        portrait: fotoOficial(record.portrait_url) ?? fallback.portrait,
       };
     }
 
@@ -92,7 +99,7 @@ export function mergePublicPoliticians(
       state: record.state ?? "UF não informada",
       city: record.city ?? "Município não informado",
       period: record.period ?? "Período não informado",
-      portrait: record.portrait_url ?? initialsAvatar(record.name),
+      portrait: fotoOficial(record.portrait_url) ?? initialsAvatar(record.name),
       type: isCandidacy ? "candidatura" : "mandato",
       summary:
         "Perfil público em fase de catalogação. Consulte as fontes e o histórico de revisão antes de tirar conclusões.",

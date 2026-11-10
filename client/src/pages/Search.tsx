@@ -13,7 +13,9 @@ import { Badge } from "@/components/ui/badge";
 import { initialsAvatar, politicians } from "@/data/demo";
 import {
   buscarDeputados,
+  carregarCadastros,
   carregarDeputados,
+  type PerfilCadastro,
   paginaDeputado,
   type DeputadoResumo,
 } from "@/lib/camara";
@@ -40,6 +42,9 @@ export default function SearchPage() {
   const [situation, setSituation] = useState("Todas as situações");
   const [directory, setDirectory] = useState(politicians);
   const [usingLiveDirectory, setUsingLiveDirectory] = useState(false);
+  const [cadastros, setCadastros] = useState<Record<string, PerfilCadastro>>(
+    {}
+  );
   const [camara, setCamara] = useState<{
     coleta: string;
     deputados: DeputadoResumo[];
@@ -48,6 +53,8 @@ export default function SearchPage() {
   useEffect(() => {
     carregarDeputados()
       .then(setCamara)
+      .then(() => carregarCadastros())
+      .then(setCadastros)
       .catch(() => {
         // Sem o arquivo do painel, a busca segue só com o catálogo.
       });
@@ -293,7 +300,14 @@ export default function SearchPage() {
                       <div
                         className="result-avatar"
                         style={{
-                          backgroundImage: `url("${initialsAvatar(d.nome)}")`,
+                          // A foto oficial cobre as iniciais; se não carregar, as iniciais aparecem.
+                          backgroundImage: [
+                            cadastros[d.id]?.foto &&
+                              `url("${cadastros[d.id]!.foto}")`,
+                            `url("${initialsAvatar(d.nome)}")`,
+                          ]
+                            .filter(Boolean)
+                            .join(", "),
                         }}
                       />
                       <div className="result-info">

@@ -26,6 +26,7 @@ Navegação por todas as rotas em desktop (1440 px) e celular (390 px), com veri
 ### Corrigido nesta revisão
 
 - [x] Perfis demonstrativos usavam fotos de banco de imagens de pessoas reais; agora usam iniciais.
+- [x] O catálogo no Neon ainda trazia essas fotos e as reexibia no site publicado; agora só são aceitas fotos de domínios oficiais (camara.leg.br, senado.leg.br).
 - [x] Endereços inválidos (`/politico/qualquer-coisa`, `/promessa/x`) mostravam outro perfil; agora mostram 404.
 - [x] `/politico/:id/atuacao` e `/integridade` abriam o topo do perfil; agora abrem na seção certa.
 - [x] Todas as páginas tinham o mesmo título na aba do navegador.

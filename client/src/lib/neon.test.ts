@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { politicians } from "@/data/demo";
-import { mergePublicPoliticians, type PoliticianRecord } from "./neon";
+import {
+  fotoOficial,
+  mergePublicPoliticians,
+  type PoliticianRecord,
+} from "./neon";
 
 const record = (over: Partial<PoliticianRecord> = {}): PoliticianRecord => ({
   id: "1",
@@ -44,5 +48,26 @@ describe("mergePublicPoliticians", () => {
     ]);
     expect(p.name).toBe("Nome do banco");
     expect(p.timeline).toBe(demo.timeline);
+  });
+});
+
+describe("fotoOficial", () => {
+  it("aceita só fotos da Câmara e do Senado", () => {
+    expect(
+      fotoOficial("https://www.camara.leg.br/internet/deputado/bandep/1.jpg")
+    ).not.toBeNull();
+    expect(
+      fotoOficial("https://www.senado.leg.br/senadores/img/fotos/1.jpg")
+    ).not.toBeNull();
+    expect(fotoOficial("https://images.unsplash.com/photo-1")).toBeNull();
+    expect(fotoOficial("https://camara.leg.br.exemplo.com/x.jpg")).toBeNull();
+    expect(fotoOficial(null)).toBeNull();
+  });
+
+  it("descarta foto de banco de imagens vinda do catálogo", () => {
+    const [p] = mergePublicPoliticians([
+      record({ portrait_url: "https://images.unsplash.com/photo-1" }),
+    ]);
+    expect(p.portrait.startsWith("data:image/svg+xml")).toBe(true);
   });
 });
