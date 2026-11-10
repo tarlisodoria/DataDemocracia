@@ -4,20 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Votações da Câmara 2025</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
     <style>
       /* Painel de exploração com filtro cruzado: toda seleção (mapa, legenda, barra, célula, linha) vira filtro global e recalcula todos os visuais. */
-      :root {
-        --bg: #f3f5f6;
+      /* html:root vence os tokens de mesmo nome do CSS do site (carregado depois). */
+      html:root {
+        --bg: #f8f8f5;
         --surface: #ffffff;
-        --ink: #13232b;
-        --muted: #5b6b73;
-        --line: #dce3e6;
+        --ink: #1b2a2e;
+        --muted: #647275;
+        --line: #dfe7e6;
         --accent: #0f4c5c;
         --accent-soft: #e2eef0;
         --sel: #e0a526;
@@ -31,54 +26,12 @@
         --r-co: #b8642a;
         --r-se: #2f6db5;
         --r-s: #7e57c2;
-        --display: "Newsreader", Georgia, "Times New Roman", serif;
-        --body: "IBM Plex Sans", "Segoe UI", Roboto, sans-serif;
-        --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+        --display:
+          Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        --body:
+          Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
         color-scheme: light;
-      }
-      @media (prefers-color-scheme: dark) {
-        :root:not([data-theme="light"]) {
-          --bg: #0d1518;
-          --surface: #142026;
-          --ink: #e4ecef;
-          --muted: #93a4ab;
-          --line: #26373e;
-          --accent: #5fb3c4;
-          --accent-soft: #1b3a42;
-          --sel: #f2c14e;
-          --sim: #5fb3c4;
-          --nao: #e77ab8;
-          --abst: #7d8c93;
-          --obst: #b7c1c8;
-          --ghost: #1e2d33;
-          --r-n: #4fb27a;
-          --r-ne: #e9b44a;
-          --r-co: #d98552;
-          --r-se: #5b93d6;
-          --r-s: #a486db;
-          color-scheme: dark;
-        }
-      }
-      :root[data-theme="dark"] {
-        --bg: #0d1518;
-        --surface: #142026;
-        --ink: #e4ecef;
-        --muted: #93a4ab;
-        --line: #26373e;
-        --accent: #5fb3c4;
-        --accent-soft: #1b3a42;
-        --sel: #f2c14e;
-        --sim: #5fb3c4;
-        --nao: #e77ab8;
-        --abst: #7d8c93;
-        --obst: #b7c1c8;
-        --ghost: #1e2d33;
-        --r-n: #4fb27a;
-        --r-ne: #e9b44a;
-        --r-co: #d98552;
-        --r-se: #5b93d6;
-        --r-s: #a486db;
-        color-scheme: dark;
       }
       * {
         box-sizing: border-box;
@@ -117,7 +70,8 @@
         color: var(--accent);
       }
       h1 {
-        font: 600 clamp(26px, 3.2vw, 38px) / 1.1 var(--display);
+        font: 700 clamp(28px, 3.4vw, 42px) / 1.08 var(--display);
+        letter-spacing: -0.04em;
         margin: 6px 0 4px;
         text-wrap: balance;
       }
@@ -604,6 +558,7 @@
     </style>
   </head>
   <body>
+    <div id="site-header"></div>
     <div class="wrap">
       <header class="top">
         <div>
@@ -616,8 +571,7 @@
           </p>
         </div>
         <div class="prov">
-          <span class="tag">Protótipo</span><br />
-          <a href="/">← DataDemocracia</a><br />
+          <span class="tag">Dados oficiais</span><br />
           Fonte: <b>API Dados Abertos da Câmara (v2)</b><br />
           Órgão: Plenário · 01/01–31/12/2025<br />
           Coleta: <b id="coleta"></b>
@@ -2301,8 +2255,6 @@
         addEventListener("resize", () =>
           Object.values(charts).forEach(c => c.resize())
         );
-        const mq = matchMedia("(prefers-color-scheme: dark)");
-        mq.addEventListener && mq.addEventListener("change", render);
         new MutationObserver(render).observe(document.documentElement, {
           attributes: true,
           attributeFilter: ["data-theme"],
@@ -2324,5 +2276,7 @@
             "<p>Não foi possível carregar os dados do painel. Recarregue a página; se o erro continuar, os arquivos em <code>/explorar/dados/</code> podem estar indisponíveis.</p>";
         });
     </script>
+    <div id="site-footer"></div>
+    <script type="module" src="./shell.tsx"></script>
   </body>
 </html>

@@ -81,7 +81,7 @@ export function SiteHeader() {
             const active =
               item.href === "/"
                 ? location === "/"
-                : location.startsWith(item.href);
+                : location.startsWith(item.href.replace(/\.html$/, ""));
             // Painéis em /explorar são páginas estáticas, fora do roteador do app.
             const NavTag = isStaticPage(item.href) ? "a" : Link;
             return (
