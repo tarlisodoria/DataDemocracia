@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   buscarDeputados,
+  destaquesDoDia,
+  temasMaisVotados,
+  ultimasVotacoes,
   divergencias,
   maisParecidos,
   votosPorTema,
@@ -127,5 +130,40 @@ describe("comparações do perfil", () => {
       emComum: 3,
     });
     expect(maisParecidos(arq, 0, 3, 10)).toEqual([]);
+  });
+});
+
+describe("dados da home", () => {
+  const arq = {
+    coleta: "x",
+    deps: [
+      [1, "Ana", "PT", "PA"],
+      [2, "Bia", "PL", "SP"],
+    ] as [number, string, string, string][],
+    vot: [
+      ["v1", "2025-02-01", "Votação 1", "PL 1/2025", 1, [0]],
+      ["v2", "2025-03-01", "Votação 2", "PL 2/2025", 2, [0, 1]],
+    ] as [string, string, string, string, number | null, number[]][],
+    temas: ["Saúde", "Educação"],
+    v: ["SN", "SA"],
+  };
+
+  it("lista as votações mais recentes com placar", () => {
+    const [v] = ultimasVotacoes(arq, 1);
+    expect(v).toMatchObject({ id: "v2", sim: 1, nao: 0, outros: 1 });
+  });
+
+  it("ordena temas por número de votações", () => {
+    expect(temasMaisVotados(arq)).toEqual([
+      { tema: "Saúde", votacoes: 2 },
+      { tema: "Educação", votacoes: 1 },
+    ]);
+  });
+
+  it("escolhe índices distintos e estáveis no mesmo dia", () => {
+    const a = destaquesDoDia(551, 3, 100);
+    expect(new Set(a).size).toBe(3);
+    expect(destaquesDoDia(551, 3, 100)).toEqual(a);
+    expect(a.every(i => i >= 0 && i < 551)).toBe(true);
   });
 });

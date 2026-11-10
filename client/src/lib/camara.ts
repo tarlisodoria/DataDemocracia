@@ -340,3 +340,69 @@ export function identificarRede(url: string): Rede {
   const achado = nomes.find(([h]) => host === h || host.endsWith("." + h));
   return { nome: achado ? achado[1] : "Site", url };
 }
+
+export type VotacaoResumo = {
+  id: string;
+  data: string;
+  proposicao: string;
+  oQue: string;
+  sim: number;
+  nao: number;
+  outros: number;
+};
+
+// Votações mais recentes com o placar de cada uma.
+export function ultimasVotacoes(
+  dados: VotacoesArquivo,
+  quantas = 4
+): VotacaoResumo[] {
+  if (!dados.vot) return [];
+  return dados.vot
+    .map((v, i) => {
+      let sim = 0;
+      let nao = 0;
+      let outros = 0;
+      for (const c of dados.v[i]) {
+        if (c === "S") sim++;
+        else if (c === "N") nao++;
+        else if (c !== ".") outros++;
+      }
+      return {
+        id: v[0],
+        data: v[1],
+        proposicao: v[3],
+        oQue: v[2],
+        sim,
+        nao,
+        outros,
+        i,
+      };
+    })
+    .sort((a, b) => b.data.localeCompare(a.data) || b.i - a.i)
+    .slice(0, quantas)
+    .map(({ i: _i, ...v }) => v);
+}
+
+// Temas com mais votações no ano.
+export function temasMaisVotados(dados: VotacoesArquivo, quantos = 4) {
+  if (!dados.vot || !dados.temas) return [];
+  const contagem = dados.temas.map(() => 0);
+  for (const v of dados.vot) for (const t of v[5]) contagem[t]++;
+  return contagem
+    .map((n, t) => ({ tema: dados.temas![t], votacoes: n }))
+    .sort((a, b) => b.votacoes - a.votacoes)
+    .slice(0, quantos);
+}
+
+// Seleção que muda uma vez por dia, para a home não destacar sempre os mesmos.
+export function destaquesDoDia(
+  total: number,
+  quantos: number,
+  dia = Math.floor(Date.now() / 864e5)
+) {
+  const passo = Math.max(1, Math.floor(total / quantos));
+  return Array.from(
+    { length: Math.min(quantos, total) },
+    (_, k) => (dia * 37 + k * passo) % total
+  );
+}
