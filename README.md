@@ -30,16 +30,17 @@ Detalhes de método e formato dos dados em [docs/PAINEL-VOTACOES.md](docs/PAINEL
 
 ## Estado atual
 
-- Home editorial com busca e apresentação da metodologia.
-- Exploração de políticos com filtros por cargo, estado e situação.
+- Home com a última votação do Plenário, temas mais votados e deputados reais em destaque.
+- Busca entre os 551 deputados com filtros por estado e partido.
+- Comparação lado a lado de dois deputados, com a taxa de votos iguais entre eles.
+- Monitoramento de deputados acompanhados, salvo no navegador.
 - Perfis com visão geral, trajetória, promessas, atuação e integridade.
 - Cadeia visual de evidências e ficha exportável.
 - Radar analítico com dimensões independentes e explicações.
-- Comparação factual sem nota geral.
 - Painel de votações nominais da Câmara com dados oficiais de 2025.
 - Catálogo público no Neon (3 perfis e 9 promessas **demonstrativos**), com fallback local se a API não responder.
 
-Perfis, promessas e evidências ainda são demonstrativos e estão rotulados assim na interface. O painel de votações usa dados reais.
+Deputados, votações, comparação e monitoramento usam dados oficiais. Promessas, dossiês, radares e os perfis em `/politico/*` ainda são demonstrativos e estão rotulados assim na interface.
 
 ## Stack
 
