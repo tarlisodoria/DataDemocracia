@@ -405,24 +405,29 @@ export const sources = [
     short: "TSE",
     detail: "Candidaturas, bens, contas, propostas e resultados",
     color: "blue",
+    status: "Planejada",
   },
   {
     name: "Câmara dos Deputados",
     short: "Câmara",
-    detail: "Presença, proposições, votações e despesas",
+    detail:
+      "Votações nominais do Plenário e cadastro dos deputados, coletados todo mês",
     color: "teal",
+    status: "Conectada",
   },
   {
     name: "Senado Federal",
     short: "Senado",
     detail: "Votações, proposições e atividade parlamentar",
     color: "amber",
+    status: "Planejada",
   },
   {
     name: "Conselho Nacional de Justiça",
     short: "CNJ",
     detail: "Metadados processuais públicos, quando aplicável",
     color: "slate",
+    status: "Planejada",
   },
 ];
 

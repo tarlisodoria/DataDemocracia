@@ -140,9 +140,9 @@ export default function Methodology() {
       </section>
       <section className="sources-method" id="fontes">
         <SectionHeading
-          eyebrow="Fontes conectadas"
+          eyebrow="Fontes"
           title="Quem sustenta os dados"
-          description="Na versão demonstrativa, as fontes abaixo representam a arquitetura de confiança do produto."
+          description="A Câmara dos Deputados já está conectada e é coletada todo mês. As demais fontes entram nas próximas etapas."
         />
         <div className="source-method-grid">
           {sources.map(source => (
@@ -153,9 +153,9 @@ export default function Methodology() {
               <div>
                 <h3>{source.name}</h3>
                 <p>{source.detail}</p>
-                <SourcePill source="Fonte demonstrativa" date="28 out. 2026" />
+                <SourcePill source={source.status} />
               </div>
-              <CheckCircle2 size={17} />
+              {source.status === "Conectada" && <CheckCircle2 size={17} />}
             </div>
           ))}
         </div>
