@@ -1,6 +1,6 @@
 # Cota parlamentar
 
-Resumo dos gastos de cada deputado com a Cota para o Exercício da Atividade Parlamentar (CEAP), mostrado na página `/deputado/:id`.
+Resumo dos gastos de cada deputado com a Cota para o Exercício da Atividade Parlamentar (CEAP), mostrado na página `/deputado/:id` e no panorama da Câmara em `/gastos`.
 
 ## Fonte
 
@@ -33,6 +33,8 @@ O script `scripts/coletar-cota-camara.mjs` não usa dependências: lê o zip com
 - **Lideranças e Mesa** não têm `ideCadastro` e ficam de fora.
 - **CPF não é publicado.** O arquivo da Câmara traz o CPF do deputado e o documento de fornecedores pessoa física; o resumo guarda só CNPJ de 14 dígitos.
 - **Comparação por estado e por mês com gasto.** O teto da cota varia por UF (por causa das passagens), então a referência é a mediana dos deputados da mesma UF. Como suplentes e quem assumiu no meio do ano têm menos meses, compara-se a média por mês com gasto, não o total do ano.
+
+- **Partidos com pelo menos cinco deputados** no panorama: a mediana de dois ou três oscila demais.
 
 ## Limitações
 

@@ -28,6 +28,8 @@ O que a página oficial da Câmara não mostra e o DataDemocracia calcula:
 - **Atuação com contexto:** presença em sessões e reuniões, comissões e cargos e projetos como primeiro autor, sempre com a mediana da Câmara ao lado.
 - **Cota parlamentar com contexto:** gastos por mês, por tipo e maiores fornecedores, com a média mensal comparada à mediana dos deputados do mesmo estado.
 
+A página [`/gastos`](client/src/pages/Gastos.tsx) mostra a cota parlamentar da Câmara inteira: gastos por tipo, mediana mensal por estado e por partido e uma tabela filtrável deputado a deputado.
+
 Detalhes de método e formato dos dados em [docs/PAINEL-VOTACOES.md](docs/PAINEL-VOTACOES.md).
 
 ## Estado atual

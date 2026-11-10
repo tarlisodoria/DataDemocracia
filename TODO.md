@@ -85,6 +85,7 @@ A página `camara.leg.br/deputados/{id}` já mostra dados brutos do mandato. O D
 - [x] Comparar dois deputados lado a lado com dados reais, com a taxa de votos iguais entre eles.
 - [ ] Histórico eleitoral do TSE: candidaturas, votos recebidos e bens declarados.
 - [ ] Mudanças de partido no ano refletidas nos cálculos (hoje vale a sigla do último voto).
+- [x] Página `/gastos` com a cota da Câmara inteira: por tipo, por estado, por partido e tabela filtrável.
 
 ## Próximo ciclo — dados públicos conectados
 
