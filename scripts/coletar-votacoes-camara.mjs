@@ -5,7 +5,7 @@
 // Uso: node scripts/coletar-votacoes-camara.mjs [ano]
 // Requer Node 18+ (fetch nativo). Leva alguns minutos: são ~2 mil chamadas à API.
 
-import { writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 
 const API = "https://dadosabertos.camara.leg.br/api/v2";
 const ANO = Number(process.argv[2] ?? 2025);
@@ -193,10 +193,23 @@ async function main() {
     v,
   };
   // Cadastro de cada deputado: nome civil, foto oficial, e-mail do gabinete e redes sociais.
-  const cadastros = await emLotes(deps, d => get(`/deputados/${d[0]}`));
+  // É complementar: se a API falhar para alguém, mantém o cadastro da coleta anterior
+  // em vez de descartar os votos, que já estão completos.
+  const anterior = await readFile(SAIDA_DEPUTADOS, "utf8")
+    .then(s => JSON.parse(s).perfis)
+    .catch(() => ({}));
+  let semCadastro = 0;
+  const cadastros = await emLotes(deps, d =>
+    get(`/deputados/${d[0]}`).catch(err => {
+      semCadastro++;
+      console.warn(`cadastro indisponível, mantido o anterior: ${err.message}`);
+      return null;
+    })
+  );
   const perfis = Object.fromEntries(
     deps.map((d, i) => {
       const c = cadastros[i];
+      if (!c && anterior[d[0]]) return [d[0], anterior[d[0]]];
       return [
         d[0],
         {
@@ -209,6 +222,7 @@ async function main() {
     })
   );
 
+  if (semCadastro) console.log(`${semCadastro} cadastros sem resposta da API`);
   await writeFile(SAIDA, JSON.stringify(dados));
   await writeFile(
     SAIDA_DEPUTADOS,
