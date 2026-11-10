@@ -4853,3 +4853,75 @@ select:focus-visible {
 .mon-card .text-button {
   justify-self: start;
 }
+
+/* Cota parlamentar no perfil do deputado */
+.cota-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: 32px;
+  margin-bottom: 24px;
+}
+.cota-grid h3 {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin: 0 0 12px;
+}
+.cota-months {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 4px;
+  height: 140px;
+  align-items: end;
+}
+.cota-months > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  gap: 4px;
+}
+.cota-months i {
+  display: block;
+  background: #0f4c5c;
+  border-radius: 3px 3px 0 0;
+  min-height: 1px;
+}
+.cota-months span {
+  font-size: 10px;
+  text-align: center;
+  color: var(--muted-foreground);
+}
+.cota-rank {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+.dep-bar.cota-bar {
+  grid-template-columns: minmax(0, 1fr) 90px 92px;
+  font-size: 13px;
+}
+.dep-bar.cota-bar i {
+  background: #0f4c5c;
+}
+.cota-doc {
+  white-space: nowrap;
+}
+.dep-source a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.dep-table caption {
+  caption-side: top;
+  text-align: left;
+  padding: 12px 14px 4px;
+  font-weight: 700;
+}
+@media (max-width: 760px) {
+  .cota-grid {
+    grid-template-columns: 1fr;
+  }
+}

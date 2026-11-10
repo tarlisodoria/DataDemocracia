@@ -110,3 +110,29 @@ test("home destaca deputados e votações reais", async ({ page }) => {
   );
   await expect(page.locator(".update-row")).toHaveCount(4);
 });
+
+test("perfil mostra a cota parlamentar quando o arquivo existe", async ({
+  page,
+}) => {
+  // O arquivo real é gerado pela coleta; aqui usamos um recorte com os deputados do AP.
+  await page.route("**/explorar/dados/cota-2025.json", route =>
+    route.fulfill({ path: "e2e/fixtures/cota-2025.json" })
+  );
+  await page.goto("/deputado/204379");
+  const secao = page
+    .locator("section", { hasText: "Cota parlamentar" })
+    .first();
+  await expect(secao.locator("h2")).toContainText("R$ 486.603");
+  await expect(secao).toContainText("mediana dos deputados de AP");
+  await expect(secao.locator(".cota-months > div")).toHaveCount(12);
+  await expect(secao.locator("tbody tr")).toHaveCount(5);
+});
+
+test("perfil sem o arquivo da cota não quebra", async ({ page }) => {
+  await page.route("**/explorar/dados/cota-2025.json", route =>
+    route.fulfill({ status: 404 })
+  );
+  await page.goto("/deputado/204379");
+  await expect(page.locator("h1")).toHaveText("Acácio Favacho");
+  await expect(page.locator(".cota-grid")).toHaveCount(0);
+});

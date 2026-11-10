@@ -406,3 +406,97 @@ export function destaquesDoDia(
     (_, k) => (dia * 37 + k * passo) % total
   );
 }
+
+// Cota parlamentar (CEAP): resumo por deputado gerado por scripts/coletar-cota-camara.mjs.
+export type CotaDeputado = {
+  t: number; // total líquido no ano
+  n: number; // lançamentos
+  m: number[]; // total por mês
+  k: Record<string, number>; // total por índice de tipo
+  f: [nome: string, cnpj: string, valor: number][]; // maiores fornecedores
+};
+export type CotaArquivo = {
+  coleta: string;
+  url: string;
+  tipos: string[];
+  deps: Record<string, CotaDeputado>;
+};
+export const COTA_URL = "/explorar/dados/cota-2025.json";
+
+// Opcional como o cadastro: sem o arquivo, o perfil só não mostra a seção de gastos.
+export function carregarCota(): Promise<CotaArquivo | null> {
+  return json<CotaArquivo>(COTA_URL).catch(() => null);
+}
+
+const SIGLAS = new Set(["sigepa", "rpa"]);
+export const rotuloTipo = (tipo: string) =>
+  tipo
+    .replace(/\s*,\s*/g, ", ")
+    .replace(/\.$/, "")
+    .toLowerCase()
+    .replace(/\b[\p{L}]+/gu, p => (SIGLAS.has(p) ? p.toUpperCase() : p))
+    .replace(/^./, c => c.toUpperCase())
+    .replace("distrito federal", "Distrito Federal");
+
+// Meses com algum gasto: suplentes e quem assumiu no meio do ano têm menos meses,
+// então a comparação usa a média por mês com gasto, não o total do ano.
+const mediaMensal = (d: CotaDeputado) => {
+  const meses = d.m.filter(v => v > 0).length;
+  return meses ? d.t / meses : 0;
+};
+
+const mediana = (xs: number[]) => {
+  const s = [...xs].sort((a, b) => a - b);
+  const meio = s.length >> 1;
+  return s.length % 2 ? s[meio] : (s[meio - 1] + s[meio]) / 2;
+};
+
+export type ResumoCota = {
+  total: number;
+  lancamentos: number;
+  meses: number;
+  mediaMensal: number;
+  porMes: number[];
+  tipos: { tipo: string; valor: number; parte: number }[];
+  fornecedores: { nome: string; cnpj: string; valor: number }[];
+  uf: { sigla: string; mediana: number; deputados: number; posicao: number };
+};
+
+export function resumoCota(
+  cota: CotaArquivo,
+  dados: VotacoesArquivo,
+  id: number
+): ResumoCota | null {
+  const d = cota.deps[id];
+  const dep = dados.deps.find(x => x[0] === id);
+  if (!d || !dep) return null;
+  const sigla = dep[3];
+  const medias = dados.deps
+    .filter(x => x[3] === sigla && cota.deps[x[0]])
+    .map(x => mediaMensal(cota.deps[x[0]]))
+    .filter(v => v > 0);
+  const minha = mediaMensal(d);
+  return {
+    total: d.t,
+    lancamentos: d.n,
+    meses: d.m.filter(v => v > 0).length,
+    mediaMensal: minha,
+    porMes: d.m,
+    tipos: Object.entries(d.k)
+      .filter(([, v]) => v > 0)
+      .map(([k, v]) => ({
+        tipo: rotuloTipo(cota.tipos[Number(k)]),
+        valor: v,
+        parte: d.t > 0 ? v / d.t : 0,
+      }))
+      .sort((a, b) => b.valor - a.valor),
+    fornecedores: d.f.map(([nome, cnpj, valor]) => ({ nome, cnpj, valor })),
+    uf: {
+      sigla,
+      mediana: medias.length ? mediana(medias) : 0,
+      deputados: medias.length,
+      // 1 = maior média mensal do estado.
+      posicao: medias.filter(v => v > minha).length + 1,
+    },
+  };
+}

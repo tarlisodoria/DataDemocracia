@@ -10,6 +10,8 @@ import {
   identificarRede,
   perfilDeputado,
   resumirDeputados,
+  resumoCota,
+  rotuloTipo,
 } from "./camara";
 
 const dados = {
@@ -165,5 +167,66 @@ describe("dados da home", () => {
     expect(new Set(a).size).toBe(3);
     expect(destaquesDoDia(551, 3, 100)).toEqual(a);
     expect(a.every(i => i >= 0 && i < 551)).toBe(true);
+  });
+});
+
+describe("cota parlamentar", () => {
+  const votos = {
+    coleta: "",
+    deps: [
+      [1, "Ana", "PT", "PA"],
+      [2, "Bia", "PL", "PA"],
+      [3, "Caio", "PL", "PA"],
+      [4, "Davi", "PL", "SP"],
+    ] as [number, string, string, string][],
+    v: [],
+  };
+  const mes = (valor: number, meses: number) =>
+    Array.from({ length: 12 }, (_, i) => (i < meses ? valor : 0));
+  const cota = {
+    coleta: "",
+    url: "",
+    tipos: ["DIVULGAÇÃO DA ATIVIDADE PARLAMENTAR.", "PASSAGEM AÉREA - SIGEPA"],
+    deps: {
+      1: {
+        t: 1200,
+        n: 3,
+        m: mes(100, 12),
+        k: { 0: 900, 1: 300 },
+        f: [["X", "1", 900]],
+      },
+      // Suplente com 3 meses: total menor, mas média mensal maior.
+      2: { t: 900, n: 2, m: mes(300, 3), k: { 0: 900 }, f: [] },
+      3: { t: 2400, n: 5, m: mes(200, 12), k: { 1: 2400 }, f: [] },
+      4: { t: 99999, n: 1, m: mes(99999, 1), k: { 0: 99999 }, f: [] },
+    },
+  } as never;
+
+  it("compara a média por mês com gasto à mediana do estado", () => {
+    const r = resumoCota(cota, votos, 1)!;
+    expect(r.meses).toBe(12);
+    expect(r.mediaMensal).toBe(100);
+    expect(r.uf).toEqual({
+      sigla: "PA",
+      mediana: 200,
+      deputados: 3,
+      posicao: 3,
+    });
+    expect(r.tipos[0]).toEqual({
+      tipo: "Divulgação da atividade parlamentar",
+      valor: 900,
+      parte: 0.75,
+    });
+    expect(resumoCota(cota, votos, 2)!.uf.posicao).toBe(1);
+    expect(resumoCota(cota, votos, 99)).toBeNull();
+  });
+
+  it("deixa os tipos legíveis", () => {
+    expect(rotuloTipo("PASSAGEM AÉREA - SIGEPA")).toBe(
+      "Passagem aérea - SIGEPA"
+    );
+    expect(
+      rotuloTipo("HOSPEDAGEM ,EXCETO DO PARLAMENTAR NO DISTRITO FEDERAL.")
+    ).toBe("Hospedagem, exceto do parlamentar no Distrito Federal");
   });
 });

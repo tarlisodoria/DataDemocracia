@@ -20,6 +20,9 @@ import { alternarAcompanhado, lerAcompanhados } from "@/lib/acompanhar";
 import { initialsAvatar } from "@/data/demo";
 import {
   carregarCadastros,
+  carregarCota,
+  resumoCota,
+  type ResumoCota,
   carregarVotacoes,
   identificarRede,
   painelDeputado,
@@ -70,6 +73,8 @@ type Estado =
       divergiu: Divergencia[];
       temas: TemaVoto[];
       parecidos: Semelhante[];
+      cota: ResumoCota | null;
+      cotaColeta?: string;
     };
 
 export default function Deputado() {
@@ -80,8 +85,8 @@ export default function Deputado() {
 
   useEffect(() => {
     let ativo = true;
-    Promise.all([carregarVotacoes(), carregarCadastros()])
-      .then(([dados, cadastros]) => {
+    Promise.all([carregarVotacoes(), carregarCadastros(), carregarCota()])
+      .then(([dados, cadastros, cota]) => {
         if (!ativo) return;
         const votos = perfilDeputado(dados, Number(id));
         const j = dados.deps.findIndex(d => d[0] === Number(id));
@@ -101,6 +106,8 @@ export default function Deputado() {
           divergiu: divergencias(dados, j),
           temas: votosPorTema(dados, j).slice(0, 10),
           parecidos: maisParecidos(dados, j),
+          cota: cota && resumoCota(cota, dados, Number(id)),
+          cotaColeta: cota?.coleta,
         });
       })
       .catch(() => ativo && setEstado({ fase: "erro" }));
@@ -463,6 +470,10 @@ export default function Deputado() {
         </section>
       )}
 
+      {estado.cota && (
+        <SecaoCota cota={estado.cota} coleta={estado.cotaColeta} />
+      )}
+
       <section className="dep-section dep-notes">
         <h2>Como ler estes números</h2>
         <ul>
@@ -480,9 +491,122 @@ export default function Deputado() {
             "Sim" pode significar aprovar ou rejeitar algo, conforme o objeto
             votado. Abra a votação para ler o contexto.
           </li>
+          <li>
+            <strong>Cota parlamentar</strong> é a verba para despesas do mandato
+            (passagens, escritório, divulgação). O teto muda por estado, por
+            isso a comparação é com deputados da mesma UF. Valores líquidos, já
+            descontados reembolsos.
+          </li>
           <li>Nenhum destes números é uma nota sobre a atuação do deputado.</li>
         </ul>
       </section>
     </PageShell>
+  );
+}
+
+const real = (v: number) =>
+  v.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    maximumFractionDigits: 0,
+  });
+const cnpj = (c: string) =>
+  c.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
+const MESES = "jan fev mar abr mai jun jul ago set out nov dez".split(" ");
+
+function SecaoCota({ cota, coleta }: { cota: ResumoCota; coleta?: string }) {
+  const { uf } = cota;
+  const maiorMes = Math.max(...cota.porMes, 1);
+  const diferenca = uf.mediana ? cota.mediaMensal / uf.mediana - 1 : 0;
+  return (
+    <section className="dep-section">
+      <SectionHeading
+        eyebrow="Cota parlamentar"
+        title={`${real(cota.total)} em despesas do mandato em 2025`}
+        description={`${cota.lancamentos} lançamentos em ${cota.meses} ${cota.meses === 1 ? "mês" : "meses"}. Média de ${real(cota.mediaMensal)} por mês com gasto: ${
+          Math.abs(diferenca) < 0.05
+            ? "perto da"
+            : `${pct(Math.abs(diferenca), 1)} ${diferenca > 0 ? "acima da" : "abaixo da"}`
+        } mediana dos deputados de ${uf.sigla} (${real(uf.mediana)}).`}
+      />
+      <div className="cota-grid">
+        <div>
+          <h3>Por mês</h3>
+          <div
+            className="cota-months"
+            role="img"
+            aria-label={cota.porMes
+              .map((v, i) => `${MESES[i]} ${real(v)}`)
+              .join(", ")}
+          >
+            {cota.porMes.map((v, i) => (
+              <div key={i} title={`${MESES[i]}: ${real(v)}`}>
+                <i
+                  style={{ height: `${(100 * Math.max(v, 0)) / maiorMes}%` }}
+                />
+                <span>{MESES[i]}</span>
+              </div>
+            ))}
+          </div>
+          <p className="cota-rank">
+            {uf.posicao}ª maior média mensal entre os {uf.deputados} deputados
+            de {uf.sigla} que usaram a cota em 2025, suplentes incluídos.
+          </p>
+        </div>
+        <div>
+          <h3>Por tipo de despesa</h3>
+          <div className="dep-bars">
+            {cota.tipos.slice(0, 6).map(t => (
+              <div className="dep-bar cota-bar" key={t.tipo}>
+                <span>{t.tipo}</span>
+                <div>
+                  <i style={{ width: `${100 * t.parte}%` }} />
+                </div>
+                <strong>{real(t.valor)}</strong>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      {cota.fornecedores.length > 0 && (
+        <div className="dep-table-wrap">
+          <table className="dep-table">
+            <caption>Maiores fornecedores no ano</caption>
+            <thead>
+              <tr>
+                <th>Fornecedor</th>
+                <th>CNPJ</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cota.fornecedores.map(f => (
+                <tr key={f.nome}>
+                  <td>{f.nome}</td>
+                  <td className="cota-doc">
+                    {f.cnpj ? cnpj(f.cnpj) : "sem CNPJ"}
+                  </td>
+                  <td>
+                    <strong>{real(f.valor)}</strong>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <div className="dep-source">
+        <SourcePill
+          source={`Câmara dos Deputados · Cota parlamentar${coleta ? ` · coleta ${coleta}` : ""}`}
+        />
+        <a
+          href="https://www.camara.leg.br/cota-parlamentar/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Notas fiscais no portal da Câmara <ArrowRight size={13} />
+        </a>
+      </div>
+    </section>
   );
 }
